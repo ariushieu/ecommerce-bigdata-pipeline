@@ -10,7 +10,7 @@
 #
 #  Du lieu de bai (./data) gan CHI DOC vao /data.
 #  Ma nguon bai lam (./src) gan vao /home/hadoop/src va /home/rstudio/src.
-#  Khoa SSH (./ssh-key, do setup.ps1 / setup.sh sinh ra) gan CHI DOC vao /ssh-key.
+#  Khoa SSH (./ssh-key, do scripts/setup.ps1 / scripts/setup.sh sinh ra) gan CHI DOC vao /ssh-key.
 #  Ha tang (Dockerfile, cau hinh, script cum) nam trong ./infra.
 #
 #  Anh dung san tren GHCR (CI build tu nhanh main):

@@ -21,7 +21,7 @@ chown -R hadoop:hadoop /home/hadoop/hdfs 2>/dev/null || true
 K=/ssh-key
 for f in id_ed25519 id_ed25519.pub ssh_host_ed25519_key ssh_host_ed25519_key.pub; do
   if [ ! -s "$K/$f" ]; then
-    echo "!!! [$(hostname)] Thieu $K/$f - hay chay setup.ps1 (Windows) hoac setup.sh truoc khi 'docker compose up'." >&2
+    echo "!!! [$(hostname)] Thieu $K/$f - hay chay scripts/setup.ps1 (Windows) hoac scripts/setup.sh truoc khi 'docker compose up'." >&2
     exit 1
   fi
 done

@@ -4,7 +4,7 @@ infra/downloads/*.tgz
 infra/downloads/*.done
 infra/downloads/*.log
 
-# --- Khoa SSH rieng cua tung may (setup.ps1 / setup.sh sinh ra) --------------
+# --- Khoa SSH rieng cua tung may (scripts/setup.ps1 / scripts/setup.sh sinh ra) --------------
 ssh-key/
 
 # --- Tai lieu cua giang vien, file Office tam (chi de o may) -----------------

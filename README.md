@@ -22,11 +22,12 @@ Toàn bộ chạy trên một cụm Hadoop 4 máy dựng bằng Docker. Không c
 ```
 ├── README.md
 ├── docker-compose.yml        cụm 4 máy Hadoop + 1 máy RStudio
-├── setup.ps1 · setup.sh      cài đặt một lần cho mỗi thành viên
-├── mo-terminal.cmd           mở 4 terminal: may1 (masternode) … may4 (datanode3)
+├── scripts/                  chạy trên MÁY THẬT
+│   ├── setup.ps1 · setup.sh  cài đặt một lần cho mỗi thành viên
+│   └── mo-terminal.cmd       mở 4 terminal: may1 (masternode) … may4 (datanode3)
 ├── data/                     dữ liệu đề bài (chỉ đọc trong container)
 ├── docs/                     đề bài, hướng dẫn môi trường, ảnh chụp
-├── infra/                    Dockerfile, cấu hình Hadoop/Spark/HBase/Flume, script vận hành cụm
+├── infra/                    Dockerfile, cấu hình Hadoop/Spark/HBase/Flume, script chạy TRONG CỤM
 ├── src/
 │   ├── cau02_flume/          thu thập dữ liệu
 │   ├── cau03_hdfs/           vùng dữ liệu HDFS
@@ -46,10 +47,10 @@ Cần: **Docker Desktop**, **Git**, máy **từ 16 GB RAM** (Docker được c�
 ```powershell
 git clone https://github.com/ariushieu/ecommerce-bigdata-pipeline.git
 cd ecommerce-bigdata-pipeline
-powershell -ExecutionPolicy Bypass -File .\setup.ps1   # sinh khóa SSH, thêm may1..may4 vào ~/.ssh/config
+powershell -ExecutionPolicy Bypass -File .\scripts\setup.ps1   # sinh khóa SSH, thêm may1..may4 vào ~/.ssh/config
 docker compose pull                                    # tải image dựng sẵn
 docker compose up -d                                   # bật cụm
-.\mo-terminal.cmd                                      # mở 4 terminal
+.\scripts\mo-terminal.cmd                              # mở 4 terminal
 ```
 
 Trong terminal **may1**:

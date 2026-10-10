@@ -1,13 +1,13 @@
 #!/bin/bash
 # =============================================================================
 #  Cai dat MOT LAN cho moi thanh vien (Linux / macOS / Git Bash).
-#  Windows nen dung setup.ps1. CI dung:  bash setup.sh --keys-only
+#  Windows nen dung scripts/setup.ps1. CI dung:  bash scripts/setup.sh --keys-only
 #
-#   1. Sinh khoa SSH rieng vao ssh-key (khong dua len Git)
+#   1. Sinh khoa SSH rieng vao ssh-key/ o goc repo (khong dua len Git)
 #   2. Them "ssh may1".."ssh may4" vao ~/.ssh/config (tru khi --keys-only)
 # =============================================================================
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"   # goc repo (script nam trong scripts/)
 KEYDIR="$ROOT/ssh-key"
 mkdir -p "$KEYDIR"
 
@@ -30,13 +30,13 @@ chmod 600 "$KEYDIR/id_ed25519" "$KEYDIR/ssh_host_ed25519_key"
 
 echo "==> Them may1..may4 vao ~/.ssh/config"
 CFG="$HOME/.ssh/config"; mkdir -p "$HOME/.ssh"; touch "$CFG"
-BAT_DAU='# >>> btl-cluster (sinh boi btl/setup.ps1 - dung sua tay) >>>'
+BAT_DAU='# >>> btl-cluster (sinh boi scripts/setup.ps1 - dung sua tay) >>>'
 KET_THUC='# <<< btl-cluster <<<'
 ID="$KEYDIR/id_ed25519"
 command -v cygpath >/dev/null && ID="$(cygpath -m "$ID")"   # Git Bash: D:/... cho ca OpenSSH Windows
 
-# Bo khoi cu (neu co) roi them khoi moi
-awk -v a="$BAT_DAU" -v b="$KET_THUC" '$0==a{skip=1} !skip{print} $0==b{skip=0}' "$CFG" > "$CFG.tmp"
+# Bo khoi cu (nhan theo tien to "# >>> btl-cluster") roi them khoi moi
+awk -v b="$KET_THUC" 'index($0, "# >>> btl-cluster") == 1 {skip=1} !skip{print} $0==b{skip=0}' "$CFG" > "$CFG.tmp"
 cat >> "$CFG.tmp" <<EOF
 
 $BAT_DAU
@@ -64,4 +64,4 @@ EOF
 mv "$CFG.tmp" "$CFG"; chmod 600 "$CFG"
 echo "    Da ghi $CFG"
 echo
-echo "XONG. Tiep theo: docker compose pull && docker compose up -d && ssh may1"
+echo "XONG. Tiep theo: cd $ROOT && docker compose pull && docker compose up -d && ssh may1"

@@ -1,7 +1,7 @@
 # =============================================================================
 #  Cai dat MOT LAN cho moi thanh vien (Windows). Chay trong PowerShell:
 #      cd <thu muc repo>
-#      powershell -ExecutionPolicy Bypass -File .\setup.ps1
+#      powershell -ExecutionPolicy Bypass -File .\scripts\setup.ps1
 #
 #  Viec lam (chay lai nhieu lan cung an toan):
 #   1. Kiem tra Docker Desktop
@@ -11,7 +11,7 @@
 $ErrorActionPreference = 'Stop'
 $PSNativeCommandArgumentPassing = 'Legacy'   # PowerShell 7: de -N '""' van la mat khau rong
 
-$root   = $PSScriptRoot
+$root   = Split-Path $PSScriptRoot -Parent       # goc repo (script nam trong scripts\)
 $keyDir = Join-Path $root 'ssh-key'
 $userKey = Join-Path $keyDir 'id_ed25519'
 $hostKey = Join-Path $keyDir 'ssh_host_ed25519_key'
@@ -49,7 +49,7 @@ if ($sinhMoi) { & $keygen -R btl-hadoop-cluster 2>$null | Out-Null }
 # --- 3. ~/.ssh/config ---------------------------------------------------------
 Buoc 'Them may1..may4 vao ~/.ssh/config'
 New-Item -ItemType Directory -Force -Path $sshDir | Out-Null
-$batDau = '# >>> btl-cluster (sinh boi btl/setup.ps1 - dung sua tay) >>>'
+$batDau = '# >>> btl-cluster (sinh boi scripts/setup.ps1 - dung sua tay) >>>'
 $ketThuc = '# <<< btl-cluster <<<'
 $idPath = ($userKey -replace '\\', '/')
 $khoi = @"
@@ -78,9 +78,10 @@ $ketThuc
 
 $cu = ''
 if (Test-Path $sshCfg) { $cu = [IO.File]::ReadAllText($sshCfg) -replace "`r`n", "`n" }
-$mau = '(?s)\n?' + [regex]::Escape($batDau) + '.*?' + [regex]::Escape($ketThuc) + '\n?'
+# Nhan khoi cu theo tien to "# >>> btl-cluster" (ban cu co the ghi duong dan khac)
+$mau = '(?s)\n?# >>> btl-cluster[^\n]*\n.*?' + [regex]::Escape($ketThuc) + '\n?'
 $moi = ([regex]::Replace($cu, $mau, "`n")).TrimEnd() + "`n`n" + $khoi + "`n"
-if ($cu -notmatch [regex]::Escape($batDau) -and $cu -match '(?m)^Host .*\bmay1\b') {
+if ($cu -notmatch '# >>> btl-cluster' -and $cu -match '(?m)^Host .*\bmay1\b') {
     Write-Host '    CANH BAO: config da co "Host may1" ngoai khoi btl-cluster - hay xoa tay khoi cu.' -ForegroundColor Yellow
 }
 [IO.File]::WriteAllText($sshCfg, $moi.TrimStart("`n"), (New-Object System.Text.UTF8Encoding($false)))
@@ -88,7 +89,8 @@ Write-Host "    Da ghi $sshCfg"
 
 Write-Host ''
 Write-Host 'XONG. Buoc tiep theo:' -ForegroundColor Green
+Write-Host "  cd $root"
 Write-Host '  docker compose pull          # tai anh dung san tu GHCR (nhanh)'
 Write-Host '  docker compose up -d         # bat 5 container'
-Write-Host '  .\mo-terminal.cmd            # mo 4 terminal may1..may4'
+Write-Host '  .\scripts\mo-terminal.cmd    # mo 4 terminal may1..may4'
 Write-Host '  (trong may1) start-cluster.sh && smoke-test.sh'

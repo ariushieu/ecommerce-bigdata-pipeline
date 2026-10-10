@@ -10,7 +10,7 @@ on:
       - 'src/**'
       - 'data/**'
       - 'docker-compose.yml'
-      - 'setup.sh'
+      - 'scripts/setup.sh'
       - '.github/workflows/cluster.yml'
   pull_request:
     paths:
@@ -18,7 +18,7 @@ on:
       - 'src/**'
       - 'data/**'
       - 'docker-compose.yml'
-      - 'setup.sh'
+      - 'scripts/setup.sh'
       - '.github/workflows/cluster.yml'
   workflow_dispatch:
 
@@ -59,7 +59,7 @@ jobs:
         run: bash infra/downloads/fetch.sh
 
       - name: Sinh khoa SSH tam cho cum
-        run: bash setup.sh --keys-only
+        run: bash scripts/setup.sh --keys-only
 
       - name: Build image
         run: docker compose build

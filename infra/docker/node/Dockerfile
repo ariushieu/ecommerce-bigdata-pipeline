@@ -38,7 +38,7 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 # ---- 2. Nguoi dung hadoop + SSH ---------------------------------------------
 #  Anh KHONG chua khoa SSH nao (repo cong khai, anh day len GHCR). Khoa nam o
-#  ./ssh-key tren may tung thanh vien (setup.ps1 / setup.sh sinh ra), gan vao
+#  ./ssh-key tren may tung thanh vien (scripts/setup.ps1 / scripts/setup.sh sinh ra), gan vao
 #  /ssh-key luc chay; entrypoint.sh cai vao dung cho:
 #   - id_ed25519           : 4 may dung chung -> ssh qua lai khong mat khau;
 #                            Windows cung dung khoa nay de "ssh may1".."ssh may4"

@@ -5,7 +5,8 @@ rem     tab 1: ssh may1 = masternode   tab 2: ssh may2 = datanode1
 rem     tab 3: ssh may3 = datanode2    tab 4: ssh may4 = datanode3
 rem  Container dang tat thi tu bat len truoc. Nhap dup file nay la chay.
 rem ===========================================================================
-cd /d "%~dp0"
+rem Script nam trong scripts\ -> ve goc repo (noi co docker-compose.yml)
+cd /d "%~dp0.."
 echo Bat container (neu dang tat)...
 docker compose up -d >nul 2>&1 || (echo Loi: Docker Desktop chua chay? & pause & exit /b 1)
 rem Cho sshd trong container san sang
