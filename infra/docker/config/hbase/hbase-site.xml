@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <!-- HBase phan tan that: HMaster o masternode, RegionServer o 3 datanode,
+         du lieu nam tren HDFS, ZooKeeper do HBase tu quan ly o masternode -->
+    <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://masternode:9000/hbase</value>
+    </property>
+    <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>masternode</value>
+    </property>
+    <property>
+        <name>hbase.zookeeper.property.dataDir</name>
+        <value>/home/hadoop/hdfs/zookeeper</value>
+    </property>
+    <property>
+        <name>hbase.tmp.dir</name>
+        <value>/home/hadoop/hdfs/tmp/hbase</value>
+    </property>
+    <!-- Docker tra nguoc IP ra "datanode1.btl-hadoop-net" -> HMaster ep
+         RegionServer doi ten. Tat de RegionServer giu ten datanode1/2/3. -->
+    <property>
+        <name>hbase.regionserver.hostname.disable.master.reversedns</name>
+        <value>true</value>
+    </property>
+    <!-- WAL kieu cu (FSHLog): on dinh hon AsyncFSWAL khi HDFS la ban 3.2.2 -->
+    <property>
+        <name>hbase.wal.provider</name>
+        <value>filesystem</value>
+    </property>
+
+    <!-- Cau 7 - nen du lieu: codec Java thuan (aircompressor), khong can thu
+         vien native -> COMPRESSION => 'SNAPPY' / 'LZ4' / 'ZSTD' / 'GZ' deu chay -->
+    <property>
+        <name>hbase.io.compress.snappy.codec</name>
+        <value>org.apache.hadoop.hbase.io.compress.aircompressor.SnappyCodec</value>
+    </property>
+    <property>
+        <name>hbase.io.compress.lz4.codec</name>
+        <value>org.apache.hadoop.hbase.io.compress.aircompressor.Lz4Codec</value>
+    </property>
+    <property>
+        <name>hbase.io.compress.zstd.codec</name>
+        <value>org.apache.hadoop.hbase.io.compress.aircompressor.ZstdCodec</value>
+    </property>
+
+    <!-- Cau 7 - quyen truy cap: bat AccessController de dung grant / revoke /
+         user_permission. User "hadoop" (chay HBase) la superuser. -->
+    <property>
+        <name>hbase.security.authorization</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>hbase.coprocessor.master.classes</name>
+        <value>org.apache.hadoop.hbase.security.access.AccessController</value>
+    </property>
+    <property>
+        <name>hbase.coprocessor.region.classes</name>
+        <value>org.apache.hadoop.hbase.security.access.AccessController</value>
+    </property>
+    <property>
+        <name>hbase.coprocessor.regionserver.classes</name>
+        <value>org.apache.hadoop.hbase.security.access.AccessController</value>
+    </property>
+    <property>
+        <name>hbase.superuser</name>
+        <value>hadoop</value>
+    </property>
+
+    <!-- Cau 7 - backup: snapshot (mac dinh da bat, ghi ro cho de giai thich) -->
+    <property>
+        <name>hbase.snapshot.enabled</name>
+        <value>true</value>
+    </property>
+</configuration>

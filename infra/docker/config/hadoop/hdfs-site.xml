@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <!-- Cau 3: nhan ban 3 lan, moi block co 1 ban tren moi datanode -->
+    <property>
+        <name>dfs.replication</name>
+        <value>3</value>
+    </property>
+    <property>
+        <name>dfs.blocksize</name>
+        <value>134217728</value>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///home/hadoop/hdfs/namenode</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///home/hadoop/hdfs/datanode</value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+    <property>
+        <name>dfs.namenode.http-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+    <property>
+        <name>dfs.permissions.enabled</name>
+        <value>false</value>
+    </property>
+
+    <!-- Cau 3 (khoi phuc khi hong node): mac dinh NameNode doi ~10,5 phut moi
+         coi DataNode la "dead". Rut xuong 2*60s + 10*3s = 2,5 phut cho de demo. -->
+    <property>
+        <name>dfs.namenode.heartbeat.recheck-interval</name>
+        <value>60000</value>
+    </property>
+    <!-- Cho phep ghi tiep khi 1 datanode chet giua chung (Flume ghi lien tuc) -->
+    <property>
+        <name>dfs.client.block.write.replace-datanode-on-failure.policy</name>
+        <value>NEVER</value>
+    </property>
+</configuration>

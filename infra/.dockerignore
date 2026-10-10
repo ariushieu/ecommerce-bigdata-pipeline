@@ -1,0 +1,6 @@
+# Build context = infra/. Bo cai trong downloads/ duoc gan bang bind mount
+# (RUN --mount) nen van can; chi bo file phu.
+downloads/*.done
+downloads/*.log
+downloads/fetch.sh
+*.md

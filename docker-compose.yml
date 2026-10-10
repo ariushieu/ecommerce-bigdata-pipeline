@@ -1,0 +1,149 @@
+# =============================================================================
+#  BTL De 01 - Cum 4 "may ao" Hadoop + 1 may R bang Docker
+#     masternode : 172.28.1.1  NameNode, ResourceManager, JobHistory,
+#                              Spark History, ZooKeeper, HMaster, Flume, Pig
+#     datanode1-3: 172.28.1.2-4 DataNode, NodeManager, HRegionServer
+#     rstudio    : 172.28.1.10 R 4.4 + tidyverse + DBI/RSQLite (Cau 9)
+#
+#  Terminal rieng tung may tu Windows (cau hinh trong ~/.ssh/config):
+#     ssh may1 = masternode (2201) | ssh may2..may4 = datanode1..3 (2202..2204)
+#
+#  Du lieu de bai (./data) gan CHI DOC vao /data.
+#  Ma nguon bai lam (./src) gan vao /home/hadoop/src va /home/rstudio/src.
+#  Khoa SSH (./ssh-key, do setup.ps1 / setup.sh sinh ra) gan CHI DOC vao /ssh-key.
+#  Ha tang (Dockerfile, cau hinh, script cum) nam trong ./infra.
+#
+#  Anh dung san tren GHCR (CI build tu nhanh main):
+#     docker compose pull   -> tai anh ve, khong can downloads/ va build
+#     docker compose up -d --build -> tu build tu Dockerfile (can downloads/)
+# =============================================================================
+# Ten project co dinh -> volume luon la btl_*, du thu muc repo ten gi
+name: btl
+
+x-node: &node
+  build:
+    context: infra
+    dockerfile: docker/node/Dockerfile
+  image: ghcr.io/ariushieu/ecommerce-bigdata-pipeline/btl-node:latest
+  shm_size: 512m
+  tty: true
+  networks: [hadoop-net]
+  # Cho entrypoint du thoi gian tat gon cac daemon khi "docker compose stop"
+  stop_grace_period: 1m
+
+services:
+  masternode:
+    <<: *node
+    container_name: masternode
+    hostname: masternode
+    environment:
+      NODE_ROLE: master
+    # masternode phu thuoc 3 datanode -> compose BAT datanode truoc, TAT
+    # masternode truoc (luc do masternode con ssh duoc sang datanode de tat cum)
+    depends_on: [datanode1, datanode2, datanode3]
+    stop_grace_period: 3m
+    networks:
+      hadoop-net:
+        ipv4_address: 172.28.1.1
+    ports:
+      - "127.0.0.1:2201:22"       # SSH: ssh may1
+      - "9870:9870"     # HDFS NameNode UI
+      - "8088:8088"     # Yarn ResourceManager UI
+      - "19888:19888"   # MapReduce JobHistory UI
+      - "18080:18080"   # Spark History Server
+      - "4040:4040"     # Spark driver UI (khi app dang chay)
+      - "16010:16010"   # HBase Master UI
+      - "41414:41414"   # Flume HTTP source (gui order_event tu Windows)
+      - "44444:44444"   # Flume Netcat source
+    volumes:
+      - master-data:/home/hadoop/hdfs
+      - ./ssh-key:/ssh-key:ro
+      - ./data:/data:ro
+      - ./src:/home/hadoop/src
+    stdin_open: true
+
+  datanode1:
+    <<: *node
+    container_name: datanode1
+    hostname: datanode1
+    environment:
+      NODE_ROLE: worker
+    networks:
+      hadoop-net:
+        ipv4_address: 172.28.1.2
+    ports:
+      - "127.0.0.1:2202:22"       # SSH: ssh may2
+      - "9864:9864"     # DataNode UI
+      - "8042:8042"     # NodeManager UI
+      - "16030:16030"   # RegionServer UI
+    volumes:
+      - datanode1-data:/home/hadoop/hdfs
+      - ./ssh-key:/ssh-key:ro
+
+  datanode2:
+    <<: *node
+    container_name: datanode2
+    hostname: datanode2
+    environment:
+      NODE_ROLE: worker
+    networks:
+      hadoop-net:
+        ipv4_address: 172.28.1.3
+    ports:
+      - "127.0.0.1:2203:22"       # SSH: ssh may3
+      - "9865:9864"
+      - "8043:8042"
+      - "16031:16030"
+    volumes:
+      - datanode2-data:/home/hadoop/hdfs
+      - ./ssh-key:/ssh-key:ro
+
+  datanode3:
+    <<: *node
+    container_name: datanode3
+    hostname: datanode3
+    environment:
+      NODE_ROLE: worker
+    networks:
+      hadoop-net:
+        ipv4_address: 172.28.1.4
+    ports:
+      - "127.0.0.1:2204:22"       # SSH: ssh may4
+      - "9866:9864"
+      - "8044:8042"
+      - "16032:16030"
+    volumes:
+      - datanode3-data:/home/hadoop/hdfs
+      - ./ssh-key:/ssh-key:ro
+
+  rstudio:
+    build:
+      context: infra/docker/r
+    image: ghcr.io/ariushieu/ecommerce-bigdata-pipeline/btl-r:latest
+    container_name: rstudio
+    hostname: rstudio
+    environment:
+      DISABLE_AUTH: "true"      # chi mo tren 127.0.0.1, khong can dang nhap
+      TZ: Asia/Ho_Chi_Minh
+    networks:
+      hadoop-net:
+        ipv4_address: 172.28.1.10
+    ports:
+      - "127.0.0.1:8787:8787"   # RStudio Server
+    volumes:
+      - ./data:/data:ro
+      - ./src:/home/rstudio/src
+
+networks:
+  hadoop-net:
+    name: btl-hadoop-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  master-data:
+  datanode1-data:
+  datanode2-data:
+  datanode3-data:

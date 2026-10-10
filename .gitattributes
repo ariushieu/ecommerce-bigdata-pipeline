@@ -1,0 +1,19 @@
+# Mac dinh LF: script .sh, Dockerfile, cau hinh chay trong container Linux
+* text=auto eol=lf
+
+# File chay tren Windows giu CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Du lieu de bai: giu nguyen tung byte
+data/** -text
+
+*.sqlite binary
+*.png    binary
+*.jpg    binary
+*.pdf    binary
+*.docx   binary
+*.xlsx   binary
+*.gz     binary
+*.tgz    binary

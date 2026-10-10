@@ -1,0 +1,56 @@
+# Kiem tra nhanh (~1 phut) cho moi push / pull request: khong dung cum.
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint & syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Script .sh phai dung xuong dong LF
+        run: |
+          bad=$(git ls-files '*.sh' | xargs -r grep -l $'\r' || true)
+          if [ -n "$bad" ]; then echo "::error::File co CRLF: $bad"; exit 1; fi
+
+      - name: ShellCheck
+        run: |
+          mapfile -t files < <(git ls-files '*.sh')
+          shellcheck --version | head -2
+          shellcheck -S warning "${files[@]}"
+
+      - name: Hadolint (Dockerfile)
+        run: |
+          for f in infra/docker/node/Dockerfile infra/docker/r/Dockerfile; do
+            echo "== $f"
+            docker run --rm -i -v "$PWD/.hadolint.yaml:/.config/hadolint.yaml:ro" \
+              hadolint/hadolint:v2.12.0 < "$f"
+          done
+
+      - name: docker-compose.yml hop le
+        run: mkdir -p ssh-key && docker compose config -q
+
+      - name: Cu phap Python (src/**/*.py)
+        run: |
+          mapfile -t files < <(git ls-files 'src/*.py')
+          if [ ${#files[@]} -eq 0 ]; then echo "Chua co file Python"; exit 0; fi
+          python3 -m py_compile "${files[@]}" && echo "OK: ${#files[@]} file"
+
+      - name: Cu phap Java (src/**/*.java, chua link Hadoop)
+        run: |
+          mapfile -t files < <(git ls-files 'src/*.java')
+          if [ ${#files[@]} -eq 0 ]; then echo "Chua co file Java"; exit 0; fi
+          echo "Bien dich that (co thu vien Hadoop) chay trong workflow Cluster"
+          printf '%s\n' "${files[@]}"

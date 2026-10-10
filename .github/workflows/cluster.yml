@@ -1,0 +1,119 @@
+# Dung NGUYEN cum 4 may tren GitHub Actions, chay smoke-test + test cua tung cau.
+# CD: tren nhanh main, test xanh thi day image len GHCR de ca nhom "docker compose pull".
+name: Cluster
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'infra/**'
+      - 'src/**'
+      - 'data/**'
+      - 'docker-compose.yml'
+      - 'setup.sh'
+      - '.github/workflows/cluster.yml'
+  pull_request:
+    paths:
+      - 'infra/**'
+      - 'src/**'
+      - 'data/**'
+      - 'docker-compose.yml'
+      - 'setup.sh'
+      - '.github/workflows/cluster.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: cluster-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY_PREFIX: ghcr.io/ariushieu/ecommerce-bigdata-pipeline
+
+jobs:
+  cluster:
+    name: Build, dung cum, test, publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Giai phong dia (image ~4 GB + bo cai ~1,6 GB)
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - name: Cache bo cai (Hadoop, Spark, Pig, Flume, HBase...)
+        uses: actions/cache@v4
+        with:
+          path: |
+            infra/downloads/*.tar.gz
+            infra/downloads/*.tgz
+            infra/downloads/*.done
+          key: downloads-${{ hashFiles('infra/downloads/fetch.sh') }}
+
+      - name: Tai bo cai (bo qua file da co trong cache)
+        run: bash infra/downloads/fetch.sh
+
+      - name: Sinh khoa SSH tam cho cum
+        run: bash setup.sh --keys-only
+
+      - name: Build image
+        run: docker compose build
+
+      - name: Bat 5 container
+        run: |
+          docker compose up -d
+          sleep 5
+          docker compose ps
+
+      - name: start-cluster.sh
+        run: docker exec masternode start-cluster.sh
+
+      - name: smoke-test.sh (8 kiem tra)
+        run: docker exec masternode smoke-test.sh
+
+      - name: Test cua tung cau (src/*/test.sh)
+        run: |
+          shopt -s nullglob
+          tests=(src/*/test.sh)
+          if [ ${#tests[@]} -eq 0 ]; then echo "Chua co src/*/test.sh"; exit 0; fi
+          for t in "${tests[@]}"; do
+            d=$(basename "$(dirname "$t")")
+            echo "::group::$d/test.sh"
+            docker exec masternode su - hadoop -c "cd ~/src/$d && bash test.sh"
+            echo "::endgroup::"
+          done
+
+      - name: Kiem tra may R (SQLite + parse src/**/*.R)
+        run: |
+          docker exec rstudio Rscript -e '
+            suppressPackageStartupMessages({library(DBI); library(RSQLite); library(dplyr); library(ggplot2)})
+            con <- dbConnect(SQLite(), "/data/project_data.sqlite", flags = SQLITE_RO)
+            print(dbGetQuery(con, "SELECT i.category, COUNT(*) n FROM fact_main f JOIN item_master i USING(product_id) GROUP BY i.category"))
+            dbDisconnect(con)
+            for (f in list.files("/home/rstudio/src", "\\.[Rr]$", recursive = TRUE, full.names = TRUE)) { parse(f); cat("parse OK:", f, "\n") }'
+
+      - name: Log khi loi
+        if: failure()
+        run: |
+          docker compose ps
+          docker compose logs --tail 100
+          docker exec masternode bash -c 'tail -n 60 /home/hadoop/hadoop/logs/*.log /home/hadoop/hbase/logs/*.log 2>/dev/null' || true
+
+      - name: Day image len GHCR (chi nhanh main)
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          for img in btl-node btl-r; do
+            docker tag  "$REGISTRY_PREFIX/$img:latest" "$REGISTRY_PREFIX/$img:sha-${GITHUB_SHA::7}"
+            docker push "$REGISTRY_PREFIX/$img:latest"
+            docker push "$REGISTRY_PREFIX/$img:sha-${GITHUB_SHA::7}"
+          done
+
+      - name: Don dep
+        if: always()
+        run: docker compose down -v || true

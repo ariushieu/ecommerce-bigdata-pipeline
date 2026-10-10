@@ -1,0 +1,40 @@
+﻿table,column,type,description,nullable,example
+fact_main,record_id,TEXT,Khóa kỹ thuật duy nhất của bản ghi,No,ORD0000001
+fact_main,timestamp,TEXT,Thời điểm phát sinh theo ISO 8601,No,2026-01-07T20:15:28
+fact_main,province,TEXT,Tỉnh/thành phố,No,Khanh Hoa
+fact_main,source_system,TEXT,Nguồn sinh dữ liệu,No,mobile
+fact_main,ingest_mode,TEXT,Chế độ nạp batch/stream,No,stream
+fact_main,data_format,TEXT,Định dạng dữ liệu nguồn,No,JSON
+fact_main,order_id,TEXT/NUMERIC,Mã đơn hàng,No,ORD0000001
+fact_main,customer_id,TEXT/NUMERIC,Mã khách hàng,No,C00941
+fact_main,product_id,TEXT/NUMERIC,Mã sản phẩm,No,P0225
+fact_main,category,TEXT/NUMERIC,Nhóm sản phẩm,No,Beauty
+fact_main,customer_segment,TEXT/NUMERIC,Phân khúc khách hàng,No,Regular
+fact_main,sales_channel,TEXT/NUMERIC,Kênh bán,No,mobile
+fact_main,quantity,TEXT/NUMERIC,Số lượng,No,3
+fact_main,unit_price,TEXT/NUMERIC,Đơn giá,No,939.95
+fact_main,discount_rate,TEXT/NUMERIC,Tỷ lệ giảm giá,No,0.05
+fact_main,shipping_fee,TEXT/NUMERIC,Phí giao hàng,No,25.0
+fact_main,net_revenue,TEXT/NUMERIC,Doanh thu ròng,No,2703.86
+fact_main,payment_method,TEXT/NUMERIC,Phương thức thanh toán,No,bank_transfer
+fact_main,delivery_days,TEXT/NUMERIC,Số ngày giao,No,4
+fact_main,returned_flag,TEXT/NUMERIC,Cờ trả hàng,No,0
+fact_main,review_score,TEXT/NUMERIC,Điểm đánh giá,Yes,4
+fact_main,campaign_id,TEXT/NUMERIC,Mã chiến dịch,Yes,CP018
+fact_main,quality_flag,TEXT,Nhãn chất lượng có chủ đích: OK/MISSING/OUTLIER/LATE/DUPLICATE,No,OK
+entity_master,customer_id,TEXT,Thuộc tính danh mục customer_id,No,C00001
+entity_master,customer_segment,TEXT,Thuộc tính danh mục customer_segment,No,Loyal
+entity_master,age_group,TEXT,Thuộc tính danh mục age_group,No,55+
+entity_master,gender,TEXT,Thuộc tính danh mục gender,No,Other
+entity_master,province,TEXT,Thuộc tính danh mục province,No,Can Tho
+entity_master,join_date,TEXT,Thuộc tính danh mục join_date,No,2021-04-17
+entity_master,loyalty_score,INTEGER,Thuộc tính danh mục loyalty_score,No,61
+entity_master,preferred_channel,TEXT,Thuộc tính danh mục preferred_channel,No,web
+item_master,product_id,TEXT,Thuộc tính danh mục product_id,No,P0001
+item_master,category,TEXT,Thuộc tính danh mục category,No,Beauty
+item_master,brand,TEXT,Thuộc tính danh mục brand,No,Brand-24
+item_master,unit_cost,REAL,Thuộc tính danh mục unit_cost,No,815.23
+item_master,list_price,REAL,Thuộc tính danh mục list_price,No,1252.26
+item_master,supplier_id,TEXT,Thuộc tính danh mục supplier_id,No,SUP050
+item_master,rating,REAL,Thuộc tính danh mục rating,No,5.0
+item_master,active_flag,INTEGER,Thuộc tính danh mục active_flag,No,1

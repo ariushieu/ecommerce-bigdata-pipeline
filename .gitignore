@@ -1,0 +1,39 @@
+# --- Bo cai de build image (tai bang: bash infra/downloads/fetch.sh) ---------
+infra/downloads/*.tar.gz
+infra/downloads/*.tgz
+infra/downloads/*.done
+infra/downloads/*.log
+
+# --- Khoa SSH rieng cua tung may (setup.ps1 / setup.sh sinh ra) --------------
+ssh-key/
+
+# --- Tai lieu cua giang vien, file Office tam (chi de o may) -----------------
+tai-lieu/
+/*.docx
+/*.pdf
+~$*
+
+# --- Cong cu / IDE -----------------------------------------------------------
+.claude/
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- San pham build / chay ---------------------------------------------------
+*.class
+*.jar
+target/
+__pycache__/
+*.pyc
+spark-warehouse/
+metastore_db/
+derby.log
+pig_*.log
+flume-data/
+.Rhistory
+.RData
+.Rproj.user/
+# Ban copy CSDL de Cau 9 ghi ket qua (ban goc nam o data/)
+src/**/*.sqlite

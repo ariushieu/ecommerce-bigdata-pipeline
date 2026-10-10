@@ -1,0 +1,6 @@
+# Hadolint: chi chan loi muc "error"; cac goi y ve ghim phien ban apt / user
+# root la co chu dich (image phuc vu hoc tap, can root de chay sshd).
+failure-threshold: error
+ignored:
+  - DL3008   # ghim phien ban apt
+  - DL3002   # USER cuoi la root (entrypoint can root de chay sshd)
