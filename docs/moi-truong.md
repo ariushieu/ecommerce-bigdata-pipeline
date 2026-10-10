@@ -27,7 +27,7 @@ Cụm 4 "máy ảo" Hadoop và 1 máy R, dựng bằng Docker.
 | Flume | 1.11.0 | Câu 2 |
 | HBase (+ ZooKeeper) | 2.5.16 | Câu 7 |
 | R + tidyverse + RSQLite | 4.4 | Câu 9 |
-| JDK 8 (+ Scala 2.12, sbt 1.9) | 1.8 | biên dịch MapReduce Java |
+| JDK 8 | 1.8 | biên dịch MapReduce Java |
 
 Cấu hình đáng chú ý:
 - `dfs.replication = 3`, đúng yêu cầu "nhân bản 3 lần" của Câu 3.
@@ -76,7 +76,7 @@ smoke-test.sh                    #   kiểm tra mọi công cụ, phải ra 8 PA
 Tự build image thay vì tải (khi sửa Dockerfile hoặc cấu hình):
 
 ```bash
-bash infra/downloads/fetch.sh    # tải bộ cài khoảng 1,6 GB (Pig chỉ có ở mirror chậm)
+bash infra/downloads/fetch.sh    # tải bộ cài khoảng 1,5 GB (Pig chỉ có ở mirror chậm)
 docker compose up -d --build
 ```
 

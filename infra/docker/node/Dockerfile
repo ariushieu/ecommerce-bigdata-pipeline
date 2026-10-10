@@ -2,7 +2,7 @@
 #  BTL De 01 - Anh dung chung cho ca 4 "may ao" (masternode + 3 datanode)
 #     Hadoop 3.2.2 (HDFS + Yarn + MapReduce)  |  Spark 3.1.2 (+ PySpark)
 #     Pig 0.17.0  |  Flume 1.11.0  |  HBase 2.5.16 (+ ZooKeeper di kem)
-#     Scala 2.12.14 + sbt 1.9.9  |  Python 3.8  |  sqlite3
+#     JDK 8 (javac cho MapReduce Java)  |  Python 3.8  |  sqlite3
 #  Vai tro tung may do bien NODE_ROLE trong docker-compose.yml quyet dinh.
 # =============================================================================
 FROM ubuntu:20.04
@@ -11,8 +11,6 @@ LABEL org.opencontainers.image.source="https://github.com/ariushieu/ecommerce-bi
 
 ARG HADOOP_VERSION=3.2.2
 ARG SPARK_VERSION=3.1.2
-ARG SCALA_VERSION=2.12.14
-ARG SBT_VERSION=1.9.9
 ARG PIG_VERSION=0.17.0
 ARG FLUME_VERSION=1.11.0
 ARG HBASE_VERSION=2.5.16
@@ -71,8 +69,6 @@ RUN --mount=type=bind,source=downloads,target=/dl set -eux; tar -xzf /dl/hadoop-
 
 RUN --mount=type=bind,source=downloads,target=/dl set -eux; tar -xzf /dl/spark-${SPARK_VERSION}-bin-hadoop3.2.tgz; mv spark-${SPARK_VERSION}-bin-hadoop3.2 spark
 
-RUN --mount=type=bind,source=downloads,target=/dl set -eux; tar -xzf /dl/scala-${SCALA_VERSION}.tgz; mv scala-${SCALA_VERSION} scala; tar -xzf /dl/sbt-${SBT_VERSION}.tgz
-
 #  Flume 1.11 kem guava-11, xung dot voi guava-27 cua Hadoop 3.2.2 (HDFS sink
 #  bao NoSuchMethodError) -> xoa ban cua Flume, dung ban cua Hadoop.
 RUN --mount=type=bind,source=downloads,target=/dl set -eux; tar -xzf /dl/apache-flume-${FLUME_VERSION}-bin.tar.gz; mv apache-flume-${FLUME_VERSION}-bin flume; rm -rf flume/docs; rm -f flume/lib/guava-*.jar
@@ -84,14 +80,12 @@ RUN --mount=type=bind,source=downloads,target=/dl set -eux; tar -xzf /dl/pig-${P
 ENV HADOOP_HOME=/home/hadoop/hadoop \
     HADOOP_CONF_DIR=/home/hadoop/hadoop/etc/hadoop \
     SPARK_HOME=/home/hadoop/spark \
-    SCALA_HOME=/home/hadoop/scala \
-    SBT_HOME=/home/hadoop/sbt \
     PIG_HOME=/home/hadoop/pig \
     PIG_CLASSPATH=/home/hadoop/hadoop/etc/hadoop \
     FLUME_HOME=/home/hadoop/flume \
     HBASE_HOME=/home/hadoop/hbase \
     PYSPARK_PYTHON=python3
-ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$SPARK_HOME/sbin:$SCALA_HOME/bin:$SBT_HOME/bin:$PIG_HOME/bin:$FLUME_HOME/bin:$HBASE_HOME/bin:/home/hadoop/scripts
+ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$SPARK_HOME/sbin:$PIG_HOME/bin:$FLUME_HOME/bin:$HBASE_HOME/bin:/home/hadoop/scripts
 
 # ---- 4. Cau hinh ------------------------------------------------------------
 COPY --chown=hadoop:hadoop docker/config/hadoop/ $HADOOP_HOME/etc/hadoop/
@@ -116,14 +110,12 @@ RUN { \
       echo 'export HADOOP_HOME=/home/hadoop/hadoop'; \
       echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop'; \
       echo 'export SPARK_HOME=/home/hadoop/spark'; \
-      echo 'export SCALA_HOME=/home/hadoop/scala'; \
-      echo 'export SBT_HOME=/home/hadoop/sbt'; \
       echo 'export PIG_HOME=/home/hadoop/pig'; \
       echo 'export PIG_CLASSPATH=$HADOOP_CONF_DIR'; \
       echo 'export FLUME_HOME=/home/hadoop/flume'; \
       echo 'export HBASE_HOME=/home/hadoop/hbase'; \
       echo 'export PYSPARK_PYTHON=python3'; \
-      echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$SPARK_HOME/sbin:$SCALA_HOME/bin:$SBT_HOME/bin:$PIG_HOME/bin:$FLUME_HOME/bin:$HBASE_HOME/bin:/home/hadoop/scripts'; \
+      echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$SPARK_HOME/sbin:$PIG_HOME/bin:$FLUME_HOME/bin:$HBASE_HOME/bin:/home/hadoop/scripts'; \
     } > /etc/profile.d/btl-env.sh \
     && chmod 644 /etc/profile.d/btl-env.sh \
     && sed -i '1i # Dau file (truoc doan "khong tuong tac thi return") de "ssh may1 <lenh>" cung co PATH\n. /etc/profile.d/btl-env.sh\n' /home/hadoop/.bashrc \
