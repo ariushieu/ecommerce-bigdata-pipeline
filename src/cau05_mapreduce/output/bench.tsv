@@ -1,0 +1,10 @@
+# 2026-10-11 23:20:58 - 3 lan moi cau hinh, 1 map, 3 reduce
+combiner	lan	elapsed_ms	reduce_shuffle_bytes	spilled_records
+true	1	12006	105658	4098
+false	1	16855	742292	28816
+true	2	15922	105658	4098
+false	2	16026	742292	28816
+true	3	15913	105658	4098
+false	3	15609	742292	28816
+# trung binh combiner=false: 16163 ms
+# trung binh combiner=true: 14614 ms

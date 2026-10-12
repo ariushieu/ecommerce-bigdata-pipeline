@@ -1,0 +1,5 @@
+category_province_month	wall_s=16.6	JOB_ID	job_1791732559230_0003 ELAPSED_MS	15377
+category_province_month_nocombiner	wall_s=19.6	JOB_ID	job_1791732559230_0004 ELAPSED_MS	18206
+category_month	wall_s=19.5	JOB_ID	job_1791732559230_0005 ELAPSED_MS	18178
+Combiner bat/tat: ket qua giong het nhau
+orders=14408 net_revenue=78218341.22 returned=1114
