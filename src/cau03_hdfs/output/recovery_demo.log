@@ -1,0 +1,144 @@
+
+== [16:41:58 | +0 s] 0. Trang thai ban dau
+masternode	Up 54 minutes
+datanode3	Up 14 minutes
+datanode2	Up 54 minutes
+datanode1	Up 54 minutes
+   	Under replicated blocks: 0
+   	Missing blocks: 0
+   Live datanodes (3):
+
+== [16:42:00 | +2 s] 1. Tao tep demo trong /tmp/cau03_recovery
+   Found 2 items
+   -rw-r--r--   3 hadoop supergroup    2298806 2026-10-12 09:42 /tmp/cau03_recovery/orders_rep3.csv
+   -rw-r--r--   2 hadoop supergroup    9195224 2026-10-12 09:42 /tmp/cau03_recovery/orders_x4_rep2.csv
+   md5 mong doi: rep2=5225b93a8b509064b37df6f63a016aa5  rep3=079da45aaa09e3aac0db566e6ad94653
+   -- vi tri block orders_rep3.csv
+   block 0  len=2298806  Live_repl=3  [datanode1, datanode2, datanode3]
+   -- vi tri block orders_x4_rep2.csv
+   block 0  len=1048576  Live_repl=2  [datanode3, datanode2]
+   block 1  len=1048576  Live_repl=2  [datanode1, datanode3]
+   block 2  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 3  len=1048576  Live_repl=2  [datanode1, datanode3]
+   block 4  len=1048576  Live_repl=2  [datanode3, datanode2]
+   block 5  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 6  len=1048576  Live_repl=2  [datanode3, datanode2]
+   block 7  len=1048576  Live_repl=2  [datanode2, datanode1]
+   block 8  len=806616  Live_repl=2  [datanode2, datanode1]
+   so block cua tep rep2 co ban sao tren datanode3: 5
+
+== [16:42:11 | +13 s] 2. docker stop datanode3 (gia lap hong node; entrypoint tat RegionServer, NodeManager, DataNode)
+   da dung: datanode3
+
+== [16:42:15 | +17 s] 3a. Doc lai tep ngay sau khi mat node (NameNode chua biet node da chet)
+   rep2: 5225b93a8b509064b37df6f63a016aa5 DOC_DUOC_DUNG
+   rep3: 079da45aaa09e3aac0db566e6ad94653 DOC_DUOC_DUNG
+   	Under replicated blocks: 0
+   	Missing blocks: 0
+   Live datanodes (3):
+
+== [16:43:19 | +81 s] 3b. Cho NameNode danh dau datanode3 la dead (2 x recheck 60 s + 10 x heartbeat 3 s = 150 s)
+   -> NameNode danh dau 1 DataNode dead (dfsadmin) (sau ~70 s cho)
+   -> NameNode go block cua datanode3 (tep rep3 thieu ban sao) (sau ~10 s cho)
+   	Under replicated blocks: 1069
+   	Missing blocks: 0
+   Live datanodes (2):
+   Dead datanodes (1):
+   -- fsck /btl (tep rep3 chi con 2 ban sao, KHONG co node thu 3 de nhan ban lai)
+   Total blocks (validated):	192 (avg. block size 201904 B)
+   Over-replicated blocks:	0 (0.0 %)
+   Under-replicated blocks:	192 (100.0 %)
+   Average block replication:	2.0
+   Missing blocks:		0
+   Corrupt blocks:		0
+   Missing replicas:		192 (33.333332 %)
+   The filesystem under path '/btl' is HEALTHY
+   -- fsck /tmp/cau03_recovery
+   Total blocks (validated):	10 (avg. block size 1149403 B)
+   Over-replicated blocks:	0 (0.0 %)
+   Under-replicated blocks:	1 (10.0 %)
+   Average block replication:	2.0
+   Missing blocks:		0
+   Corrupt blocks:		0
+   Missing replicas:		1 (4.7619047 %)
+   The filesystem under path '/tmp/cau03_recovery' is HEALTHY
+
+== [16:44:59 | +181 s] 3c. Cho NameNode nhan ban lai cac block cua tep rep2 sang node con song
+   -> tep rep2 du 2 ban sao tren datanode1 + datanode2 (sau ~0 s cho)
+   block 0  len=1048576  Live_repl=2  [datanode2, datanode1]
+   block 1  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 2  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 3  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 4  len=1048576  Live_repl=2  [datanode2, datanode1]
+   block 5  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 6  len=1048576  Live_repl=2  [datanode2, datanode1]
+   block 7  len=1048576  Live_repl=2  [datanode2, datanode1]
+   block 8  len=806616  Live_repl=2  [datanode2, datanode1]
+   doc lai rep2: 5225b93a8b509064b37df6f63a016aa5 DOC_DUOC_DUNG
+   -- YARN (NodeManager tat gon thi ResourceManager ghi SHUTDOWN ngay; hong dot ngot thi LOST sau 10 phut)
+   Total Nodes:6
+            Node-Id	     Node-State	Node-Http-Address	Number-of-Running-Containers
+    datanode1:38101	        RUNNING	   datanode1:8042	                           0
+    datanode2:38683	        RUNNING	   datanode2:8042	                           0
+    datanode3:40967	       SHUTDOWN	   datanode3:8042	                           0
+    datanode3:39195	       SHUTDOWN	   datanode3:8042	                           0
+    datanode3:33571	       SHUTDOWN	   datanode3:8042	                           0
+    datanode3:32787	       SHUTDOWN	   datanode3:8042	                           0
+   -- HBase (region cua RegionServer bi tat duoc HMaster gan sang server khac)
+   2 live servers
+       datanode1:16020 1791797832771
+       datanode2:16020 1791797858378
+   1 dead servers
+       datanode3,16020,1791797883562
+
+== [16:45:10 | +192 s] 4. docker start datanode3 + bat lai DataNode, NodeManager, RegionServer
+   da bat: datanode3
+   528 Jps
+   384 HRegionServer
+   187 NodeManager
+   62 DataNode
+   -> DataNode quay lai (Live datanodes 3) (sau ~0 s cho)
+   -> khong con block thieu ban sao trong /btl va tep demo (sau ~0 s cho)
+   -> ban sao thua cua tep rep2 da bi xoa (sau ~0 s cho)
+   	Under replicated blocks: 0
+   	Missing blocks: 0
+   Live datanodes (3):
+   Total blocks (validated):	192 (avg. block size 201904 B)
+   Over-replicated blocks:	0 (0.0 %)
+   Under-replicated blocks:	0 (0.0 %)
+   Average block replication:	3.0
+   Missing blocks:		0
+   Corrupt blocks:		0
+   Missing replicas:		0 (0.0 %)
+   The filesystem under path '/btl' is HEALTHY
+   -- vi tri block orders_x4_rep2.csv sau khi node quay lai
+   block 0  len=1048576  Live_repl=2  [datanode2, datanode3]
+   block 1  len=1048576  Live_repl=2  [datanode3, datanode2]
+   block 2  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 3  len=1048576  Live_repl=2  [datanode3, datanode2]
+   block 4  len=1048576  Live_repl=2  [datanode2, datanode3]
+   block 5  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 6  len=1048576  Live_repl=2  [datanode2, datanode3]
+   block 7  len=1048576  Live_repl=2  [datanode2, datanode1]
+   block 8  len=806616  Live_repl=2  [datanode2, datanode1]
+   Total Nodes:7
+            Node-Id	     Node-State	Node-Http-Address	Number-of-Running-Containers
+    datanode3:39753	        RUNNING	   datanode3:8042	                           0
+    datanode1:38101	        RUNNING	   datanode1:8042	                           0
+    datanode2:38683	        RUNNING	   datanode2:8042	                           0
+    datanode3:40967	       SHUTDOWN	   datanode3:8042	                           0
+    datanode3:39195	       SHUTDOWN	   datanode3:8042	                           0
+    datanode3:33571	       SHUTDOWN	   datanode3:8042	                           0
+    datanode3:32787	       SHUTDOWN	   datanode3:8042	                           0
+   3 live servers
+   0 dead servers
+
+== [16:45:36 | +218 s] 5. Don tep demo
+   Deleted /tmp/cau03_recovery
+
+== Moc thoi gian (giay, tinh tu luc docker stop)
+   NameNode loai node + go block: 164
+   tep rep2 nhan ban lai xong   : 170
+   node bat lai (docker start)  : 179
+   DataNode duoc tinh live lai  : 191
+   HDFS het thieu/thua ban sao  : 196

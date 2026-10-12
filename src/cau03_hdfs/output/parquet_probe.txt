@@ -1,0 +1,11 @@
+# Cau 3 - do dung luong theo dinh dang (parquet_probe.py)
+# orders sau lam sach: 14408 dong; so partition year/month/category: 114; events: 5000
+tap du lieu                                          byte   so tep     byte/tep    ty le/raw
+orders raw CSV (15.000 dong, co BOM)              2298806        1      2298806        1.000
+orders sach CSV khong nen                         2200945        1      2200945        0.957
+orders sach Parquet snappy 1 tep                   594099        1       594099        0.258
+orders sach Parquet year/month/category           1388160      114        12177        0.604
+orders sach Parquet phan vung, 12 task            8931807     1368         6529        3.885
+events raw JSONL                                  1118573        1      1118573        1.000
+events phang CSV khong nen                         378663        1       378663        0.339
+events phang Parquet snappy 1 tep                  111343        1       111343        0.100
