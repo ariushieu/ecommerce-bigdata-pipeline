@@ -1,0 +1,695 @@
+{
+  "volume": {
+    "files": [
+      {
+        "file": "orders.csv",
+        "bytes": 2298806,
+        "rows": 15000,
+        "columns": 23,
+        "bytes_per_row": 153.3
+      },
+      {
+        "file": "customers.csv",
+        "bytes": 62345,
+        "rows": 1200,
+        "columns": 8,
+        "bytes_per_row": 52.0
+      },
+      {
+        "file": "products.csv",
+        "bytes": 20621,
+        "rows": 400,
+        "columns": 8,
+        "bytes_per_row": 51.6
+      },
+      {
+        "file": "events_stream.jsonl",
+        "bytes": 1118573,
+        "rows": 5000,
+        "columns": null,
+        "bytes_per_row": 223.7
+      },
+      {
+        "file": "project_data.sqlite",
+        "bytes": 3506176,
+        "rows": 16600,
+        "columns": null,
+        "bytes_per_row": 211.2
+      },
+      {
+        "file": "data_dictionary.csv",
+        "bytes": 2821,
+        "rows": 39,
+        "columns": 6,
+        "bytes_per_row": 72.3
+      }
+    ],
+    "total_bytes": 7009342,
+    "sqlite_tables": {
+      "entity_master": 1200,
+      "fact_main": 15000,
+      "item_master": 400
+    },
+    "span_first": "2025-01-01T00:33:37",
+    "span_last": "2026-07-31T23:39:49",
+    "span_days": 577,
+    "orders_per_day": 26.0,
+    "order_bytes_per_day": 3984.1,
+    "event_bytes_per_record": 223.7,
+    "hdfs_bytes_rep3": 21028026
+  },
+  "velocity": {
+    "orders_by_month": {
+      "2025-01": 830,
+      "2025-02": 747,
+      "2025-03": 871,
+      "2025-04": 783,
+      "2025-05": 803,
+      "2025-06": 781,
+      "2025-07": 766,
+      "2025-08": 800,
+      "2025-09": 770,
+      "2025-10": 795,
+      "2025-11": 803,
+      "2025-12": 821,
+      "2026-01": 799,
+      "2026-02": 693,
+      "2026-03": 790,
+      "2026-04": 792,
+      "2026-05": 769,
+      "2026-06": 781,
+      "2026-07": 806
+    },
+    "orders_per_day_mean": 26.0,
+    "orders_per_day_max": 39,
+    "peak_day": "2025-01-10",
+    "active_days": 577,
+    "orders_by_hour_of_day": {
+      "0": 640,
+      "1": 665,
+      "2": 620,
+      "3": 602,
+      "4": 663,
+      "5": 658,
+      "6": 623,
+      "7": 632,
+      "8": 583,
+      "9": 599,
+      "10": 637,
+      "11": 605,
+      "12": 576,
+      "13": 600,
+      "14": 614,
+      "15": 622,
+      "16": 635,
+      "17": 594,
+      "18": 634,
+      "19": 667,
+      "20": 644,
+      "21": 624,
+      "22": 593,
+      "23": 670
+    },
+    "peak_hour_of_day": 23,
+    "peak_hour_of_day_n": 670,
+    "max_orders_in_one_clock_hour": 8,
+    "ingest_mode": {
+      "stream": 9297,
+      "batch": 5703
+    },
+    "ingest_mode_by_source": {
+      "api/batch": 1128,
+      "api/stream": 1771,
+      "batch/batch": 1134,
+      "batch/stream": 1944,
+      "mobile/batch": 1163,
+      "mobile/stream": 1857,
+      "partner/batch": 1130,
+      "partner/stream": 1872,
+      "web/batch": 1148,
+      "web/stream": 1853
+    },
+    "events": 5000,
+    "events_span_days": 577,
+    "events_out_of_order_pairs": 2513,
+    "events_out_of_order_pct": 50.27,
+    "events_displacement_median": 1495.0,
+    "events_displacement_max": 4962
+  },
+  "variety": {
+    "encodings": {
+      "orders.csv": "UTF-8 BOM",
+      "customers.csv": "UTF-8 BOM",
+      "products.csv": "UTF-8 BOM",
+      "events_stream.jsonl": "UTF-8",
+      "data_dictionary.csv": "UTF-8 BOM"
+    },
+    "data_format_label": {
+      "JSON": 5010,
+      "LOG": 5041,
+      "CSV": 4949
+    },
+    "source_system": {
+      "mobile": 3020,
+      "partner": 3002,
+      "web": 3001,
+      "api": 2899,
+      "batch": 3078
+    },
+    "ingest_x_format": {
+      "batch/CSV": 1865,
+      "batch/JSON": 1930,
+      "batch/LOG": 1908,
+      "stream/CSV": 3084,
+      "stream/JSON": 3080,
+      "stream/LOG": 3133
+    },
+    "event_top_level_keys": {
+      "event_id": 5000,
+      "event_time": 5000,
+      "event_type": 5000,
+      "source": 5000,
+      "payload": 5000
+    },
+    "event_payload_keys": {
+      "category": 5000,
+      "customer_segment": 5000,
+      "net_revenue": 5000,
+      "returned_flag": 5000
+    },
+    "event_types": {
+      "order_event": 5000
+    },
+    "event_sources": {
+      "mobile": 989,
+      "partner": 1033,
+      "web": 995,
+      "api": 971,
+      "batch": 1012
+    },
+    "columns": {
+      "orders.csv": [
+        {
+          "column": "record_id",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 15000
+        },
+        {
+          "column": "timestamp",
+          "type": "datetime",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 15000
+        },
+        {
+          "column": "province",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 18
+        },
+        {
+          "column": "source_system",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 5
+        },
+        {
+          "column": "ingest_mode",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 2
+        },
+        {
+          "column": "data_format",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 3
+        },
+        {
+          "column": "order_id",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 15000
+        },
+        {
+          "column": "customer_id",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 1200
+        },
+        {
+          "column": "product_id",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 400
+        },
+        {
+          "column": "category",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 6
+        },
+        {
+          "column": "customer_segment",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 4
+        },
+        {
+          "column": "sales_channel",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 3
+        },
+        {
+          "column": "quantity",
+          "type": "int",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 6
+        },
+        {
+          "column": "unit_price",
+          "type": "float",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 10326
+        },
+        {
+          "column": "discount_rate",
+          "type": "float",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 6
+        },
+        {
+          "column": "shipping_fee",
+          "type": "float",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 5
+        },
+        {
+          "column": "net_revenue",
+          "type": "float",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 14430
+        },
+        {
+          "column": "payment_method",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 4
+        },
+        {
+          "column": "delivery_days",
+          "type": "float",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 82
+        },
+        {
+          "column": "returned_flag",
+          "type": "int",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 2
+        },
+        {
+          "column": "review_score",
+          "type": "int",
+          "nulls": 5390,
+          "null_pct": 35.93,
+          "distinct": 6
+        },
+        {
+          "column": "campaign_id",
+          "type": "string",
+          "nulls": 165,
+          "null_pct": 1.1,
+          "distinct": 31
+        },
+        {
+          "column": "quality_flag",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 5
+        }
+      ],
+      "customers.csv": [
+        {
+          "column": "customer_id",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 1200
+        },
+        {
+          "column": "customer_segment",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 4
+        },
+        {
+          "column": "age_group",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 5
+        },
+        {
+          "column": "gender",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 3
+        },
+        {
+          "column": "province",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 18
+        },
+        {
+          "column": "join_date",
+          "type": "date",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 837
+        },
+        {
+          "column": "loyalty_score",
+          "type": "int",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 101
+        },
+        {
+          "column": "preferred_channel",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 2
+        }
+      ],
+      "products.csv": [
+        {
+          "column": "product_id",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 400
+        },
+        {
+          "column": "category",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 6
+        },
+        {
+          "column": "brand",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 44
+        },
+        {
+          "column": "unit_cost",
+          "type": "float",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 400
+        },
+        {
+          "column": "list_price",
+          "type": "float",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 400
+        },
+        {
+          "column": "supplier_id",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 79
+        },
+        {
+          "column": "rating",
+          "type": "float",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 26
+        },
+        {
+          "column": "active_flag",
+          "type": "int",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 2
+        }
+      ],
+      "events_stream.jsonl": [
+        {
+          "column": "event_id",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 5000
+        },
+        {
+          "column": "event_time",
+          "type": "datetime",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 5000
+        },
+        {
+          "column": "event_type",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 1
+        },
+        {
+          "column": "source",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 5
+        },
+        {
+          "column": "payload.category",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 6
+        },
+        {
+          "column": "payload.customer_segment",
+          "type": "string",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 4
+        },
+        {
+          "column": "payload.net_revenue",
+          "type": "float",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 4934
+        },
+        {
+          "column": "payload.returned_flag",
+          "type": "int",
+          "nulls": 0,
+          "null_pct": 0.0,
+          "distinct": 2
+        }
+      ]
+    }
+  },
+  "veracity": {
+    "quality_flag": {
+      "OK": 14095,
+      "MISSING": 313,
+      "OUTLIER": 297,
+      "LATE": 146,
+      "DUPLICATE": 149
+    },
+    "quality_flag_pct": {
+      "OK": 93.97,
+      "MISSING": 2.09,
+      "OUTLIER": 1.98,
+      "LATE": 0.97,
+      "DUPLICATE": 0.99
+    },
+    "nulls_by_flag": {
+      "review_score": {
+        "OK": 4983,
+        "MISSING": 210,
+        "OUTLIER": 103,
+        "LATE": 47,
+        "DUPLICATE": 47
+      },
+      "campaign_id": {
+        "OK": 0,
+        "MISSING": 165,
+        "OUTLIER": 0,
+        "LATE": 0,
+        "DUPLICATE": 0
+      }
+    },
+    "net_revenue_formula_fail_by_flag": {
+      "OK": 0,
+      "MISSING": 0,
+      "OUTLIER": 219,
+      "LATE": 0,
+      "DUPLICATE": 0
+    },
+    "fractional_delivery_days_by_flag": {
+      "OK": 0,
+      "MISSING": 0,
+      "OUTLIER": 71,
+      "LATE": 0,
+      "DUPLICATE": 0
+    },
+    "delivery_days_max_by_flag": {
+      "OK": 9.0,
+      "MISSING": 7.0,
+      "OUTLIER": 37.221,
+      "LATE": 7.0,
+      "DUPLICATE": 7.0
+    },
+    "invalid_domain": {
+      "quantity<=0": 0,
+      "unit_price<=0": 0,
+      "discount_rate_not_in_[0,1)": 0,
+      "delivery_days<0": 0,
+      "review_score_not_in_[1,5]": 0,
+      "returned_flag_not_0_1": 0
+    },
+    "integrity": {
+      "duplicate_record_id": 0,
+      "duplicate_order_id": 0,
+      "record_id_ne_order_id": 0,
+      "orphan_customer_id": 0,
+      "orphan_product_id": 0,
+      "category_ne_product_master": 0,
+      "segment_ne_customer_master": 0,
+      "province_ne_customer_home": 14166,
+      "inactive_product_orders": 517,
+      "duplicate_content_among_DUPLICATE": 0,
+      "products_list_price_lt_unit_cost": 117,
+      "products_list_over_cost_min": 0.029,
+      "products_list_over_cost_max": 127.69
+    },
+    "events_vs_orders": {},
+    "events_cover_orders": "ORD0000001..ORD0005000",
+    "sqlite_fact_main_rows": 15000,
+    "sqlite_rows_differing_from_csv": 0,
+    "rows_after_cleaning_rule": 14408,
+    "rows_dropped_by_cleaning_rule": 592
+  },
+  "value": {
+    "clean_orders": 14408,
+    "net_revenue_total": 78218341.22,
+    "net_revenue_mean": 5428.81,
+    "returned_orders": 1114,
+    "return_rate_pct": 7.73,
+    "revenue_of_returned_orders": 5965840.89,
+    "delivery_days_mean": 3.04,
+    "delivery_days_p90": 5.0,
+    "share_delivery_gt_5_days_pct": 7.01,
+    "by_category": {
+      "Books": {
+        "orders": 2953,
+        "revenue": 15741983.83,
+        "return_rate_pct": 7.59,
+        "delivery_days_mean": 2.99
+      },
+      "Home": {
+        "orders": 2616,
+        "revenue": 14257300.58,
+        "return_rate_pct": 7.49,
+        "delivery_days_mean": 3.05
+      },
+      "Electronics": {
+        "orders": 2505,
+        "revenue": 14086726.93,
+        "return_rate_pct": 7.54,
+        "delivery_days_mean": 3.06
+      },
+      "Sports": {
+        "orders": 2280,
+        "revenue": 12994254.03,
+        "return_rate_pct": 7.89,
+        "delivery_days_mean": 2.97
+      },
+      "Beauty": {
+        "orders": 2219,
+        "revenue": 11426625.74,
+        "return_rate_pct": 7.62,
+        "delivery_days_mean": 3.11
+      },
+      "Fashion": {
+        "orders": 1835,
+        "revenue": 9711450.11,
+        "return_rate_pct": 8.5,
+        "delivery_days_mean": 3.09
+      }
+    },
+    "return_rate_by_delivery_days": {
+      "0": {
+        "orders": 1002,
+        "return_rate_pct": 8.38
+      },
+      "1": {
+        "orders": 1608,
+        "return_rate_pct": 6.47
+      },
+      "2": {
+        "orders": 2889,
+        "return_rate_pct": 8.34
+      },
+      "3": {
+        "orders": 3315,
+        "return_rate_pct": 8.02
+      },
+      "4": {
+        "orders": 2836,
+        "return_rate_pct": 6.84
+      },
+      "5": {
+        "orders": 1748,
+        "return_rate_pct": 8.35
+      },
+      "6": {
+        "orders": 746,
+        "return_rate_pct": 8.18
+      },
+      "7+": {
+        "orders": 264,
+        "return_rate_pct": 6.82
+      }
+    }
+  }
+}
