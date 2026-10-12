@@ -14,7 +14,7 @@ LOG=${TMPDIR:-/tmp}/cau05_logs
 mkdir -p output "$LOG"
 
 bash ../cau03_hdfs/init_zones.sh > /dev/null   # dam bao co ban chup raw (idempotent)
-bash build.sh > /dev/null
+JAR=$(bash build.sh | sed -n "s/^JAR=//p")
 hdfs dfs -mkdir -p "$OUT"
 
 : > output/runtime.txt
@@ -23,7 +23,7 @@ chay() {  # chay <ten> [-D ...]
   local t0 t1
   echo "== $ten"
   t0=$(date +%s.%N)
-  hadoop jar build/cau05.jar btl.cau05.RevenueReturnJob "$@" "$IN" "$OUT/$ten" \
+  hadoop jar "$JAR" btl.cau05.RevenueReturnJob "$@" "$IN" "$OUT/$ten" \
     > "output/counters_$ten.txt" 2> "$LOG/$ten.log"
   t1=$(date +%s.%N)
   printf '%s\twall_s=%s\t%s\n' "$ten" "$(awk -v a="$t0" -v b="$t1" 'BEGIN { printf "%.1f", b - a }')" \
