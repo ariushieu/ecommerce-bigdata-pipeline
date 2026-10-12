@@ -1,0 +1,64 @@
+JOB	cau05 category_province_month (no combiner)	SUCCEEDED
+JOB_ID	job_1791732559230_0004
+ELAPSED_MS	18206
+REDUCERS	3	COMBINER	false
+COUNTER	Shuffle Errors	BAD_ID	0
+COUNTER	Shuffle Errors	CONNECTION	0
+COUNTER	Shuffle Errors	IO_ERROR	0
+COUNTER	Shuffle Errors	WRONG_LENGTH	0
+COUNTER	Shuffle Errors	WRONG_MAP	0
+COUNTER	Shuffle Errors	WRONG_REDUCE	0
+COUNTER	btl.cau05.DataQuality	DROP_DUPLICATE	149
+COUNTER	btl.cau05.DataQuality	DROP_LATE	146
+COUNTER	btl.cau05.DataQuality	DROP_OUTLIER	297
+COUNTER	btl.cau05.DataQuality	HEADER_SKIPPED	1
+COUNTER	btl.cau05.DataQuality	KEPT_MISSING	313
+COUNTER	btl.cau05.DataQuality	KEPT_OK	14095
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	FILE_BYTES_READ	742292
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	FILE_BYTES_WRITTEN	2431531
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	FILE_LARGE_READ_OPS	0
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	FILE_READ_OPS	0
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	FILE_WRITE_OPS	0
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	HDFS_BYTES_READ	2298942
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	HDFS_BYTES_READ_EC	0
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	HDFS_BYTES_WRITTEN	90317
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	HDFS_LARGE_READ_OPS	0
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	HDFS_READ_OPS	18
+COUNTER	org.apache.hadoop.mapreduce.FileSystemCounter	HDFS_WRITE_OPS	6
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	DATA_LOCAL_MAPS	1
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	MB_MILLIS_MAPS	1808384
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	MB_MILLIS_REDUCES	7220224
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	MILLIS_MAPS	1766
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	MILLIS_REDUCES	7051
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	SLOTS_MILLIS_MAPS	3532
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	SLOTS_MILLIS_REDUCES	14102
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	TOTAL_LAUNCHED_MAPS	1
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	TOTAL_LAUNCHED_REDUCES	3
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	VCORES_MILLIS_MAPS	1766
+COUNTER	org.apache.hadoop.mapreduce.JobCounter	VCORES_MILLIS_REDUCES	7051
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	COMBINE_INPUT_RECORDS	0
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	COMBINE_OUTPUT_RECORDS	0
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	COMMITTED_HEAP_BYTES	944766976
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	CPU_MILLISECONDS	3400
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	FAILED_SHUFFLE	0
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	GC_TIME_MILLIS	206
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	MAP_INPUT_RECORDS	15001
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	MAP_OUTPUT_BYTES	713458
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	MAP_OUTPUT_MATERIALIZED_BYTES	742292
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	MAP_OUTPUT_RECORDS	14408
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	MAP_PHYSICAL_MEMORY_BYTES_MAX	319234048
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	MAP_VIRTUAL_MEMORY_BYTES_MAX	2533933056
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	MERGED_MAP_OUTPUTS	3
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	PHYSICAL_MEMORY_BYTES	988286976
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	REDUCE_INPUT_GROUPS	2049
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	REDUCE_INPUT_RECORDS	14408
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	REDUCE_OUTPUT_RECORDS	2049
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	REDUCE_PHYSICAL_MEMORY_BYTES_MAX	236621824
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	REDUCE_SHUFFLE_BYTES	742292
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	REDUCE_VIRTUAL_MEMORY_BYTES_MAX	2539917312
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	SHUFFLED_MAPS	3
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	SPILLED_RECORDS	28816
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	SPLIT_RAW_BYTES	136
+COUNTER	org.apache.hadoop.mapreduce.TaskCounter	VIRTUAL_MEMORY_BYTES	10149302272
+COUNTER	org.apache.hadoop.mapreduce.lib.input.FileInputFormatCounter	BYTES_READ	2298806
+COUNTER	org.apache.hadoop.mapreduce.lib.output.FileOutputFormatCounter	BYTES_WRITTEN	90317

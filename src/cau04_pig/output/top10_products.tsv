@@ -1,0 +1,11 @@
+product_id	brand	category	orders	net_revenue	returned	rating
+P0310	Brand-44	Books	58	502072.27	3	3.8
+P0301	Brand-32	Home	46	449957.76	2	4.9
+P0346	Brand-04	Electronics	47	413130.55	3	3.4
+P0263	Brand-28	Electronics	43	405836.97	2	3.1
+P0105	Brand-06	Home	41	397894.38	6	3.3
+P0356	Brand-22	Home	48	395997.32	4	4.8
+P0184	Brand-21	Electronics	48	391131.60	2	4.1
+P0090	Brand-17	Home	42	381042.86	2	2.8
+P0002	Brand-33	Home	38	379353.39	3	2.6
+P0271	Brand-20	Home	45	376975.79	1	4.0

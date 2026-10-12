@@ -1,0 +1,12 @@
+metric	value
+distinct_content_rows	15000
+join_catalog_mismatch	0
+join_enriched_orders	14408
+raw_status_DUPLICATE	149
+raw_status_HEADER	1
+raw_status_LATE	146
+raw_status_MISSING	313
+raw_status_OK	14095
+raw_status_OUTLIER	297
+split_clean_orders (staging)	14408
+split_rejected_orders	592

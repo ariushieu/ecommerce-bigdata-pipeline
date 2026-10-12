@@ -1,0 +1,6 @@
+2352399  7057197  /btl/curated/orders
+4293   12879   /btl/output/cau06_spark/category_month
+36409  109227  /btl/output/cau06_spark/churn_risk_customers
+39140  117420  /btl/output/cau06_spark/customer_churn
+6227   18681   /btl/output/cau06_spark/fast_growing_products
+61976  185928  /btl/output/cau06_spark/product_growth

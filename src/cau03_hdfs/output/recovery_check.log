@@ -1,0 +1,31 @@
+
+== [23:00:13 | +0 s] 0. Trang thai ban dau
+masternode	Up 31 minutes
+datanode3	Up 31 minutes
+datanode2	Up 31 minutes
+datanode1	Up 31 minutes
+   	Under replicated blocks: 0
+   	Missing blocks: 0
+   Live datanodes (3):
+
+== [23:00:15 | +2 s] 1. Tao tep demo trong /tmp/cau03_recovery
+   Found 2 items
+   -rw-r--r--   3 hadoop supergroup    2298806 2026-10-11 16:00 /tmp/cau03_recovery/orders_rep3.csv
+   -rw-r--r--   2 hadoop supergroup    9195224 2026-10-11 16:00 /tmp/cau03_recovery/orders_x4_rep2.csv
+   md5 mong doi: rep2=5225b93a8b509064b37df6f63a016aa5  rep3=079da45aaa09e3aac0db566e6ad94653
+   -- vi tri block orders_rep3.csv
+   block 0  len=2298806  Live_repl=3  [datanode1, datanode2, datanode3]
+   -- vi tri block orders_x4_rep2.csv
+   block 0  len=1048576  Live_repl=2  [datanode2, datanode3]
+   block 1  len=1048576  Live_repl=2  [datanode2, datanode1]
+   block 2  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 3  len=1048576  Live_repl=2  [datanode1, datanode3]
+   block 4  len=1048576  Live_repl=2  [datanode1, datanode3]
+   block 5  len=1048576  Live_repl=2  [datanode2, datanode3]
+   block 6  len=1048576  Live_repl=2  [datanode2, datanode1]
+   block 7  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 8  len=806616  Live_repl=2  [datanode2, datanode3]
+   so block cua tep rep2 co ban sao tren datanode3: 5
+
+== [23:00:30 | +17 s] --check: khong tat node. Don tep demo va thoat
+   Deleted /tmp/cau03_recovery

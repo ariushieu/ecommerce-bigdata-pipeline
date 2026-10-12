@@ -1,0 +1,19 @@
+Tong: 2049 nhom khoa, 14408 don sach; ly tuong 4803 don/reducer
+
+(a) CategoryPartitioner (bang anh xa)
+  reducer 0:  5172 don,  682 nhom, danh muc: Beauty,Books
+  reducer 1:  4340 don,  683 nhom, danh muc: Electronics,Fashion
+  reducer 2:  4896 don,  684 nhom, danh muc: Home,Sports
+  lech tai (max/trung binh): 1.077
+
+(b) hash(category) % 3
+  reducer 0: 10293 don, 1366 nhom, danh muc: Beauty,Books,Electronics,Home
+  reducer 1:  4115 don,  683 nhom, danh muc: Fashion,Sports
+  reducer 2:     0 don,    0 nhom, danh muc: -
+  lech tai (max/trung binh): 2.143
+
+(c) HashPartitioner(khoa day du) % 3
+  reducer 0:  4872 don,  690 nhom, danh muc: Beauty,Books,Electronics,Fashion,Home,Sports
+  reducer 1:  4801 don,  680 nhom, danh muc: Beauty,Books,Electronics,Fashion,Home,Sports
+  reducer 2:  4735 don,  679 nhom, danh muc: Beauty,Books,Electronics,Fashion,Home,Sports
+  lech tai (max/trung binh): 1.014

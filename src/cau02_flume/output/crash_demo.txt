@@ -1,0 +1,18 @@
+# Cau 2 - thi nghiem sap agent (2026-10-11 23:19:29 +0700); conf: conf/crash-demo.conf
+== 1. Bat agent c0 (HTTP -> FileChannel + MemoryChannel, chua co sink)
+   REPLAY events=1000 batches=10 batch_size=100 target_rate=0.0 retries=0 elapsed_s=0.131 throughput_eps=7647.7
+   tep du lieu FileChannel tren dia:
+     log-1.meta 47 byte
+     log-1 1048576 byte
+== 2. kill -9 agent c0 (khong kip dong channel, mat toan bo bo nho)
+== 3. Khoi dong lai bang agent c1 (cung thu muc FileChannel, them 2 sink HDFS)
+2026-10-11T16:19:34,441 INFO  [lifecycleSupervisor-1-0] file.Log: Replay started
+2026-10-11T16:19:34,500 INFO  [lifecycleSupervisor-1-0] file.Log: Replaying logs with v2 replay logic
+2026-10-11T16:19:34,501 INFO  [lifecycleSupervisor-1-0] file.ReplayHandler: Starting replay of [/tmp/cau02_crash.OBPIXE/fc/data/log-1]
+2026-10-11T16:19:34,502 INFO  [lifecycleSupervisor-1-0] file.ReplayHandler: Replaying /tmp/cau02_crash.OBPIXE/fc/data/log-1
+2026-10-11T16:19:34,602 INFO  [lifecycleSupervisor-1-0] file.ReplayHandler: read: 1010, put: 1000, take: 0, rollback: 0, commit: 10, skip: 0, eventCount:1000
+== 4. Ket qua sau khi khoi dong lai
+   channel          da_gui   giao_lai  event_id_khac
+   FileChannel        1000       1000           1000
+   MemoryChannel      1000          0              -
+PASS: FileChannel giao lai du 1000/1000 su kien sau kill -9; MemoryChannel mat 1000/1000

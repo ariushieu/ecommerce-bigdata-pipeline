@@ -1,0 +1,25 @@
+BENCH warmup                         17.9s n=14408 jobs=11 tasks=126 in=7059737 shufR=249513
+BENCH x1-cache-p12-r0                 5.8s n=14408 jobs=11 tasks=126 in=7059737 shufR=249513
+BENCH x1-nocache-p12-r0               7.5s n=14408 jobs=11 tasks=165 in=16175293 shufR=822160
+BENCH x1-cache-p200-r0               19.5s n=14408 jobs=11 tasks=1732 in=7059737 shufR=366712
+BENCH x10-cache-p12-r0               10.2s n=144080 jobs=11 tasks=153 in=49155257 shufR=332395
+BENCH x10-nocache-p12-r0             17.6s n=144080 jobs=11 tasks=219 in=140310817 shufR=2572543
+BENCH x10-cache-p200-r0              28.6s n=144080 jobs=11 tasks=1759 in=49155257 shufR=570455
+BENCH x1-cache-p12-r1                 4.8s n=14408 jobs=11 tasks=126 in=7059737 shufR=249513
+BENCH x1-nocache-p12-r1               8.2s n=14408 jobs=11 tasks=165 in=16175293 shufR=822160
+BENCH x1-cache-p200-r1               13.9s n=14408 jobs=11 tasks=1732 in=7059737 shufR=366712
+BENCH x10-cache-p12-r1                8.0s n=144080 jobs=11 tasks=153 in=49155257 shufR=332395
+BENCH x10-nocache-p12-r1             11.4s n=144080 jobs=11 tasks=219 in=140310817 shufR=2572543
+BENCH x10-cache-p200-r1              18.8s n=144080 jobs=11 tasks=1759 in=49155257 shufR=570455
+BENCH x1-cache-p12-r2                 4.2s n=14408 jobs=11 tasks=126 in=7059737 shufR=249513
+BENCH x1-nocache-p12-r2               5.1s n=14408 jobs=11 tasks=165 in=16175293 shufR=822160
+BENCH x1-cache-p200-r2               21.8s n=14408 jobs=11 tasks=1732 in=7059737 shufR=366712
+BENCH x10-cache-p12-r2                6.9s n=144080 jobs=11 tasks=153 in=49155257 shufR=332395
+BENCH x10-nocache-p12-r2             12.5s n=144080 jobs=11 tasks=219 in=140310817 shufR=2572543
+BENCH x10-cache-p200-r2              15.6s n=144080 jobs=11 tasks=1759 in=49155257 shufR=570455
+RESULT {"scale": 1, "rows_raw": 15000, "rows_clean": 14408, "cache": "yes", "shuffle_partitions": 12, "median_s": 4.8, "min_s": 4.2, "max_s": 5.8, "jobs": 11, "stages": 23, "tasks": 126, "input_mb": 7.06, "shuffle_read_mb": 0.25, "shuffle_write_mb": 0.2, "spill_disk_mb": 0.0}
+RESULT {"scale": 1, "rows_raw": 15000, "rows_clean": 14408, "cache": "no", "shuffle_partitions": 12, "median_s": 7.5, "min_s": 5.1, "max_s": 8.2, "jobs": 11, "stages": 29, "tasks": 165, "input_mb": 16.18, "shuffle_read_mb": 0.82, "shuffle_write_mb": 0.78, "spill_disk_mb": 0.0}
+RESULT {"scale": 1, "rows_raw": 15000, "rows_clean": 14408, "cache": "yes", "shuffle_partitions": 200, "median_s": 19.5, "min_s": 13.9, "max_s": 21.8, "jobs": 11, "stages": 23, "tasks": 1732, "input_mb": 7.06, "shuffle_read_mb": 0.37, "shuffle_write_mb": 0.29, "spill_disk_mb": 0.0}
+RESULT {"scale": 10, "rows_raw": 150000, "rows_clean": 144080, "cache": "yes", "shuffle_partitions": 12, "median_s": 8.0, "min_s": 6.9, "max_s": 10.2, "jobs": 11, "stages": 23, "tasks": 153, "input_mb": 49.16, "shuffle_read_mb": 0.33, "shuffle_write_mb": 0.24, "spill_disk_mb": 0.0}
+RESULT {"scale": 10, "rows_raw": 150000, "rows_clean": 144080, "cache": "no", "shuffle_partitions": 12, "median_s": 12.5, "min_s": 11.4, "max_s": 17.6, "jobs": 11, "stages": 29, "tasks": 219, "input_mb": 140.31, "shuffle_read_mb": 2.57, "shuffle_write_mb": 2.48, "spill_disk_mb": 0.0}
+RESULT {"scale": 10, "rows_raw": 150000, "rows_clean": 144080, "cache": "yes", "shuffle_partitions": 200, "median_s": 18.8, "min_s": 15.6, "max_s": 28.6, "jobs": 11, "stages": 23, "tasks": 1759, "input_mb": 49.16, "shuffle_read_mb": 0.57, "shuffle_write_mb": 0.39, "spill_disk_mb": 0.0}

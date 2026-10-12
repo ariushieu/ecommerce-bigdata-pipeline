@@ -1,0 +1,13 @@
+# Lich su toi uu cau04.pig (ghi tay tu output/runtime.txt + pig_job_stats.txt cua tung lan chay)
+# Ca hai lan deu chay khi cum dang chay dong thoi job Spark cua Cau 6 (cau06-spark-*).
+
+v1  2026-10-11 15:50:30 -> 16:00:07  job_1791732559230_0009 .. _0034
+    ORDER cap quan he cho moi ket qua (moi ORDER = 1 job lay mau + 1 job sap xep),
+    GROUP ALL rieng cho tung chi so + UNION + ORDER, JOIN de ghep so khach theo danh muc,
+    default_parallel 3
+    -> 26 job MapReduce, wall_s=583.9
+
+v2  2026-10-11 16:12 -> 16:18 (ban hien tai, xem runtime.txt, pig_job_timeline.tsv)
+    ORDER long trong GROUP ... ALL cho ket qua nho (6-114 dong), giu ORDER + LIMIT cap quan he
+    cho top10_products; DISTINCT long thay cho JOIN; default_parallel 1
+    -> 17 job MapReduce, wall_s=339.1 (tong run_s 129.0, tong wait_s 479.9)

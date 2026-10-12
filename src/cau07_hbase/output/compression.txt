@@ -1,0 +1,4 @@
+byte_1_ban_sao  byte_x3_ban_sao  thu_muc
+3446349  10339047  /hbase/data/btl/customer_orders_size_snappy
+19950384  59851152  /hbase/data/btl/customer_orders_size_plain
+2298806  6896418  /btl/raw/orders/ingest_date=2026-08-01/orders.csv

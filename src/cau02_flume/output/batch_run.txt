@@ -1,0 +1,29 @@
+# Cau 2 - kich ban (i) spooldir -> FileChannel -> HDFS   (2026-10-11 22:58:52 +0700)
+# conf: conf/batch-csv.conf   agent: b1   raw: /btl/raw
+== 1. Don lan chay truoc (chi tep do Flume tao)
+   Deleted /btl/raw/orders/ingest_date=2026-10-11/orders_20261011-224347.1791733428599.csv
+   Deleted /btl/raw/customers/ingest_date=2026-10-11/customers_20261011-224347.1791733428947.csv
+   Deleted /btl/raw/products/ingest_date=2026-10-11/products_20261011-224347.1791733427695.csv
+== 2. Bat agent b1
+== 3. Dat tep lo vao spool (chep ten *.tmp roi mv: nguyen tu, ten khong lap)
+   /home/hadoop/flume-data/cau02/spool/orders/orders_20261011-225900  (2298806 byte)
+   /home/hadoop/flume-data/cau02/spool/customers/customers_20261011-225900  (62345 byte)
+   /home/hadoop/flume-data/cau02/spool/products/products_20261011-225900  (20621 byte)
+   source doc xong (doi ten .COMPLETED) sau 2062 ms
+   sink dong tep (idleTimeout 30 s) sau 39072 ms
+== 4. Tat agent
+== 5. Kiem tra tren HDFS
+   -rw-r--r-- 3 62345 /btl/raw/customers/ingest_date=2026-10-11/customers_20261011-225900.1791734345256.csv
+   -rw-r--r-- 3 2298806 /btl/raw/orders/ingest_date=2026-10-11/orders_20261011-225900.1791734345694.csv
+   -rw-r--r-- 3 20621 /btl/raw/products/ingest_date=2026-10-11/products_20261011-225900.1791734343985.csv
+   bang         byte_goc  byte_hdfs dong_goc dong_hdfs  md5
+   orders        2298806    2298806    15001    15001  trung khop (replication=3)
+   customers       62345      62345     1201     1201  trung khop (replication=3)
+   products        20621      20621      401      401  trung khop (replication=3)
+   BOM o dau tep orders tren HDFS:  ef bb bf
+   Ban chup chuan van con nguyen:
+     62345 /btl/raw/customers/ingest_date=2026-08-01/customers.csv
+     1118573 /btl/raw/events/ingest_date=2026-08-01/events_stream.jsonl
+     2298806 /btl/raw/orders/ingest_date=2026-08-01/orders.csv
+     20621 /btl/raw/products/ingest_date=2026-08-01/products.csv
+PASS: 3 tep lo nap vao HDFS trung tung byte voi tep goc

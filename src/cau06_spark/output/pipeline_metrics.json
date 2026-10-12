@@ -1,0 +1,37 @@
+{
+  "clean_join_count_s": 6.96,
+  "analytics_s": 8.28,
+  "write_curated_s": 5.64,
+  "write_output_s": 3.51,
+  "in_app_total_s": 33.64,
+  "n_clean": 14408,
+  "n_curated_readback": 14408,
+  "curated_partitions": 114,
+  "curated_bytes": 2352399,
+  "curated_files": 115,
+  "derived": {
+    "has_review": 9215,
+    "has_campaign": 14243,
+    "seen_in_stream": 4793,
+    "ship_to_home": 808,
+    "product_inactive": 497,
+    "quality_missing": 313,
+    "delivery_min": 0,
+    "delivery_max": 9,
+    "tenure_min": 6,
+    "tenure_max": 2068,
+    "tenure_avg": 1057.1
+  },
+  "io_analytics": {
+    "inputBytes": 7059737,
+    "inputRecords": 27804,
+    "shuffleReadBytes": 263087,
+    "shuffleWriteBytes": 216697,
+    "outputBytes": 0,
+    "memoryBytesSpilled": 0,
+    "diskBytesSpilled": 0,
+    "numTasks": 126,
+    "jobs": 11,
+    "stages": 23
+  }
+}

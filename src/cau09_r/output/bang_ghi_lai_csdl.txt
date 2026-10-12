@@ -1,0 +1,20 @@
+CSDL ket qua: output/project_data_results.sqlite
+Tat ca bang trong CSDL: entity_master, fact_main, item_master, kq_hoi_quy_anova, kq_hoi_quy_he_so, kq_hoi_quy_khach_he_so, kq_hoi_quy_phan_du, kq_hoi_quy_so_sanh, kq_kiem_dinh_chi2, kq_kiem_dinh_giao_hang, kq_ma_tran_doanh_thu, kq_ma_tran_ty_le_tra, kq_phan_loai_chi_so, kq_phan_loai_du_doan, kq_phan_loai_he_so, kq_phan_loai_lrt, kq_phan_loai_thap_phan_vi, kq_tong_hop_danh_muc_phan_khuc, kq_tra_theo_yeu_to
+
+Bang ket qua da ghi (bang | so dong | so cot):
+  kq_tong_hop_danh_muc_phan_khuc         24  11
+  kq_ma_tran_ty_le_tra                    6   5
+  kq_ma_tran_doanh_thu                    6   5
+  kq_tra_theo_yeu_to                     28   7
+  kq_kiem_dinh_chi2                       9   4
+  kq_kiem_dinh_giao_hang                  3   4
+  kq_hoi_quy_so_sanh                      5   8
+  kq_hoi_quy_he_so                       18   8
+  kq_hoi_quy_anova                        9   7
+  kq_hoi_quy_phan_du                      1   4
+  kq_hoi_quy_khach_he_so                 13   5
+  kq_phan_loai_chi_so                     3  15
+  kq_phan_loai_he_so                     26   6
+  kq_phan_loai_lrt                        1   4
+  kq_phan_loai_thap_phan_vi              10   6
+  kq_phan_loai_du_doan                 4288   5

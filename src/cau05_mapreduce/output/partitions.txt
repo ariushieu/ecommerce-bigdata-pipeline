@@ -1,0 +1,4 @@
+part_file	lines	orders	categories
+part-r-00000	682	5172	Books,Beauty
+part-r-00001	683	4340	Fashion,Electronics
+part-r-00002	684	4896	Sports,Home
