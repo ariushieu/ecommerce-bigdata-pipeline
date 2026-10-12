@@ -14,7 +14,7 @@ LOG=${TMPDIR:-/tmp}/cau10_logs
 mkdir -p output "$LOG"
 
 bash ../cau03_hdfs/init_zones.sh > /dev/null
-bash ../cau05_mapreduce/build.sh > /dev/null
+JAR=$(bash ../cau05_mapreduce/build.sh | sed -n "s/^JAR=//p")
 hdfs dfs -mkdir -p "$TMP"
 
 # Ban x10: 1 dong tieu de + 10 lan phan than (ket qua dung = 10 lan so don/doanh thu)
@@ -45,9 +45,9 @@ for scale in x1 x10; do
   if [ "$scale" = x1 ]; then IN=$RAW; else IN=$TMP/x10/orders.csv; fi
   for i in $(seq "$LAN"); do
     hdfs dfs -rm -r -f -skipTrash "$TMP/out_mr" "$TMP/out_pig" "$TMP/out_spark" > /dev/null 2>&1 || true
-    do_tg MapReduce "$scale" "$i" hadoop jar ../cau05_mapreduce/build/cau05.jar btl.cau05.RevenueReturnJob \
+    do_tg MapReduce "$scale" "$i" hadoop jar "$JAR" btl.cau05.RevenueReturnJob \
       -D cau05.level=category_month "$IN" "$TMP/out_mr"
-    do_tg Pig "$scale" "$i" pig -x mapreduce -param IN="$IN" -param OUT="$TMP/out_pig" -f category_month.pig
+    do_tg Pig "$scale" "$i" pig -x mapreduce -l "$LOG" -param IN="$IN" -param OUT="$TMP/out_pig" -f category_month.pig
     do_tg Spark "$scale" "$i" spark-submit --master yarn --py-files ../cau06_spark/pipeline.py \
       spark_category_month.py "$IN" "$TMP/out_spark"
   done
