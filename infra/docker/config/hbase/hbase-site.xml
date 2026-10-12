@@ -78,4 +78,11 @@
         <name>hbase.snapshot.enabled</name>
         <value>true</value>
     </property>
+    <!-- HBase khong doc hdfs-site.xml cua Hadoop (HBASE_DISABLE_HADOOP_CLASSPATH_LOOKUP),
+         nen phai dat lai o day: cum chi co 3 DataNode, mat 1 node thi khong con node de thay
+         trong pipeline ghi WAL -> HMaster/RegionServer abort ("no more good datanodes"). -->
+    <property>
+        <name>dfs.client.block.write.replace-datanode-on-failure.policy</name>
+        <value>NEVER</value>
+    </property>
 </configuration>
