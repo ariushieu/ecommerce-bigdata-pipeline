@@ -1,0 +1,12 @@
+buoc,mo_ta,so_dong
+B1,"Collection orders (doc orders.csv, co tieu de)",15000
+B1,Collection customers,1200
+B1,Collection products,400
+B3,Filter: bo quality_flag OUTLIER/DUPLICATE/LATE,14408
+B4,"Them order_month, is_late, has_campaign, revenue_bucket",14408
+B5,"Join products (brand) + customers (age_group, home_province)",14408
+B6,Group by category x province,108
+B6,Group by category,6
+B6,Group by province,18
+B6,Group by order_month,19
+B6,Group by revenue_bucket,4

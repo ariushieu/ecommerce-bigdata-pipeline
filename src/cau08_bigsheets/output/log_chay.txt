@@ -1,0 +1,29 @@
+== B1-B2: doc collection
+  B1   Collection orders (doc orders.csv, co tieu de)                15000 dong
+  B1   Collection customers                                           1200 dong
+  B1   Collection products                                             400 dong
+== B3: loc quality_flag
+  B3   Filter: bo quality_flag OUTLIER/DUPLICATE/LATE                14408 dong
+== B4: cot tinh toan
+  B4   Them order_month, is_late, has_campaign, revenue_bucket       14408 dong
+== B5: join danh muc
+  B5   Join products (brand) + customers (age_group, home_province)  14408 dong
+== B6: group by
+  B6   Group by category x province                                    108 dong
+  B6   Group by category                                                 6 dong
+  B6   Group by province                                                18 dong
+  B6   Group by order_month                                             19 dong
+  B6   Group by revenue_bucket                                           4 dong
+# A tibble: 1 × 7
+  orders net_revenue returned return_rate_pct avg_delivery_days late_orders
+   <int>       <dbl>    <int>           <dbl>             <dbl>       <int>
+1  14408   78218341.     1114            7.73              3.04        1010
+# ℹ 1 more variable: late_pct <dbl>
+== B7-B8: bieu do
+  anh: /home/rstudio/src/cau08_bigsheets/output/hinh/cau08-doanh-thu-danh-muc.png 
+  anh: /home/rstudio/src/cau08_bigsheets/output/hinh/cau08-hoan-tra-danh-muc.png 
+  anh: /home/rstudio/src/cau08_bigsheets/output/hinh/cau08-giao-hang-tinh.png 
+  anh: /home/rstudio/src/cau08_bigsheets/output/hinh/cau08-heatmap-hoan-tra.png 
+  anh: /home/rstudio/src/cau08_bigsheets/output/hinh/cau08-xu-huong-thang.png 
+  anh: /home/rstudio/src/cau08_bigsheets/output/hinh/cau08-dashboard.png 
+Xong. Font bieu do: TeX Gyre Heros 
