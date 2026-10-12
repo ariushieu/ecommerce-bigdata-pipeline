@@ -1,0 +1,29 @@
+yeu_to,muc,orders,returned,return_rate_pct,ci_low_pct,ci_high_pct
+Có đánh giá,Có,9215,728,7.9,7.35,8.45
+Có đánh giá,Không,5193,386,7.43,6.72,8.15
+Danh mục,Beauty,2219,169,7.62,6.51,8.72
+Danh mục,Books,2953,224,7.59,6.63,8.54
+Danh mục,Electronics,2505,189,7.54,6.51,8.58
+Danh mục,Fashion,1835,156,8.5,7.23,9.78
+Danh mục,Home,2616,196,7.49,6.48,8.5
+Danh mục,Sports,2280,180,7.89,6.79,9
+Kênh bán,marketplace,4777,339,7.1,6.37,7.82
+Kênh bán,mobile,4814,384,7.98,7.21,8.74
+Kênh bán,web,4817,391,8.12,7.35,8.89
+Mức giảm giá,0%,2462,193,7.84,6.78,8.9
+Mức giảm giá,10%,2410,186,7.72,6.65,8.78
+Mức giảm giá,15%,2344,190,8.11,7,9.21
+Mức giảm giá,20%,2407,178,7.4,6.35,8.44
+Mức giảm giá,30%,2377,184,7.74,6.67,8.82
+Mức giảm giá,5%,2408,183,7.6,6.54,8.66
+Phân khúc,Loyal,3566,265,7.43,6.57,8.29
+Phân khúc,New,3697,293,7.93,7.05,8.8
+Phân khúc,Regular,3562,269,7.55,6.68,8.42
+Phân khúc,VIP,3583,287,8.01,7.12,8.9
+Thanh toán,COD,3586,290,8.09,7.19,8.98
+Thanh toán,bank_transfer,3606,277,7.68,6.81,8.55
+Thanh toán,card,3569,258,7.23,6.38,8.08
+Thanh toán,e_wallet,3647,289,7.92,7.05,8.8
+Thời gian giao,0–2 ngày,5499,429,7.8,7.09,8.51
+Thời gian giao,3–5 ngày,7899,606,7.67,7.08,8.26
+Thời gian giao,> 5 ngày,1010,79,7.82,6.17,9.48
