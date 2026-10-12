@@ -1,0 +1,340 @@
+== Cau 6 - Spark 3.1.2, app application_1791732559230_0078, shuffle.partitions=12
+
+== 1. Doc va lam sach
+orders raw: 15000 | sau lam sach: 14408 | bo: 592
+tong kiem tra: {"last_idx": "18", "revenue": "78218341.22", "returned": "1114", "seen_in_stream": "4793", "unmatched_join": "0"}
+--- quality_flag truoc lam sach
++------------+-----+
+|quality_flag|count|
++------------+-----+
+|DUPLICATE   |149  |
+|LATE        |146  |
+|MISSING     |313  |
+|OK          |14095|
+|OUTLIER     |297  |
++------------+-----+
+--- vi du TRUOC (raw, chuoi/double)
++----------+-------------------+--------+----------+-------------+------------+-----------+------------+
+|order_id  |timestamp          |quantity|unit_price|delivery_days|review_score|campaign_id|quality_flag|
++----------+-------------------+--------+----------+-------------+------------+-----------+------------+
+|ORD0000002|2025-10-12T22:41:50|2       |1228.59   |3.0          |null        |CP022      |OK          |
+|ORD0000014|2025-01-20T07:52:06|1       |1587.97   |3.0          |2           |CP019      |OK          |
++----------+-------------------+--------+----------+-------------+------------+-----------+------------+
+--- vi du SAU (curated)
++----------+-------------------+-------+---------+-------------+------------+----------+-----------+--------+-------------+--------------+
+|order_id  |order_ts           |ym     |month_idx|delivery_days|review_score|has_review|campaign_id|brand   |home_province|seen_in_stream|
++----------+-------------------+-------+---------+-------------+------------+----------+-----------+--------+-------------+--------------+
+|ORD0000002|2025-10-12 22:41:50|2025-10|9        |3            |null        |false     |CP022      |Brand-40|Hai Phong    |true          |
+|ORD0000014|2025-01-20 07:52:06|2025-01|0        |3            |2           |true      |CP019      |Brand-25|Da Nang      |true          |
++----------+-------------------+-------+---------+-------------+------------+----------+-----------+--------+-------------+--------------+
+--- schema curated
+root
+ |-- order_id: string (nullable = true)
+ |-- customer_id: string (nullable = true)
+ |-- product_id: string (nullable = true)
+ |-- province: string (nullable = true)
+ |-- source_system: string (nullable = true)
+ |-- ingest_mode: string (nullable = true)
+ |-- data_format: string (nullable = true)
+ |-- category: string (nullable = true)
+ |-- customer_segment: string (nullable = true)
+ |-- sales_channel: string (nullable = true)
+ |-- quantity: integer (nullable = true)
+ |-- unit_price: double (nullable = true)
+ |-- discount_rate: double (nullable = true)
+ |-- shipping_fee: double (nullable = true)
+ |-- net_revenue: double (nullable = true)
+ |-- payment_method: string (nullable = true)
+ |-- delivery_days: integer (nullable = true)
+ |-- returned_flag: integer (nullable = true)
+ |-- review_score: integer (nullable = true)
+ |-- campaign_id: string (nullable = true)
+ |-- quality_flag: string (nullable = true)
+ |-- order_ts: timestamp (nullable = true)
+ |-- order_date: date (nullable = true)
+ |-- year: integer (nullable = true)
+ |-- month: string (nullable = true)
+ |-- ym: string (nullable = true)
+ |-- month_idx: integer (nullable = true)
+ |-- hour: integer (nullable = true)
+ |-- gross_amount: double (nullable = true)
+ |-- discount_amount: double (nullable = true)
+ |-- has_review: boolean (nullable = false)
+ |-- has_campaign: boolean (nullable = false)
+ |-- brand: string (nullable = true)
+ |-- supplier_id: string (nullable = true)
+ |-- product_rating: double (nullable = true)
+ |-- product_active: integer (nullable = true)
+ |-- home_province: string (nullable = true)
+ |-- age_group: string (nullable = true)
+ |-- gender: string (nullable = true)
+ |-- join_date: date (nullable = true)
+ |-- loyalty_score: integer (nullable = true)
+ |-- preferred_channel: string (nullable = true)
+ |-- seen_in_stream: boolean (nullable = false)
+ |-- ship_to_home: boolean (nullable = true)
+ |-- tenure_days: integer (nullable = true)
+--- explain(formatted): enriched (clean + broadcast join)
+== Physical Plan ==
+InMemoryTableScan (1)
+   +- InMemoryRelation (2)
+         +- * Project (26)
+            +- * BroadcastHashJoin LeftOuter BuildRight (25)
+               :- * Project (17)
+               :  +- * BroadcastHashJoin LeftOuter BuildRight (16)
+               :     :- * Project (11)
+               :     :  +- * BroadcastHashJoin LeftOuter BuildRight (10)
+               :     :     :- * Project (5)
+               :     :     :  +- * Filter (4)
+               :     :     :     +- Scan csv  (3)
+               :     :     +- BroadcastExchange (9)
+               :     :        +- * Project (8)
+               :     :           +- * Filter (7)
+               :     :              +- Scan csv  (6)
+               :     +- BroadcastExchange (15)
+               :        +- * Project (14)
+               :           +- * Filter (13)
+               :              +- Scan csv  (12)
+               +- BroadcastExchange (24)
+                  +- * HashAggregate (23)
+                     +- Exchange (22)
+                        +- * HashAggregate (21)
+                           +- * Project (20)
+                              +- * Filter (19)
+                                 +- Scan json  (18)
+
+
+(1) InMemoryTableScan
+Output [45]: [order_id#52, customer_id#53, product_id#54, province#48, source_system#49, ingest_mode#50, data_format#51, category#55, customer_segment#56, sales_channel#57, quantity#58, unit_price#59, discount_rate#60, shipping_fee#61, net_revenue#62, payment_method#63, delivery_days#239, returned_flag#65, review_score#66, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, month#317, ym#345, month_idx#374, hour#404, gross_amount#435, discount_amount#467, has_review#500, has_campaign#534, brand#142, supplier_id#145, product_rating#601, product_active#602, home_province#608, age_group#110, gender#111, join_date#113, loyalty_score#114, preferred_channel#115, seen_in_stream#785, ship_to_home#829, tenure_days#874]
+Arguments: [order_id#52, customer_id#53, product_id#54, province#48, source_system#49, ingest_mode#50, data_format#51, category#55, customer_segment#56, sales_channel#57, quantity#58, unit_price#59, discount_rate#60, shipping_fee#61, net_revenue#62, payment_method#63, delivery_days#239, returned_flag#65, review_score#66, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, ... 21 more fields]
+
+(2) InMemoryRelation
+Arguments: [order_id#52, customer_id#53, product_id#54, province#48, source_system#49, ingest_mode#50, data_format#51, category#55, customer_segment#56, sales_channel#57, quantity#58, unit_price#59, discount_rate#60, shipping_fee#61, net_revenue#62, payment_method#63, delivery_days#239, returned_flag#65, review_score#66, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, ... 21 more fields], CachedRDDBuilder(org.apache.spark.sql.execution.columnar.DefaultCachedBatchSerializer@6fba778d,StorageLevel(disk, memory, 1 replicas),*(5) Project [order_id#6, customer_id#7, product_id#8, province#2, source_system#3, ingest_mode#4, data_format#5, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#239, returned_flag#19, review_score#20, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, ... 21 more fields]
++- *(5) BroadcastHashJoin [order_id#6], [order_id#616], LeftOuter, BuildRight, false
+   :- *(5) Project [customer_id#7, product_id#8, province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#239, returned_flag#19, review_score#20, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, ... 18 more fields]
+   :  +- *(5) BroadcastHashJoin [customer_id#7], [customer_id#92], LeftOuter, BuildRight, false
+   :     :- *(5) Project [product_id#8, province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, customer_id#7, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#239, returned_flag#19, review_score#20, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, ... 12 more fields]
+   :     :  +- *(5) BroadcastHashJoin [product_id#8], [product_id#124], LeftOuter, BuildRight, false
+   :     :     :- *(5) Project [province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, customer_id#7, product_id#8, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, cast(delivery_days#18 as int) AS delivery_days#239, returned_flag#19, review_score#20, CASE WHEN (trim(campaign_id#21, None) = ) THEN null ELSE trim(campaign_id#21, None) END AS campaign_id#190, upper(trim(quality_flag#22, None)) AS quality_flag#166, gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false) AS order_ts#214, cast(gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false) as date) AS order_date#264, year(cast(gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false) as date)) AS year#290, ... 8 more fields]
+   :     :     :  +- *(5) Filter NOT upper(trim(quality_flag#22, None)) IN (OUTLIER,DUPLICATE,LATE)
+   :     :     :     +- FileScan csv [timestamp#1,province#2,source_system#3,ingest_mode#4,data_format#5,order_id#6,customer_id#7,product_id#8,category#9,customer_segment#10,sales_channel#11,quantity#12,unit_price#13,discount_rate#14,shipping_fee#15,net_revenue#16,payment_method#17,delivery_days#18,returned_flag#19,review_score#20,campaign_id#21,quality_flag#22] Batched: false, DataFilters: [NOT upper(trim(quality_flag#22, None)) IN (OUTLIER,DUPLICATE,LATE)], Format: CSV, Location: InMemoryFileIndex[hdfs://masternode:9000/btl/raw/orders/ingest_date=2026-08-01/orders.csv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<timestamp:string,province:string,source_system:string,ingest_mode:string,data_format:strin...
+   :     :     +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, true]),false), [id=#82]
+   :     :        +- *(1) Project [product_id#124, brand#126, supplier_id#129, rating#130 AS product_rating#601, active_flag#131 AS product_active#602]
+   :     :           +- *(1) Filter isnotnull(product_id#124)
+   :     :              +- FileScan csv [product_id#124,brand#126,supplier_id#129,rating#130,active_flag#131] Batched: false, DataFilters: [isnotnull(product_id#124)], Format: CSV, Location: InMemoryFileIndex[hdfs://masternode:9000/btl/raw/products/ingest_date=2026-08-01/products.csv], PartitionFilters: [], PushedFilters: [IsNotNull(product_id)], ReadSchema: struct<product_id:string,brand:string,supplier_id:string,rating:double,active_flag:int>
+   :     +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, true]),false), [id=#90]
+   :        +- *(2) Project [customer_id#92, province#96 AS home_province#608, age_group#94, gender#95, join_date#97, loyalty_score#98, preferred_channel#99]
+   :           +- *(2) Filter isnotnull(customer_id#92)
+   :              +- FileScan csv [customer_id#92,age_group#94,gender#95,province#96,join_date#97,loyalty_score#98,preferred_channel#99] Batched: false, DataFilters: [isnotnull(customer_id#92)], Format: CSV, Location: InMemoryFileIndex[hdfs://masternode:9000/btl/raw/customers/ingest_date=2026-08-01/customers.csv], PartitionFilters: [], PushedFilters: [IsNotNull(customer_id)], ReadSchema: struct<customer_id:string,age_group:string,gender:string,province:string,join_date:date,loyalty_s...
+   +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, true]),false), [id=#103]
+      +- *(4) HashAggregate(keys=[order_id#616], functions=[], output=[order_id#616, seen_in_stream#618])
+         +- Exchange hashpartitioning(order_id#616, 12), ENSURE_REQUIREMENTS, [id=#99]
+            +- *(3) HashAggregate(keys=[order_id#616], functions=[], output=[order_id#616])
+               +- *(3) Project [regexp_replace(event_id#156, ^EVT-, , 1) AS order_id#616]
+                  +- *(3) Filter isnotnull(regexp_replace(event_id#156, ^EVT-, , 1))
+                     +- FileScan json [event_id#156] Batched: false, DataFilters: [isnotnull(regexp_replace(event_id#156, ^EVT-, , 1))], Format: JSON, Location: InMemoryFileIndex[hdfs://masternode:9000/btl/raw/events/ingest_date=2026-08-01/events_stream.jsonl], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<event_id:string>
+,None)
+
+(3) Scan csv 
+Output [22]: [timestamp#1, province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, customer_id#7, product_id#8, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#18, returned_flag#19, review_score#20, campaign_id#21, quality_flag#22]
+Batched: false
+Location: InMemoryFileIndex [hdfs://masternode:9000/btl/raw/orders/ingest_date=2026-08-01/orders.csv]
+ReadSchema: struct<timestamp:string,province:string,source_system:string,ingest_mode:string,data_format:string,order_id:string,customer_id:string,product_id:string,category:string,customer_segment:string,sales_channel:string,quantity:int,unit_price:double,discount_rate:double,shipping_fee:double,net_revenue:double,payment_method:string,delivery_days:double,returned_flag:int,review_score:int,campaign_id:string,quality_flag:string>
+
+(4) Filter [codegen id : 5]
+Input [22]: [timestamp#1, province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, customer_id#7, product_id#8, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#18, returned_flag#19, review_score#20, campaign_id#21, quality_flag#22]
+Condition : NOT upper(trim(quality_flag#22, None)) IN (OUTLIER,DUPLICATE,LATE)
+
+(5) Project [codegen id : 5]
+Output [32]: [province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, customer_id#7, product_id#8, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, cast(delivery_days#18 as int) AS delivery_days#239, returned_flag#19, review_score#20, CASE WHEN (trim(campaign_id#21, None) = ) THEN null ELSE trim(campaign_id#21, None) END AS campaign_id#190, upper(trim(quality_flag#22, None)) AS quality_flag#166, gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false) AS order_ts#214, cast(gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false) as date) AS order_date#264, year(cast(gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false) as date)) AS year#290, lpad(cast(month(cast(gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false) as date)) as string), 2, 0) AS month#317, date_format(gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false), yyyy-MM, Some(Etc/UTC)) AS ym#345, ((((year(cast(gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false) as date)) - 2025) * 12) + month(cast(gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false) as date))) - 1) AS month_idx#374, hour(gettimestamp(timestamp#1, yyyy-MM-dd'T'HH:mm:ss, Some(Etc/UTC), false), Some(Etc/UTC)) AS hour#404, round((cast(quantity#12 as double) * unit_price#13), 2) AS gross_amount#435, round(((cast(quantity#12 as double) * unit_price#13) * discount_rate#14), 2) AS discount_amount#467, isnotnull(review_score#20) AS has_review#500, isnotnull(CASE WHEN (trim(campaign_id#21, None) = ) THEN null ELSE trim(campaign_id#21, None) END) AS has_campaign#534]
+Input [22]: [timestamp#1, province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, customer_id#7, product_id#8, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#18, returned_flag#19, review_score#20, campaign_id#21, quality_flag#22]
+
+(6) Scan csv 
+Output [5]: [product_id#124, brand#126, supplier_id#129, rating#130, active_flag#131]
+Batched: false
+Location: InMemoryFileIndex [hdfs://masternode:9000/btl/raw/products/ingest_date=2026-08-01/products.csv]
+PushedFilters: [IsNotNull(product_id)]
+ReadSchema: struct<product_id:string,brand:string,supplier_id:string,rating:double,active_flag:int>
+
+(7) Filter [codegen id : 1]
+Input [5]: [product_id#124, brand#126, supplier_id#129, rating#130, active_flag#131]
+Condition : isnotnull(product_id#124)
+
+(8) Project [codegen id : 1]
+Output [5]: [product_id#124, brand#126, supplier_id#129, rating#130 AS product_rating#601, active_flag#131 AS product_active#602]
+Input [5]: [product_id#124, brand#126, supplier_id#129, rating#130, active_flag#131]
+
+(9) BroadcastExchange
+Input [5]: [product_id#124, brand#126, supplier_id#129, product_rating#601, product_active#602]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [id=#82]
+
+(10) BroadcastHashJoin [codegen id : 5]
+Left keys [1]: [product_id#8]
+Right keys [1]: [product_id#124]
+Join condition: None
+
+(11) Project [codegen id : 5]
+Output [36]: [product_id#8, province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, customer_id#7, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#239, returned_flag#19, review_score#20, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, month#317, ym#345, month_idx#374, hour#404, gross_amount#435, discount_amount#467, has_review#500, has_campaign#534, brand#126, supplier_id#129, product_rating#601, product_active#602]
+Input [37]: [province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, customer_id#7, product_id#8, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#239, returned_flag#19, review_score#20, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, month#317, ym#345, month_idx#374, hour#404, gross_amount#435, discount_amount#467, has_review#500, has_campaign#534, product_id#124, brand#126, supplier_id#129, product_rating#601, product_active#602]
+
+(12) Scan csv 
+Output [7]: [customer_id#92, age_group#94, gender#95, province#96, join_date#97, loyalty_score#98, preferred_channel#99]
+Batched: false
+Location: InMemoryFileIndex [hdfs://masternode:9000/btl/raw/customers/ingest_date=2026-08-01/customers.csv]
+PushedFilters: [IsNotNull(customer_id)]
+ReadSchema: struct<customer_id:string,age_group:string,gender:string,province:string,join_date:date,loyalty_score:int,preferred_channel:string>
+
+(13) Filter [codegen id : 2]
+Input [7]: [customer_id#92, age_group#94, gender#95, province#96, join_date#97, loyalty_score#98, preferred_channel#99]
+Condition : isnotnull(customer_id#92)
+
+(14) Project [codegen id : 2]
+Output [7]: [customer_id#92, province#96 AS home_province#608, age_group#94, gender#95, join_date#97, loyalty_score#98, preferred_channel#99]
+Input [7]: [customer_id#92, age_group#94, gender#95, province#96, join_date#97, loyalty_score#98, preferred_channel#99]
+
+(15) BroadcastExchange
+Input [7]: [customer_id#92, home_province#608, age_group#94, gender#95, join_date#97, loyalty_score#98, preferred_channel#99]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [id=#90]
+
+(16) BroadcastHashJoin [codegen id : 5]
+Left keys [1]: [customer_id#7]
+Right keys [1]: [customer_id#92]
+Join condition: None
+
+(17) Project [codegen id : 5]
+Output [42]: [customer_id#7, product_id#8, province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#239, returned_flag#19, review_score#20, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, month#317, ym#345, month_idx#374, hour#404, gross_amount#435, discount_amount#467, has_review#500, has_campaign#534, brand#126, supplier_id#129, product_rating#601, product_active#602, home_province#608, age_group#94, gender#95, join_date#97, loyalty_score#98, preferred_channel#99]
+Input [43]: [product_id#8, province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, customer_id#7, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#239, returned_flag#19, review_score#20, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, month#317, ym#345, month_idx#374, hour#404, gross_amount#435, discount_amount#467, has_review#500, has_campaign#534, brand#126, supplier_id#129, product_rating#601, product_active#602, customer_id#92, home_province#608, age_group#94, gender#95, join_date#97, loyalty_score#98, preferred_channel#99]
+
+(18) Scan json 
+Output [1]: [event_id#156]
+Batched: false
+Location: InMemoryFileIndex [hdfs://masternode:9000/btl/raw/events/ingest_date=2026-08-01/events_stream.jsonl]
+ReadSchema: struct<event_id:string>
+
+(19) Filter [codegen id : 3]
+Input [1]: [event_id#156]
+Condition : isnotnull(regexp_replace(event_id#156, ^EVT-, , 1))
+
+(20) Project [codegen id : 3]
+Output [1]: [regexp_replace(event_id#156, ^EVT-, , 1) AS order_id#616]
+Input [1]: [event_id#156]
+
+(21) HashAggregate [codegen id : 3]
+Input [1]: [order_id#616]
+Keys [1]: [order_id#616]
+Functions: []
+Aggregate Attributes: []
+Results [1]: [order_id#616]
+
+(22) Exchange
+Input [1]: [order_id#616]
+Arguments: hashpartitioning(order_id#616, 12), ENSURE_REQUIREMENTS, [id=#99]
+
+(23) HashAggregate [codegen id : 4]
+Input [1]: [order_id#616]
+Keys [1]: [order_id#616]
+Functions: []
+Aggregate Attributes: []
+Results [2]: [order_id#616, true AS seen_in_stream#618]
+
+(24) BroadcastExchange
+Input [2]: [order_id#616, seen_in_stream#618]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [id=#103]
+
+(25) BroadcastHashJoin [codegen id : 5]
+Left keys [1]: [order_id#6]
+Right keys [1]: [order_id#616]
+Join condition: None
+
+(26) Project [codegen id : 5]
+Output [45]: [order_id#6, customer_id#7, product_id#8, province#2, source_system#3, ingest_mode#4, data_format#5, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#239, returned_flag#19, review_score#20, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, month#317, ym#345, month_idx#374, hour#404, gross_amount#435, discount_amount#467, has_review#500, has_campaign#534, brand#126, supplier_id#129, product_rating#601, product_active#602, home_province#608, age_group#94, gender#95, join_date#97, loyalty_score#98, preferred_channel#99, coalesce(seen_in_stream#618, false) AS seen_in_stream#785, (province#2 = home_province#608) AS ship_to_home#829, datediff(order_date#264, join_date#97) AS tenure_days#874]
+Input [44]: [customer_id#7, product_id#8, province#2, source_system#3, ingest_mode#4, data_format#5, order_id#6, category#9, customer_segment#10, sales_channel#11, quantity#12, unit_price#13, discount_rate#14, shipping_fee#15, net_revenue#16, payment_method#17, delivery_days#239, returned_flag#19, review_score#20, campaign_id#190, quality_flag#166, order_ts#214, order_date#264, year#290, month#317, ym#345, month_idx#374, hour#404, gross_amount#435, discount_amount#467, has_review#500, has_campaign#534, brand#126, supplier_id#129, product_rating#601, product_active#602, home_province#608, age_group#94, gender#95, join_date#97, loyalty_score#98, preferred_channel#99, order_id#616, seen_in_stream#618]
+
+== 2. Danh muc x thang (Spark SQL) - 114 dong
++--------+-------+------+-----------+--------+---------------+
+|category|month  |orders|net_revenue|returned|return_rate_pct|
++--------+-------+------+-----------+--------+---------------+
+|Beauty  |2025-01|127   |660451.11  |10      |7.87           |
+|Beauty  |2025-02|121   |629095.01  |9       |7.44           |
+|Beauty  |2025-03|108   |555437.35  |10      |9.26           |
+|Beauty  |2025-04|114   |526250.23  |6       |5.26           |
+|Beauty  |2025-05|117   |585613.21  |9       |7.69           |
+|Beauty  |2025-06|113   |577834.65  |7       |6.19           |
+|Beauty  |2025-07|107   |620953.72  |7       |6.54           |
+|Beauty  |2025-08|120   |626562.21  |11      |9.17           |
++--------+-------+------+-----------+--------+---------------+
+only showing top 8 rows
+
+== 3. Tang truong san pham (R = 3 thang cuoi, P = 3 thang truoc)
+san pham du nguong (>= 3 don moi cua so): 339/400; tang truong nhanh: 64
+z_orders >= 1.96: 6; <= -1.96: 4 (ngau nhien ky vong ~2,5% moi phia)
++----------+-----------+--------+----------+--------+----------+--------+-------------+-----------+------------+--------------+--------------+--------+---------------+--------+------------+-----------+----------------+
+|product_id|category   |brand   |rev_recent|rev_prev|qty_recent|qty_prev|orders_recent|orders_prev|orders_total|growth_rev_pct|growth_qty_pct|z_orders|slope_pct_month|eligible|fast_growing|significant|rank_in_category|
++----------+-----------+--------+----------+--------+----------+--------+-------------+-----------+------------+--------------+--------------+--------+---------------+--------+------------+-----------+----------------+
+|P0317     |Books      |Brand-05|30925.25  |6835.48 |40        |8       |12           |4          |36          |352.42        |400.0         |2.0     |3.85           |true    |true        |true       |1               |
+|P0347     |Books      |Brand-29|68915.66  |16110.91|40        |10      |10           |4          |29          |327.76        |300.0         |1.6     |6.47           |true    |true        |false      |2               |
+|P0177     |Home       |Brand-09|45654.1   |10994.3 |21        |6       |7            |3          |35          |315.25        |250.0         |1.26    |1.19           |true    |true        |false      |1               |
+|P0089     |Home       |Brand-19|68721.08  |17233.32|27        |7       |9            |3          |33          |298.77        |285.71        |1.73    |2.46           |true    |true        |false      |3               |
+|P0275     |Electronics|Brand-44|76308.34  |19153.16|24        |7       |7            |4          |27          |298.41        |242.86        |0.9     |1.46           |true    |true        |false      |1               |
+|P0266     |Fashion    |Brand-14|55199.18  |14715.08|26        |7       |8            |3          |32          |275.12        |271.43        |1.51    |4.01           |true    |true        |false      |1               |
+|P0207     |Books      |Brand-11|56663.78  |16005.62|29        |8       |8            |3          |24          |254.02        |262.5         |1.51    |3.96           |true    |true        |false      |3               |
+|P0255     |Books      |Brand-18|79474.2   |22452.63|32        |9       |10           |3          |32          |253.96        |255.56        |1.94    |0.23           |true    |true        |false      |4               |
+|P0285     |Beauty     |Brand-11|43182.53  |12213.43|32        |9       |8            |3          |35          |253.57        |255.56        |1.51    |1.73           |true    |true        |false      |1               |
+|P0095     |Fashion    |Brand-22|57680.47  |18485.87|38        |13      |8            |4          |35          |212.02        |192.31        |1.15    |4.55           |true    |true        |false      |2               |
+|P0199     |Sports     |Brand-43|38122.38  |12375.55|26        |9       |7            |3          |31          |208.05        |188.89        |1.26    |1.76           |true    |true        |false      |1               |
+|P0239     |Beauty     |Brand-13|94099.06  |31374.87|40        |13      |10           |4          |37          |199.92        |207.69        |1.6     |6.51           |true    |true        |false      |2               |
+|P0308     |Sports     |Brand-25|79648.73  |26910.09|34        |11      |7            |3          |39          |195.98        |209.09        |1.26    |0.62           |true    |true        |false      |2               |
+|P0201     |Books      |Brand-39|39948.49  |14138.12|40        |14      |8            |3          |34          |182.56        |185.71        |1.51    |3.97           |true    |true        |false      |6               |
+|P0134     |Electronics|Brand-03|53545.07  |19477.62|31        |10      |8            |3          |30          |174.91        |210.0         |1.51    |1.82           |true    |true        |false      |4               |
++----------+-----------+--------+----------+--------+----------+--------+-------------+-----------+------------+--------------+--------------+--------+---------------+--------+------------+-----------+----------------+
+only showing top 15 rows
+
+== 4. Nguy co roi bo (moc 2026-07-31)
+HIGH   147
+MEDIUM 222
+LOW    831
+duong co so Poisson: {'expected_lapsed': 211.0, 'observed_lapsed': 188}
+--- churn_risk x segment
++----------------+----+------+---+
+|customer_segment|HIGH|MEDIUM|LOW|
++----------------+----+------+---+
+|Loyal           |28  |51    |217|
+|New             |41  |48    |214|
+|Regular         |37  |61    |204|
+|VIP             |41  |62    |196|
++----------------+----+------+---+
+--- HIGH (10 dau)
++-----------+----------------+----------+------------+---------+--------+-------------+-------------+---+
+|customer_id|customer_segment|last_order|recency_days|frequency|monetary|orders_prev6m|orders_last6m|rfm|
++-----------+----------------+----------+------------+---------+--------+-------------+-------------+---+
+|C00817     |New             |2025-08-15|350         |5        |17720.87|1            |0            |111|
+|C00719     |Regular         |2025-09-22|312         |3        |16146.51|1            |0            |111|
+|C00672     |New             |2025-09-25|309         |10       |43426.44|3            |0            |121|
+|C00249     |New             |2025-11-06|267         |9        |45496.64|2            |0            |111|
+|C00607     |Regular         |2025-11-11|262         |6        |32934.72|2            |0            |111|
+|C00799     |New             |2025-11-13|260         |6        |27650.52|5            |0            |111|
+|C00947     |Regular         |2025-11-17|256         |8        |46462.97|2            |0            |112|
+|C00327     |Loyal           |2025-11-18|255         |9        |45400.72|6            |0            |111|
+|C00767     |New             |2025-11-18|255         |14       |74296.16|5            |0            |144|
+|C00453     |Loyal           |2025-11-21|252         |8        |32946.64|2            |0            |111|
++-----------+----------------+----------+------------+---------+--------+-------------+-------------+---+
+only showing top 10 rows
+
+== 5. Doi chieu su kien JSON voi don hang
+{"events": "5000", "matched_orders": "5000", "diff_time": "0", "diff_source": "0", "diff_category": "0", "diff_segment": "0", "diff_net_revenue": "0", "diff_returned": "0", "events_of_clean_orders": "4793", "event_revenue": "28406526.37", "event_revenue_clean": "25969005.67"}
+  quality_flag DUPLICATE 57 su kien
+  quality_flag LATE      51 su kien
+  quality_flag MISSING   114 su kien
+  quality_flag OK        4679 su kien
+  quality_flag OUTLIER   99 su kien
+
+== 6. Ghi HDFS
+curated /btl/curated/orders: 14408 dong, 114 phan vung year/month/category (5.6s)
+curated tren HDFS: 2352399 byte (1 ban sao), 115 tep, 45 cot
+cot dan xuat (doc lai tu curated): {"has_review": 9215, "has_campaign": 14243, "seen_in_stream": 4793, "ship_to_home": 808, "product_inactive": 497, "quality_missing": 313, "delivery_min": 0, "delivery_max": 9, "tenure_min": 6, "tenure_max": 2068, "tenure_avg": 1057.1}
+output  /btl/output/cau06_spark: category_month, product_growth, fast_growing_products, customer_churn, churn_risk_customers (3.5s)
+
+== 7. Thoi gian (giay) va I/O cua nhom job 'analytics'
+doc+lam sach+join+count: 7.0 | phan tich: 8.3 | ghi curated: 5.6 | ghi output: 3.5 | tong (trong app): 33.6
+{"inputBytes": 7059737, "inputRecords": 27804, "shuffleReadBytes": 263087, "shuffleWriteBytes": 216697, "outputBytes": 0, "memoryBytesSpilled": 0, "diskBytesSpilled": 0, "numTasks": 126, "jobs": 11, "stages": 23}
+KET QUA: OK

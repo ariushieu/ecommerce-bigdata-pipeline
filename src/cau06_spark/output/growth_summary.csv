@@ -1,0 +1,12 @@
+metric,value
+products,400
+eligible,339
+fast_growing,64
+z_ge_1.96,6
+z_le_-1.96,4
+expected_by_chance_each_side,10.00
+fast_growing_and_significant,1
+rev_recent_all,12639814.44
+rev_prev_all,11701028.29
+rev_recent_fast,3263506.44
+rev_prev_fast,1502535.09
