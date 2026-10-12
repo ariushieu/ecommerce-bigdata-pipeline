@@ -29,6 +29,7 @@ Toàn bộ chạy trên một cụm Hadoop 4 máy dựng bằng Docker. Không c
 ├── docs/                     đề bài, hướng dẫn môi trường, ảnh chụp
 ├── infra/                    Dockerfile, cấu hình Hadoop/Spark/HBase/Flume, script chạy TRONG CỤM
 ├── src/
+│   ├── cau01_5v/             profiling dữ liệu cho phân tích 5V
 │   ├── cau02_flume/          thu thập dữ liệu
 │   ├── cau03_hdfs/           vùng dữ liệu HDFS
 │   ├── cau04_pig/            Pig Latin
@@ -36,8 +37,9 @@ Toàn bộ chạy trên một cụm Hadoop 4 máy dựng bằng Docker. Không c
 │   ├── cau06_spark/          PySpark
 │   ├── cau07_hbase/          HBase
 │   ├── cau08_bigsheets/      mô phỏng BigSheets + dashboard
-│   └── cau09_r/              R + SQLite
-└── report/                   Câu 1 + Câu 10 (báo cáo tổng hợp)
+│   ├── cau09_r/              R + SQLite
+│   └── cau10_doi_chieu/      đối chiếu Pig – MapReduce – Spark (Câu 10)
+└── report/                   báo cáo theo mẫu CTKU122: mỗi mục một file trong sections/
 ```
 
 ## Bắt đầu (mỗi thành viên làm một lần)
@@ -71,15 +73,17 @@ Chi tiết (giao diện web, tắt máy an toàn, xử lý lỗi): **[docs/moi-t
 5. **Kiểm thử:** nếu thư mục câu có `test.sh`, CI sẽ tự chạy nó trên cụm thật.
 6. **Không commit:** khóa SSH (`ssh-key/`), bộ cài (`infra/downloads/*.tar.gz`), file build (`*.jar`, `*.class`). `.gitignore` đã chặn sẵn.
 
-## Phân công (đề xuất)
+## Phân công (mỗi người 20%)
 
-| Thành viên | Câu | Nội dung |
-|---|---|---|
-| A – nhóm trưởng | 1, 10 | 5V, phân loại dữ liệu; báo cáo tổng hợp |
-| B | 2, 3 | Flume; vùng dữ liệu HDFS (làm trước, cả nhóm dùng chung) |
-| C | 4, 5 | Pig; MapReduce Java |
-| D | 6, 7 | PySpark; HBase |
-| E | 8, 9 | BigSheets + dashboard; R |
+| Thành viên | Câu | Mục báo cáo phụ trách | Ngoài ra |
+|---|---|---|---|
+| A – nhóm trưởng | 1, 10 | Lời mở đầu, 1.1–1.3, 2.1–2.3, 3.1, 4.5, Chương 5, Phụ lục A | Môi trường Docker/CI, ghép báo cáo |
+| B | 2, 3 | 1.4 (Flume, HDFS/YARN), 1.5, 3.2 (HDFS), 3.3 | Slide thuyết trình |
+| C | 4, 5 | 1.4 (Pig, MapReduce), 2.4 (Pig), 3.5, 4.1 | |
+| D | 6, 7 | 1.4 (Spark, HBase), 2.4–2.5 (Spark), 3.2 (HBase), 3.4, 3.6, 4.4 | |
+| E | 8, 9 | 1.4 (BigSheets, R), 4.2, 4.3, Phụ lục C | Dashboard demo |
+
+Mỗi câu làm **code và mục báo cáo cùng lúc**, trong cùng một Pull Request. Quy ước chung (đường dẫn HDFS, làm sạch, file đối chiếu, cách đánh số bảng/hình): [`docs/quy-uoc.md`](docs/quy-uoc.md).
 
 ## CI/CD
 

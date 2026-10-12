@@ -42,9 +42,9 @@ jobs:
       - name: docker-compose.yml hop le
         run: mkdir -p ssh-key && docker compose config -q
 
-      - name: Cu phap Python (src/**/*.py)
+      - name: Cu phap Python (src/**/*.py, report/tools/*.py)
         run: |
-          mapfile -t files < <(git ls-files 'src/*.py')
+          mapfile -t files < <(git ls-files 'src/*.py' 'report/tools/*.py')
           if [ ${#files[@]} -eq 0 ]; then echo "Chua co file Python"; exit 0; fi
           python3 -m py_compile "${files[@]}" && echo "OK: ${#files[@]} file"
 
@@ -54,3 +54,25 @@ jobs:
           if [ ${#files[@]} -eq 0 ]; then echo "Chua co file Java"; exit 0; fi
           echo "Bien dich that (co thu vien Hadoop) chay trong workflow Cluster"
           printf '%s\n' "${files[@]}"
+
+  report:
+    name: Ghep bao cao (BaoCao.docx)
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ghep report/sections -> BaoCao.docx (pandoc + mermaid trong Docker)
+        run: bash scripts/build-report.sh | tee build.log
+
+      - name: Canh bao nhan bang/hinh/tai lieu chua dinh nghia
+        run: |
+          if grep -q 'CANH BAO' build.log; then
+            echo "::warning::$(grep 'CANH BAO' build.log)"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BaoCao-docx
+          path: report/build/BaoCao.docx
+          retention-days: 30

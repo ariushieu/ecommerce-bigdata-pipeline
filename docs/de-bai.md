@@ -12,7 +12,7 @@ Một sàn thương mại điện tử cần xây dựng nền tảng phân tíc
 
 | Câu | Điểm | Yêu cầu | Thư mục |
 |---|---|---|---|
-| 1 | 1,0 | Phân tích đặc trưng Big Data của bài toán theo tối thiểu 5V. Phân loại các tệp và trường dữ liệu thành dữ liệu có cấu trúc, bán cấu trúc và dữ liệu luồng; chỉ rõ phần nào phù hợp phân tích tĩnh và phần nào cần xử lý gần thời gian thực. | `report/` |
+| 1 | 1,0 | Phân tích đặc trưng Big Data của bài toán theo tối thiểu 5V. Phân loại các tệp và trường dữ liệu thành dữ liệu có cấu trúc, bán cấu trúc và dữ liệu luồng; chỉ rõ phần nào phù hợp phân tích tĩnh và phần nào cần xử lý gần thời gian thực. | `src/cau01_5v/` + báo cáo mục 1.3, 2.1–2.3 |
 | 2 | 1,0 | Đề xuất kiến trúc thu thập và lưu trữ dữ liệu đầu–cuối. Thiết kế ít nhất hai kịch bản Flume: (i) nạp tệp CSV theo lô vào HDFS; (ii) nhận sự kiện `order_event` từ HTTP/Netcat/Kafka vào HDFS hoặc HBase. Viết cấu hình Source–Channel–Sink, giải thích lựa chọn MemoryChannel/FileChannel và cơ chế chống mất dữ liệu. | `src/cau02_flume/` |
 | 3 | 1,0 | Thiết kế vùng dữ liệu trên HDFS gồm raw, staging, curated và output. Đề xuất cấu trúc thư mục phân vùng theo thời gian và category; tính dung lượng lưu trữ khi nhân bản 3 lần; mô tả vai trò NameNode, DataNode, YARN và phương án khôi phục khi một node hỏng. | `src/cau03_hdfs/` |
 | 4 | 1,0 | Viết Pig Latin để LOAD các tệp, khai báo schema, FILTER bản ghi không hợp lệ, JOIN bảng sự kiện với hai bảng danh mục, GROUP theo category và customer_segment, sử dụng FOREACH, DISTINCT, ORDER, LIMIT, SPLIT và STORE. Bổ sung tối thiểu bốn hàm đánh giá như SUM, COUNT, AVG, MIN/MAX, SIZE, CONCAT hoặc TOKENIZE. | `src/cau04_pig/` |
@@ -21,7 +21,7 @@ Một sàn thương mại điện tử cần xây dựng nền tảng phân tíc
 | 7 | 1,0 | Thiết kế bảng HBase phục vụ truy cập ngẫu nhiên. RowKey đề xuất: `customer_id#reverse_timestamp`. Tối thiểu ba column families, mô tả version/timestamp, viết lệnh hoặc mã Client API cho create/put/get/scan/delete, đề xuất pre-splitting, TTL, compression, backup và quyền truy cập. | `src/cau07_hbase/` |
 | 8 | 1,0 | Mô phỏng quy trình phân tích bằng BigSheets: định nghĩa collection, làm sạch và biến đổi dữ liệu, tạo calculated columns, lọc/nhóm/join, xây dựng dashboard doanh thu – hoàn trả – giao hàng theo danh mục và tỉnh. Nêu rõ các bước để người không lập trình tái tạo kết quả và xuất báo cáo. | `src/cau08_bigsheets/` |
 | 9 | 1,0 | Dùng R kết nối tệp SQLite đi kèm bằng DBI/RSQLite, viết truy vấn SQL có JOIN và GROUP BY, đọc dữ liệu vào R, xử lý bằng dplyr/tidyr, trực quan hóa bằng ggplot2, thực hiện hồi quy doanh thu và phân loại khả năng trả hàng. Ghi bảng kết quả trở lại CSDL và đóng kết nối an toàn. | `src/cau09_r/` |
-| 10 | 1,0 | Tích hợp thành báo cáo kỹ thuật hoàn chỉnh: đánh giá chất lượng dữ liệu, trả lời mục tiêu “tối ưu doanh thu, tỷ lệ hoàn trả và thời gian giao hàng”, đối chiếu Pig–MapReduce–Spark, đề xuất kiến trúc triển khai và ít nhất năm khuyến nghị có căn cứ từ dữ liệu. Kèm sơ đồ luồng dữ liệu, dashboard, mã nguồn và hướng dẫn tái lập. | `report/` |
+| 10 | 1,0 | Tích hợp thành báo cáo kỹ thuật hoàn chỉnh: đánh giá chất lượng dữ liệu, trả lời mục tiêu “tối ưu doanh thu, tỷ lệ hoàn trả và thời gian giao hàng”, đối chiếu Pig–MapReduce–Spark, đề xuất kiến trúc triển khai và ít nhất năm khuyến nghị có căn cứ từ dữ liệu. Kèm sơ đồ luồng dữ liệu, dashboard, mã nguồn và hướng dẫn tái lập. | `report/` + `src/cau10_doi_chieu/` |
 
 ## Dữ liệu (`data/`)
 
