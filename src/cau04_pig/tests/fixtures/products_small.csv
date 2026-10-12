@@ -1,0 +1,7 @@
+product_id,category,brand,unit_cost,list_price,supplier_id,rating,active_flag
+P0001,Books,Brand-01,400.0,1000.1,SUP001,4.5,1
+P0002,Fashion,Brand-02,5.0,10.05,SUP002,3.5,1
+P0003,Electronics,Brand-03,60.0,100.0,SUP003,4.0,1
+P0004,Beauty,Brand-04,100.0,250.5,SUP004,5.0,0
+P0005,Home,Brand-05,10.0,12.34,SUP005,2.5,1
+P0006,Sports,Brand-06,2.0,5.0,SUP006,3.0,1

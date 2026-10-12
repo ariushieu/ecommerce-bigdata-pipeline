@@ -1,0 +1,4 @@
+cau04.pig	wall_s=339.1	mapreduce_jobs=17
+orders=14408 net_revenue=78218341.22 returned=1114
+Pig va MapReduce: compare_category_month.csv giong het nhau
+# 17 job; tong wait_s 479.9; tong run_s 129.0; tu job dau nop den job cuoi xong 327.0 s

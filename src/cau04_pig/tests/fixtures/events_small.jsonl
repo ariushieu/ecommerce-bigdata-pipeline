@@ -1,0 +1,5 @@
+{"event_id": "EVT-T0001", "event_time": "2025-01-05T10:00:00", "event_type": "order_event", "source": "web", "payload": {"category": "Books", "customer_segment": "New", "net_revenue": 1000.1, "returned_flag": 1}}
+{"event_id": "EVT-T0003", "event_time": "2025-01-31T23:59:59", "event_type": "order_event", "source": "api", "payload": {"category": "Books", "customer_segment": "New", "net_revenue": 0.01, "returned_flag": 0}}
+{"event_id": "EVT-T0006", "event_time": "2025-01-03T09:00:00", "event_type": "order_event", "source": "web", "payload": {"category": "Books", "customer_segment": "New", "net_revenue": 99999.99, "returned_flag": 1}}
+{"event_id": "EVT-T0020", "event_time": "2025-03-10T12:00:00", "event_type": "order_event", "source": "web", "payload": {"category": "Electronics", "customer_segment": "Loyal", "net_revenue": 111.0, "returned_flag": 1}}
+{"event_id": "EVT-T9999", "event_time": "2025-05-01T00:00:00", "event_type": "order_event", "source": "web", "payload": {"category": "Home", "customer_segment": "New", "net_revenue": 1.0, "returned_flag": 0}}

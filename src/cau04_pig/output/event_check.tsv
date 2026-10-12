@@ -1,0 +1,6 @@
+order_quality_flag	events	events_matching_order
+DUPLICATE	57	57
+LATE	51	51
+MISSING	114	114
+OK	4679	4679
+OUTLIER	99	99

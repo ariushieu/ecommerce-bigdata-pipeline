@@ -1,0 +1,19 @@
+### raw: /btl/raw/orders/ingest_date=2026-08-01/orders.csv (CSV, BOM, CRLF)
+16 byte dau tep:
+0000000 357 273 277   r   e   c   o   r   d   _   i   d   ,   t   i   m
+0000020
+ORD0000001,2026-01-07T20:15:28,Khanh Hoa,mobile,stream,JSON,ORD0000001,C00941,P0225,Beauty,Regular,mobile,3,939.95,0.05,25.0,2703.86,bank_transfer,4,0,4,CP018,OK
+ORD0000025,2026-06-26T14:04:10,Ha Noi,web,batch,LOG,ORD0000025,C00214,P0179,Sports,New,mobile,4,3007.14,0.3,35.0,8455.0,bank_transfer,13.456,0,,CP021,OUTLIER
+ORD0000174,2025-08-12T22:28:05,Khanh Hoa,web,stream,JSON,ORD0000174,C00358,P0392,Home,Loyal,marketplace,5,2165.7,0.15,0.0,9204.21,COD,2,0,,,MISSING
+
+### staging: /btl/staging/orders (TSV, khong tieu de; ten cot trong .pig_header)
+record_id	order_ts	province	source_system	ingest_mode	data_format	order_id	customer_id	product_id	category	customer_segment	sales_channel	quantity	unit_price	discount_rate	shipping_fee	net_revenue	payment_method	delivery_days	returned_flag	review_score	campaign_id	quality_flag	order_month
+ORD0000001	2026-01-07T20:15:28	Khanh Hoa	mobile	stream	JSON	ORD0000001	C00941	P0225	Beauty	Regular	mobile	3	939.95	0.05	25.0	2703.86	bank_transfer	4	0	4	CP018	OK	2026-01
+ORD0000174	2025-08-12T22:28:05	Khanh Hoa	web	stream	JSON	ORD0000174	C00358	P0392	Home	Loyal	marketplace	5	2165.7	0.15	0.0	9204.21	COD	2	0		NONE	MISSING	2025-08
+
+### rejected: /btl/output/cau04_pig/rejected_orders (them cot status)
+ORD0000025	2026-06-26T14:04:10	Ha Noi	web	batch	LOG	ORD0000025	C00214	P0179	Sports	New	mobile	4	3007.14	0.3	35.0	8455.0	bank_transfer	13.456	0		CP021	OUTLIER	OUTLIER
+
+### dung luong (byte) va so dong
+raw orders.csv	2298806 byte	15001 dong
+staging orders	2305874 byte	14408 dong	1 tep part

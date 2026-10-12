@@ -1,0 +1,73 @@
+HadoopVersion	PigVersion	UserId	StartedAt	FinishedAt	Features
+3.2.2	0.17.0	hadoop	2026-10-11 16:13:29	2026-10-11 16:19:04	REPLICATED_JOIN,HASH_JOIN,GROUP_BY,ORDER_BY,DISTINCT,FILTER,LIMIT,UNION
+
+Success!
+
+Job Stats (time in seconds):
+JobId	Maps	Reduces	MaxMapTime	MinMapTime	AvgMapTime	MedianMapTime	MaxReduceTime	MinReduceTime	AvgReduceTime	MedianReducetime	Alias	Feature	Outputs
+job_1791732559230_0059	1	0	2	2	2	2	0	0	0	0	products,products_raw	MAP_ONLY	
+job_1791732559230_0060	1	0	1	1	1	1	0	0	0	0	customers,customers_raw	MAP_ONLY	
+job_1791732559230_0061	1	1	2	2	2	2	1	1	1	1	1-41,clean,cm,cm_fmt,cm_rate,g_cm,g_status,m_status,orders_c,orders_chk,orders_raw,rejected,staging,valid	MULTI_QUERY,COMBINER	/btl/output/cau04_pig/rejected_orders,/btl/staging/orders,
+job_1791732559230_0062	1	1	1	1	1	1	1	1	1	1	cm_all,cm_sorted	GROUP_BY	/btl/output/cau04_pig/compare_category_month,
+job_1791732559230_0063	2	1	2	2	2	2	1	1	1	1	ev,ev_chk,ev_j,events,valid	HASH_JOIN	
+job_1791732559230_0064	1	1	1	1	1	1	1	1	1	1	content,valid	DISTINCT	
+job_1791732559230_0065	1	1	2	2	2	2	2	2	2	2	1-46,custs,enriched,g_enr,g_seg,j_cust,j_prod,orders_c,rets,seg_fmt,seg_stats	REPLICATED_JOIN,MULTI_QUERY	
+job_1791732559230_0066	1	1	1	1	1	1	1	1	1	1	seg_all,seg_sorted	GROUP_BY	/btl/output/cau04_pig/segment_stats,
+job_1791732559230_0067	1	1	2	2	2	2	1	1	1	1	1-49,cat_stats,g_cat	GROUP_BY,COMBINER	
+job_1791732559230_0068	1	1	2	2	2	2	1	1	1	1	g_content,m_content	GROUP_BY,COMBINER	
+job_1791732559230_0069	1	1	1	1	1	1	1	1	1	1	g_prod,prod_rev	GROUP_BY,COMBINER	
+job_1791732559230_0070	1	1	1	1	1	1	0	0	0	0	ev_summary,g_ev	GROUP_BY,COMBINER	/btl/output/cau04_pig/event_check,
+job_1791732559230_0071	1	1	2	2	2	2	1	1	1	1	prod_sorted	SAMPLER	
+job_1791732559230_0072	4	0	3	2	3	3	0	0	0	0	checks,g_enr,m_enr,m_mis	MAP_ONLY	/btl/output/cau04_pig/checks,
+job_1791732559230_0073	1	1	2	2	2	2	1	1	1	1	cat_all,cat_fmt,cat_sorted	GROUP_BY	/btl/output/cau04_pig/category_summary,
+job_1791732559230_0075	1	1	1	1	1	1	1	1	1	1	prod_sorted	ORDER_BY,COMBINER	
+job_1791732559230_0076	1	1	1	1	1	1	2	2	2	2	prod_sorted,top10_fmt		/btl/output/cau04_pig/top10_products,
+
+Input(s):
+Successfully read 1201 records (62749 bytes) from: "/btl/raw/customers/ingest_date=2026-08-01/customers.csv"
+Successfully read 401 records (21023 bytes) from: "/btl/raw/products/ingest_date=2026-08-01/products.csv"
+Successfully read 15001 records (2299204 bytes) from: "/btl/raw/orders/ingest_date=2026-08-01/orders.csv"
+Successfully read 5000 records from: "/btl/raw/events/ingest_date=2026-08-01/events_stream.jsonl"
+
+Output(s):
+Successfully stored 592 records (101912 bytes) in: "/btl/output/cau04_pig/rejected_orders"
+Successfully stored 14408 records (2308599 bytes) in: "/btl/staging/orders"
+Successfully stored 24 records (2313 bytes) in: "/btl/output/cau04_pig/segment_stats"
+Successfully stored 114 records (4234 bytes) in: "/btl/output/cau04_pig/compare_category_month"
+Successfully stored 10 records (412 bytes) in: "/btl/output/cau04_pig/top10_products"
+Successfully stored 5 records (70 bytes) in: "/btl/output/cau04_pig/event_check"
+Successfully stored 9 records (210 bytes) in: "/btl/output/cau04_pig/checks"
+Successfully stored 6 records (258 bytes) in: "/btl/output/cau04_pig/category_summary"
+
+Counters:
+Total records written : 15168
+Total bytes written : 2418008
+Spillable Memory Manager spill count : 0
+Total bags proactively spilled: 0
+Total records proactively spilled: 0
+
+Job DAG:
+job_1791732559230_0060	->	job_1791732559230_0065,
+job_1791732559230_0059	->	job_1791732559230_0065,
+job_1791732559230_0061	->	job_1791732559230_0065,job_1791732559230_0062,job_1791732559230_0063,job_1791732559230_0064,
+job_1791732559230_0065	->	job_1791732559230_0066,job_1791732559230_0069,job_1791732559230_0072,job_1791732559230_0067,
+job_1791732559230_0066
+job_1791732559230_0062
+job_1791732559230_0069	->	job_1791732559230_0071,
+job_1791732559230_0071	->	job_1791732559230_0075,
+job_1791732559230_0075	->	job_1791732559230_0076,
+job_1791732559230_0076
+job_1791732559230_0063	->	job_1791732559230_0070,
+job_1791732559230_0070
+job_1791732559230_0064	->	job_1791732559230_0068,
+job_1791732559230_0068	->	job_1791732559230_0072,
+job_1791732559230_0072
+job_1791732559230_0067	->	job_1791732559230_0073,
+job_1791732559230_0073
+
+
+Encountered Warning IMPLICIT_CAST_TO_LONG 1 time(s).
+Encountered Warning IMPLICIT_CAST_TO_DOUBLE 4 time(s).
+Encountered Warning IMPLICIT_CAST_TO_LONG 1 time(s).
+Encountered Warning FIELD_DISCARDED_TYPE_CONVERSION_FAILED 10 time(s).
+Pig script completed in 5 minutes, 37 seconds and 715 milliseconds (337715 ms)
