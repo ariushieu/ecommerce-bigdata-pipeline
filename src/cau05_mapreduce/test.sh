@@ -15,7 +15,7 @@ FAIL=0
 pass() { echo "PASS: $1"; }
 fail() { echo "FAIL: $1"; FAIL=1; }
 
-bash build.sh >/dev/null
+JAR=$(bash build.sh | sed -n "s/^JAR=//p")
 
 # Du lieu mau: them BOM + CRLF giong orders.csv that (tep trong Git luon la LF)
 mkdir -p "$TMP/in"
@@ -23,7 +23,7 @@ mkdir -p "$TMP/in"
 
 chay() {  # chay <ten> [-D ...]  -> $TMP/<ten>/ (output), $TMP/<ten>.out (counter)
   local ten=$1; shift
-  hadoop jar build/cau05.jar btl.cau05.RevenueReturnJob \
+  hadoop jar "$JAR" btl.cau05.RevenueReturnJob \
     -D mapreduce.framework.name=local -fs file:/// "$@" \
     "file://$TMP/in" "file://$TMP/$ten" > "$TMP/$ten.out" 2> "$TMP/$ten.err" \
     || { echo "Job $ten loi:"; tail -30 "$TMP/$ten.err"; exit 1; }
