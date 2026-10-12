@@ -1,0 +1,166 @@
+# Cau 3 - bao cao vung du lieu HDFS   (2026-10-11 23:21:19 +0700)
+
+== 1. Cau hinh (hdfs getconf)
+   dfs.replication                                              3
+   dfs.blocksize                                                134217728
+   dfs.heartbeat.interval                                       3s
+   dfs.namenode.heartbeat.recheck-interval                      60000
+   dfs.namenode.replication.min                                 1
+   dfs.namenode.name.dir                                        file:///home/hadoop/hdfs/namenode
+   dfs.datanode.data.dir                                        file:///home/hadoop/hdfs/datanode
+   dfs.client.block.write.replace-datanode-on-failure.policy    NEVER
+
+== 2. Cay thu muc /btl (thu muc toi cap partition dau tien; cap sau chi dem)
+   /btl/backup
+   /btl/backup/hbase
+   /btl/backup/hbase/.hbase-snapshot
+   /btl/backup/hbase/archive
+   /btl/curated
+   /btl/curated/orders
+   /btl/curated/orders/year=2025
+   /btl/curated/orders/year=2026
+   /btl/output
+   /btl/output/cau04_pig
+   /btl/output/cau04_pig/category_summary
+   /btl/output/cau04_pig/checks
+   /btl/output/cau04_pig/compare_category_month
+   /btl/output/cau04_pig/event_check
+   /btl/output/cau04_pig/rejected_orders
+   /btl/output/cau04_pig/segment_stats
+   /btl/output/cau04_pig/top10_products
+   /btl/output/cau05_mr
+   /btl/output/cau05_mr/_bench
+   /btl/output/cau05_mr/category_month
+   /btl/output/cau05_mr/category_province_month
+   /btl/output/cau05_mr/category_province_month_nocombiner
+   /btl/output/cau06_spark
+   /btl/output/cau06_spark/category_month
+   /btl/output/cau06_spark/churn_risk_customers
+   /btl/output/cau06_spark/customer_churn
+   /btl/output/cau06_spark/fast_growing_products
+   /btl/output/cau06_spark/product_growth
+   /btl/raw
+   /btl/raw/customers
+   /btl/raw/customers/ingest_date=2026-08-01
+   /btl/raw/customers/ingest_date=2026-10-11
+   /btl/raw/events
+   /btl/raw/events/ingest_date=2026-08-01
+   /btl/raw/events/ingest_date=2026-10-11
+   /btl/raw/orders
+   /btl/raw/orders/ingest_date=2026-08-01
+   /btl/raw/orders/ingest_date=2026-10-11
+   /btl/raw/products
+   /btl/raw/products/ingest_date=2026-08-01
+   /btl/raw/products/ingest_date=2026-10-11
+   /btl/staging
+   /btl/staging/orders
+   ... /btl/backup/hbase: them 29 thu muc con, vi du /btl/backup/hbase/archive/data/btl/customer_orders/057d7fea66e0f3d3fba22ac498a47800/d
+   ... /btl/curated/orders: them 133 thu muc con, vi du /btl/curated/orders/year=2025/month=01/category=Beauty
+   ... /btl/output/cau05_mr: them 2 thu muc con, vi du /btl/output/cau05_mr/_bench/_temporary/1
+
+== 3. Dung luong theo vung: hdfs dfs -du -s (cot 1 = logic, cot 2 = chiem dung tat ca ban sao)
+          7224382       21673146  /btl/raw
+          2308599        6925797  /btl/staging
+          2352399        7057197  /btl/curated
+           446959        1340877  /btl/output
+   -- raw theo bang
+           124690         374070  /btl/raw/customers
+          2460838        7382514  /btl/raw/events
+          4597612       13792836  /btl/raw/orders
+            41242         123726  /btl/raw/products
+   -- raw theo partition
+            62345         187035  /btl/raw/customers/ingest_date=2026-08-01
+            62345         187035  /btl/raw/customers/ingest_date=2026-10-11
+          1118573        3355719  /btl/raw/events/ingest_date=2026-08-01
+          1342265        4026795  /btl/raw/events/ingest_date=2026-10-11
+          2298806        6896418  /btl/raw/orders/ingest_date=2026-08-01
+          2298806        6896418  /btl/raw/orders/ingest_date=2026-10-11
+            20621          61863  /btl/raw/products/ingest_date=2026-08-01
+            20621          61863  /btl/raw/products/ingest_date=2026-10-11
+   -- staging theo thu muc con
+          2308599        6925797  /btl/staging/orders
+   -- curated theo thu muc con
+          2352399        7057197  /btl/curated/orders
+   -- output theo thu muc con
+           114046         342138  /btl/output/cau04_pig
+           184868         554604  /btl/output/cau05_mr
+           148045         444135  /btl/output/cau06_spark
+
+== 4. So tep va kich thuoc tep trung binh theo vung (van de tep nho)
+   raw      thu_muc=13    tep=8      byte=7224382      byte/tep=903048 (0.6728% block 128 MiB)
+   staging  thu_muc=2     tep=4      byte=2308599      byte/tep=577150 (0.4300% block 128 MiB)
+   curated  thu_muc=137   tep=115    byte=2352399      byte/tep=20456 (0.0152% block 128 MiB)
+   output   thu_muc=22    tep=61     byte=446959       byte/tep=7327 (0.0055% block 128 MiB)
+
+== 5. hdfs fsck /btl (tom tat)
+   Number of data-nodes:	3
+   Number of racks:		1
+   Total size:	15780103 B
+   Total files:	208
+   Total blocks (validated):	191 (avg. block size 82618 B)
+   Minimally replicated blocks:	191 (100.0 %)
+   Over-replicated blocks:	0 (0.0 %)
+   Under-replicated blocks:	0 (0.0 %)
+   Mis-replicated blocks:		0 (0.0 %)
+   Default replication factor:	3
+   Average block replication:	3.0
+   Missing blocks:		0
+   Corrupt blocks:		0
+   Missing replicas:		0 (0.0 %)
+
+== 6. Vi tri block cua ban chup orders.csv
+   /btl/raw/orders/ingest_date=2026-08-01/orders.csv 2298806 bytes, replicated: replication=3, 1 block(s):  OK
+   0. BP-1060793150-172.28.1.1-1791127385133:blk_1073742697_1900 len=2298806 Live_repl=3  [172.28.1.3, 172.28.1.2, 172.28.1.4]
+
+== 7. hdfs dfsadmin -report (tom tat)
+   Configured Capacity: 3243303530496 (2.95 TB)
+   Present Capacity: 2755147221795 (2.51 TB)
+   DFS Remaining: 2752941582295 (2.50 TB)
+   DFS Used: 2205639500 (2.05 GB)
+   DFS Used%: 0.08%
+   	Under replicated blocks: 2
+   	Missing blocks: 0
+   	Missing blocks (with replication factor 1): 0
+   Live datanodes (3):
+   Name: 172.28.1.2:9866 (datanode1.btl-hadoop-net)
+   Hostname: datanode1
+   Configured Capacity: 1081101176832 (1006.85 GB)
+   DFS Used: 734919599 (700.87 MB)
+   DFS Remaining: 917602632510 (854.58 GB)
+   DFS Used%: 0.07%
+   DFS Remaining%: 84.88%
+   Last contact: Sun Oct 11 16:21:42 UTC 2026
+   Num of Blocks: 919
+   Name: 172.28.1.3:9866 (datanode2.btl-hadoop-net)
+   Hostname: datanode2
+   Configured Capacity: 1081101176832 (1006.85 GB)
+   DFS Used: 735904146 (701.81 MB)
+   DFS Remaining: 917736317275 (854.71 GB)
+   DFS Used%: 0.07%
+   DFS Remaining%: 84.89%
+   Last contact: Sun Oct 11 16:21:39 UTC 2026
+   Num of Blocks: 919
+   Name: 172.28.1.4:9866 (datanode3.btl-hadoop-net)
+   Hostname: datanode3
+   Configured Capacity: 1081101176832 (1006.85 GB)
+   DFS Used: 734815755 (700.77 MB)
+   DFS Remaining: 917602632510 (854.58 GB)
+   DFS Used%: 0.07%
+   DFS Remaining%: 84.88%
+   Last contact: Sun Oct 11 16:21:42 UTC 2026
+   Num of Blocks: 919
+
+== 8. YARN: NodeManager
+   Total Nodes:3
+            Node-Id	     Node-State	Node-Http-Address	Number-of-Running-Containers
+    datanode1:41373	        RUNNING	   datanode1:8042	                           1
+    datanode2:46711	        RUNNING	   datanode2:8042	                           2
+    datanode3:44273	        RUNNING	   datanode3:8042	                           1
+
+== 9. HBase luu tren HDFS (/hbase/data/btl/*); flush bang su kien cua Cau 2 truoc khi do
+          3446839       10340517  /hbase/data/btl/customer_orders
+           388094        1164282  /hbase/data/btl/order_events
+
+== 10. Sao luu metadata NameNode: hdfs dfsadmin -fetchImage (tai fsimage moi nhat)
+   2026-10-11 16:21:51,738 INFO common.Util: Combined time for file download and fsync to all disks took 0.00s. The file download took 0.00s at 36000.00 KB/s. Synchronous (fsync) write to disk of /tmp/cau03_fsimage.yglyKf/fsimage_0000000000000008593 took 0.00s.
+   fsimage_0000000000000008593  37095 byte

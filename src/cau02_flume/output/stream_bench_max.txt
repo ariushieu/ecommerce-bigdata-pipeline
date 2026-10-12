@@ -1,0 +1,14 @@
+# Cau 2 - do thong luong toi da (RATE=0, lo 50, 5.000 event) tren duong dan/bang rieng, da xoa sau khi do
+# lenh: FLUME_WORK=/tmp/cau02_bench_work RAW_ROOT=/tmp/cau02_bench/raw HB_TABLE=btl:cau02_bench HTTP_PORT=41498 MON_PORT=34598 OUT_DIR=/tmp/cau02_bench_out RATE=0 RESEND=0 bash run_stream.sh
+# Cau 2 - kich ban (ii) HTTP -> FileChannel/HDFS + MemoryChannel/HBase   (2026-10-11 23:03:54 +0700)
+   REPLAY events=5000 batches=100 batch_size=50 target_rate=0.0 retries=0 elapsed_s=0.61 throughput_eps=8199.4
+   CHANNEL.fcEvents       EventPutSuccessCount=5000 EventTakeSuccessCount=5000 ChannelSize=0 ChannelCapacity=1000000 ChannelFillPercentage=0.0
+   CHANNEL.mcEvents       EventPutSuccessCount=5000 EventTakeSuccessCount=5000 ChannelSize=0 ChannelCapacity=20000 ChannelFillPercentage=0.0
+   SINK.hbaseEvents       EventDrainAttemptCount=5000 EventDrainSuccessCount=5000 BatchCompleteCount=10 BatchUnderflowCount=0 ConnectionFailedCount=0 EventWriteFail=0
+   SINK.hdfsEvents        EventDrainAttemptCount=5000 EventDrainSuccessCount=5000 BatchCompleteCount=5 BatchUnderflowCount=0 ConnectionFailedCount=0 EventWriteFail=0
+   SOURCE.httpSrc         EventReceivedCount=5000 EventAcceptedCount=5000 ChannelWriteFail=0
+   so dong HDFS = 5000; event_id khac nhau = 5000; tap event_id trung tep goc: 1
+   count 'btl:cau02_bench' = 5000
+PASS: HDFS nhan 5000 dong = 5000 + 0 gui lai (at-least-once)
+PASS: khu trung theo event_id con 5000, dung tap goc
+PASS: HBase 5000 dong = so dong hop le 5000 (gui lai khong sinh dong trung)

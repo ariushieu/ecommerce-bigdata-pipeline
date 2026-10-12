@@ -1,0 +1,44 @@
+# Cau 2 - kich ban (ii) HTTP -> FileChannel/HDFS + MemoryChannel/HBase   (2026-10-11 23:00:12 +0700)
+# conf: conf/stream-events.conf  agent: s1  cong: 41414  bang: btl:order_events  raw: /btl/raw/events
+== 1. Chuan bi: xoa tep Flume cu (events.*), tao/truncate bang HBase
+   Deleted /btl/raw/events/ingest_date=2026-10-11/events.1791733573880.jsonl
+   hbase:001:0> if !list.include?('btl:order_events') then create 'btl:order_events', {NAME => 'e', VERSIONS => 1, COMPRESSION => 'SNAPPY', TTL => 15552000, BLOOMFILTER => 'ROW'} end
+   {NAME => 'e', INDEX_BLOCK_ENCODING => 'NONE', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'NONE', TTL => '15552000 SECONDS (180 DAYS)', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', COMPRESSION => 'SNAPPY', BLOCKCACHE => 'true', BLOCKSIZE => '65536 B (64KB)'}
+   so dong HBase truoc khi chay: 0
+== 2. Bat agent s1 (HTTP :41414, metrics :34545)
+== 3. Lan 1: phat lai 5000 event, nhip 250 event/s, lo 50
+   REPLAY events=5000 batches=100 batch_size=50 target_rate=250.0 retries=0 elapsed_s=19.805 throughput_eps=252.5
+   CHANNEL.fcEvents       EventPutSuccessCount=5000 EventTakeSuccessCount=5000 ChannelSize=0 ChannelCapacity=1000000 ChannelFillPercentage=0.0
+   CHANNEL.mcEvents       EventPutSuccessCount=5000 EventTakeSuccessCount=5000 ChannelSize=0 ChannelCapacity=20000 ChannelFillPercentage=0.0
+   SINK.hbaseEvents       EventDrainAttemptCount=5000 EventDrainSuccessCount=5000 BatchCompleteCount=10 BatchUnderflowCount=0 ConnectionFailedCount=0 EventWriteFail=0
+   SINK.hdfsEvents        EventDrainAttemptCount=5000 EventDrainSuccessCount=5000 BatchCompleteCount=0 BatchUnderflowCount=20 ConnectionFailedCount=0 EventWriteFail=0
+   SOURCE.httpSrc         EventReceivedCount=5000 EventAcceptedCount=5000 ChannelWriteFail=0
+== 4. Lan 2: gui lai 1000 event dau, toc do toi da, lo 100 (mo phong client retry)
+   REPLAY events=1000 batches=10 batch_size=100 target_rate=0.0 retries=0 elapsed_s=0.048 throughput_eps=21031.8
+   metrics sau 2 lan gui:
+   CHANNEL.fcEvents       EventPutSuccessCount=6000 EventTakeSuccessCount=6000 ChannelSize=0 ChannelCapacity=1000000 ChannelFillPercentage=0.0
+   CHANNEL.mcEvents       EventPutSuccessCount=6000 EventTakeSuccessCount=6000 ChannelSize=0 ChannelCapacity=20000 ChannelFillPercentage=0.0
+   SINK.hbaseEvents       EventDrainAttemptCount=6000 EventDrainSuccessCount=6000 BatchCompleteCount=12 BatchUnderflowCount=0 ConnectionFailedCount=0 EventWriteFail=0
+   SINK.hdfsEvents        EventDrainAttemptCount=6000 EventDrainSuccessCount=6000 BatchCompleteCount=1 BatchUnderflowCount=20 ConnectionFailedCount=0 EventWriteFail=0
+   SOURCE.httpSrc         EventReceivedCount=6000 EventAcceptedCount=6000 ChannelWriteFail=0
+== 5. Tat agent (sink HDFS dong tep, doi ten _*.tmp -> *.jsonl)
+== 6. Kiem tra HDFS
+   -rw-r--r-- 3 1118573 /btl/raw/events/ingest_date=2026-08-01/events_stream.jsonl
+   -rw-r--r-- 3 1342265 /btl/raw/events/ingest_date=2026-10-11/events.1791734447244.jsonl
+   so dong HDFS = 6000; event_id khac nhau = 5000; tap event_id trung tep goc: 1
+== 7. Kiem tra HBase
+   count 'btl:order_events' = 5000
+    e:category timestamp=2026-10-11T16:01:07.874, value=Beauty
+    e:customer_segment timestamp=2026-10-11T16:01:07.874, value=Regular
+    e:event_time timestamp=2026-10-11T16:01:07.874, value=2026-01-07T20:15:28
+    e:event_type timestamp=2026-10-11T16:01:07.874, value=order_event
+    e:net_revenue timestamp=2026-10-11T16:01:07.874, value=2703.86
+    e:returned_flag timestamp=2026-10-11T16:01:07.874, value=0
+    e:source timestamp=2026-10-11T16:01:07.874, value=mobile
+   dong goc: {"event_id": "EVT-ORD0000001", "event_time": "2026-01-07T20:15:28", "event_type": "order_event", "source": "mobile", "payload": {"category": "Beauty", "customer_segment": "Regular", "net_revenue": 2703.86, "returned_flag": 0}}
+    EVT-ORD0000001 column=e:net_revenue, timestamp=2026-10-11T16:01:07.874, value=2703.86
+    EVT-ORD0000002 column=e:net_revenue, timestamp=2026-10-11T16:01:07.874, value=2349.32
+== 8. Ket qua
+PASS: HDFS nhan 6000 dong = 5000 + 1000 gui lai (at-least-once)
+PASS: khu trung theo event_id con 5000, dung tap goc
+PASS: HBase 5000 dong = so dong hop le 5000 (gui lai khong sinh dong trung)
