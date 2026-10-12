@@ -37,3 +37,6 @@ flume-data/
 .Rproj.user/
 # Ban copy CSDL de Cau 9 ghi ket qua (ban goc nam o data/)
 src/**/*.sqlite
+
+# Bao cao sinh tu dong
+report/build/
