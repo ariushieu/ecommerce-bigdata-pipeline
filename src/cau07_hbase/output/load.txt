@@ -1,0 +1,14 @@
+$ java CustomerOrders create --recreate
+xoa bang cu btl:customer_orders
+tao bang btl:customer_orders voi 6 region, TTL=94608000s, SNAPPY, FAST_DIFF, BLOOM ROW, d:VERSIONS=5
+$ hdfs dfs -cat /btl/raw/orders/ingest_date=2026-08-01/orders.csv | java CustomerOrders load -
+nap btl:customer_orders: doc 15000 dong, ghi 14408 dong (Put), bo 592 (OUTLIER/DUPLICATE/LATE), 1.9 s
+$ java CustomerOrders count
+region (start .. end)        RegionServer   so dong   so khach
+(-)      .. C00201    datanode2          2384        200
+C00201   .. C00401    datanode3          2419        200
+C00401   .. C00601    datanode1          2444        200
+C00601   .. C00801    datanode2          2377        200
+C00801   .. C01001    datanode1          2332        200
+C01001   .. (-)       datanode3          2452        200
+tong so dong btl:customer_orders = 14408
