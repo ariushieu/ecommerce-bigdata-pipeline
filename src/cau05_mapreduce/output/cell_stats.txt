@@ -1,0 +1,21 @@
+So o (danh muc x tinh x thang) co don: 2049 / 2052 o co the co
+So don moi o: nho nhat 1, trung vi 7, lon nhat 18, trung binh 7.03
+O khong co don tra: 1190 (58.1%)
+
+5 o doanh thu cao nhat:
+Books	Thanh Hoa	2025-06	18	115231.08	2	11.11
+Electronics	Thai Nguyen	2025-03	15	108375.83	0	0.00
+Electronics	Nam Dinh	2025-10	14	106663.82	0	0.00
+Home	Khanh Hoa	2025-08	13	106529.26	0	0.00
+Home	Khanh Hoa	2025-01	14	105329.66	0	0.00
+
+5 o ty le tra cao nhat (chi xet o co >= 15 don):
+Home	Binh Duong	2025-03	18	92892.97	4	22.22
+Books	Da Nang	2026-04	15	58884.94	2	13.33
+Books	Quang Nam	2025-04	15	97039.12	2	13.33
+Books	Quang Ninh	2025-03	15	97164.22	2	13.33
+Books	Thua Thien Hue	2025-04	15	54998.19	2	13.33
+
+Danh muc x thang (compare_category_month.csv): ty le tra thap nhat / cao nhat
+Electronics,2025-07,119,726973.80,3,2.52
+Books,2025-03,161,852565.08,23,14.29
