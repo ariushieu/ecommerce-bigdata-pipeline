@@ -1,0 +1,9 @@
+{
+  "events": 5000,
+  "batches": 100,
+  "batch_size": 50,
+  "target_rate": 250.0,
+  "retries": 0,
+  "elapsed_s": 19.805,
+  "throughput_eps": 252.5
+}
