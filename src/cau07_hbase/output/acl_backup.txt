@@ -1,0 +1,18 @@
+$ HADOOP_USER_NAME=analyst hbase shell   # sau khi grant 'analyst', 'R'
+ C00941#9223370251667013807 column=o:order_id, timestamp=2026-07-27T21:29:22, value=ORD0009988
+ C00941#9223370252467399807 column=o:order_id, timestamp=2026-07-18T15:09:36, value=ORD0001650
+2 row(s)
+Took 0.8173 secondsRuntimeError: org.apache.hadoop.hbase.security.AccessDeniedException: Insufficient permissions (user=analyst, scope=btl:customer_orders, family=o:order_id, params=[table=btl:customer_orders,family=o:order_id],action=WRITE)
+$ hbase shell: revoke 'analyst', 'btl:customer_orders'
+User  Namespace,Table,Family,Qualifier:Permission
+ hadoop btl,btl:customer_orders,,: [Permission: actions=READ,WRITE,EXEC,CREATE,ADMIN]
+1 row(s)
+$ HADOOP_USER_NAME=analyst hbase shell   # sau khi revoke
+org.apache.hadoop.hbase.security.AccessDeniedException: org.apache.hadoop.hbase.security.AccessDeniedException: Insufficient permissions for user 'analyst' (table=btl:customer_orders, action=READ)
+Caused by: org.apache.hadoop.hbase.ipc.RemoteWithExtrasException(org.apache.hadoop.hbase.security.AccessDeniedException): org.apache.hadoop.hbase.security.AccessDeniedException: Insufficient permissions for user 'analyst' (table=btl:customer_orders, action=READ)
+Took 1.3537 secondsRuntimeError: org.apache.hadoop.hbase.security.AccessDeniedException: Insufficient permissions for user 'analyst' (table=btl:customer_orders, action=READ)
+$ hbase org.apache.hadoop.hbase.snapshot.ExportSnapshot -snapshot customer_orders_snap -copy-to hdfs://masternode:9000/btl/backup/hbase -mappers 2 -overwrite
+ExportSnapshot: OK
+$ hdfs dfs -du -s /btl/backup/hbase/.hbase-snapshot /btl/backup/hbase/archive
+2180     6540      /btl/backup/hbase/.hbase-snapshot
+3445584  10336752  /btl/backup/hbase/archive

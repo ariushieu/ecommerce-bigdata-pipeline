@@ -1,0 +1,17 @@
+metric,value
+events,5000
+matched_orders,5000
+diff_time,0
+diff_source,0
+diff_category,0
+diff_segment,0
+diff_net_revenue,0
+diff_returned,0
+events_of_clean_orders,4793
+event_revenue,28406526.37
+event_revenue_clean,25969005.67
+events_flag_DUPLICATE,57
+events_flag_LATE,51
+events_flag_MISSING,114
+events_flag_OK,4679
+events_flag_OUTLIER,99

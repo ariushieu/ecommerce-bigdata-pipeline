@@ -1,0 +1,277 @@
+hbase:001:0> # Cau 7 - lenh hbase shell tren bang that btl:customer_orders (da nap bang CustomerOrders load).
+hbase:002:0> #   hbase shell -n cau07_hbase/shell_demo.rb
+hbase:003:0> # hbase shell la JRuby nen tinh rowkey customer_id#reverse_timestamp ngay trong script.
+hbase:004:0> 
+hbase:005:0> ZONE = java.time.ZoneId.of('Asia/Ho_Chi_Minh')
+=> #<Java::JavaTime::ZoneRegion:0x6cf047cf>
+hbase:006:0> def ms(iso)
+  java.time.LocalDateTime.parse(iso).atZone(ZONE).toInstant.toEpochMilli
+end
+=> :ms
+hbase:009:0> 
+hbase:010:0> def rk(cust, iso)
+  format('%s#%019d', cust, java.lang.Long::MAX_VALUE - ms(iso))
+end
+=> :rk
+hbase:013:0> 
+hbase:014:0> def title(s)
+  puts
+  puts '==== ' + s
+end
+=> :title
+hbase:018:0> 
+hbase:019:0> T = 'btl:customer_orders'.freeze
+=> "btl:customer_orders"
+hbase:020:0> K1 = rk('C00941', '2026-01-07T20:15:28') # ORD0000001
+=> "C00941#9223370269063047807"
+hbase:021:0> KR = rk('C00941', '2025-09-29T03:02:19') # ORD0013507, don bi tra
+=> "C00941#9223370277765036807"
+hbase:022:0> 
+hbase:023:0> title '1. describe: 3 column family, VERSIONS, TTL, COMPRESSION, BLOOMFILTER'
+
+==== 1. describe: 3 column family, VERSIONS, TTL, COMPRESSION, BLOOMFILTER
+hbase:024:0> describe T
+Table btl:customer_orders is ENABLED
+btl:customer_orders, {TABLE_ATTRIBUTES => {METADATA => {'hbase.store.file-tracker.impl' => 'DEFAULT'}}}
+COLUMN FAMILIES DESCRIPTION
+{NAME => 'd', INDEX_BLOCK_ENCODING => 'NONE', VERSIONS => '5', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'FAST_DIFF', TTL => '94608000 SECONDS (1095 DAYS)', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', COMPRESSION => 'SNAPPY', BLOCKCACHE => 'true', BLOCKSIZE => '65536 B (64KB)'}
+
+{NAME => 'm', INDEX_BLOCK_ENCODING => 'NONE', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'FAST_DIFF', TTL => '94608000 SECONDS (1095 DAYS)', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', COMPRESSION => 'SNAPPY', BLOCKCACHE => 'true', BLOCKSIZE => '65536 B (64KB)'}
+
+{NAME => 'o', INDEX_BLOCK_ENCODING => 'NONE', VERSIONS => '1', KEEP_DELETED_CELLS => 'FALSE', DATA_BLOCK_ENCODING => 'FAST_DIFF', TTL => '94608000 SECONDS (1095 DAYS)', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', IN_MEMORY => 'false', COMPRESSION => 'SNAPPY', BLOCKCACHE => 'true', BLOCKSIZE => '65536 B (64KB)'}
+
+3 row(s)
+Quota is disabled
+Took 0.6744 seconds
+hbase:025:0> 
+hbase:026:0> title '2. get mot don (rowkey ' + K1 + ')'
+
+==== 2. get mot don (rowkey C00941#9223370269063047807)
+hbase:027:0> get T, K1
+COLUMN  CELL
+ d:delivery_days timestamp=2026-01-07T13:15:28, value=4
+ d:returned_flag timestamp=2026-01-07T13:15:28, value=0
+ d:review_score timestamp=2026-01-07T13:15:28, value=4
+ d:status timestamp=2026-01-11T13:15:28, value=DELIVERED
+ m:discount_rate timestamp=2026-01-07T13:15:28, value=0.05
+ m:net_revenue timestamp=2026-01-07T13:15:28, value=2703.86
+ m:quantity timestamp=2026-01-07T13:15:28, value=3
+ m:shipping_fee timestamp=2026-01-07T13:15:28, value=25.0
+ m:unit_price timestamp=2026-01-07T13:15:28, value=939.95
+ o:campaign_id timestamp=2026-01-07T13:15:28, value=CP018
+ o:category timestamp=2026-01-07T13:15:28, value=Beauty
+ o:channel timestamp=2026-01-07T13:15:28, value=mobile
+ o:ingest_mode timestamp=2026-01-07T13:15:28, value=stream
+ o:order_id timestamp=2026-01-07T13:15:28, value=ORD0000001
+ o:payment timestamp=2026-01-07T13:15:28, value=bank_transfer
+ o:product_id timestamp=2026-01-07T13:15:28, value=P0225
+ o:province timestamp=2026-01-07T13:15:28, value=Khanh Hoa
+ o:quality_flag timestamp=2026-01-07T13:15:28, value=OK
+ o:segment timestamp=2026-01-07T13:15:28, value=Regular
+ o:source_system timestamp=2026-01-07T13:15:28, value=mobile
+ o:ts timestamp=2026-01-07T13:15:28, value=2026-01-07T20:15:28
+1 row(s)
+Took 0.0984 seconds
+hbase:028:0> 
+hbase:029:0> title '3. scan tien to C00941#: 5 don moi nhat truoc (reverse timestamp)'
+
+==== 3. scan tien to C00941#: 5 don moi nhat truoc (reverse timestamp)
+hbase:030:0> scan T, { ROWPREFIXFILTER => 'C00941#', COLUMNS => ['o:order_id', 'o:ts', 'm:net_revenue', 'd:status'], LIMIT => 5 }
+ROW  COLUMN+CELL
+ C00941#9223370251667013807 column=d:status, timestamp=2026-07-29T21:29:22, value=DELIVERED
+ C00941#9223370251667013807 column=m:net_revenue, timestamp=2026-07-27T21:29:22, value=7420.87
+ C00941#9223370251667013807 column=o:order_id, timestamp=2026-07-27T21:29:22, value=ORD0009988
+ C00941#9223370251667013807 column=o:ts, timestamp=2026-07-27T21:29:22, value=2026-07-28T04:29:22
+ C00941#9223370252467399807 column=d:status, timestamp=2026-07-22T15:09:36, value=DELIVERED
+ C00941#9223370252467399807 column=m:net_revenue, timestamp=2026-07-18T15:09:36, value=1029.58
+ C00941#9223370252467399807 column=o:order_id, timestamp=2026-07-18T15:09:36, value=ORD0001650
+ C00941#9223370252467399807 column=o:ts, timestamp=2026-07-18T15:09:36, value=2026-07-18T22:09:36
+ C00941#9223370253164965807 column=d:status, timestamp=2026-07-16T13:23:30, value=DELIVERED
+ C00941#9223370253164965807 column=m:net_revenue, timestamp=2026-07-10T13:23:30, value=2240.6
+ C00941#9223370253164965807 column=o:order_id, timestamp=2026-07-10T13:23:30, value=ORD0008333
+ C00941#9223370253164965807 column=o:ts, timestamp=2026-07-10T13:23:30, value=2026-07-10T20:23:30
+ C00941#9223370253672262807 column=d:status, timestamp=2026-07-09T16:28:33, value=DELIVERED
+ C00941#9223370253672262807 column=m:net_revenue, timestamp=2026-07-04T16:28:33, value=11299.54
+ C00941#9223370253672262807 column=o:order_id, timestamp=2026-07-04T16:28:33, value=ORD0001228
+ C00941#9223370253672262807 column=o:ts, timestamp=2026-07-04T16:28:33, value=2026-07-04T23:28:33
+ C00941#9223370255366814807 column=d:status, timestamp=2026-06-17T01:46:01, value=DELIVERED
+ C00941#9223370255366814807 column=m:net_revenue, timestamp=2026-06-15T01:46:01, value=1377.55
+ C00941#9223370255366814807 column=o:order_id, timestamp=2026-06-15T01:46:01, value=ORD0003359
+ C00941#9223370255366814807 column=o:ts, timestamp=2026-06-15T01:46:01, value=2026-06-15T08:46:01
+5 row(s)
+Took 0.0862 seconds
+hbase:031:0> 
+hbase:032:0> title '4. get nhieu phien ban d:status cua don bi tra ' + KR
+
+==== 4. get nhieu phien ban d:status cua don bi tra C00941#9223370277765036807
+hbase:033:0> get T, KR, { COLUMN => 'd:status', VERSIONS => 5 }
+COLUMN  CELL
+ d:status timestamp=2025-09-30T20:02:19.001, value=RETURNED
+ d:status timestamp=2025-09-30T20:02:19, value=DELIVERED
+ d:status timestamp=2025-09-28T20:02:19, value=PLACED
+1 row(s)
+Took 0.0126 seconds
+hbase:034:0> 
+hbase:035:0> title '5. put them phien ban REFUNDED (timestamp tuong minh 2025-10-05) roi doc lai'
+
+==== 5. put them phien ban REFUNDED (timestamp tuong minh 2025-10-05) roi doc lai
+hbase:036:0> TS_REFUND = ms('2025-10-05T09:00:00')
+=> 1759629600000
+hbase:037:0> put T, KR, 'd:status', 'REFUNDED', TS_REFUND
+Took 0.0370 seconds
+hbase:038:0> get T, KR, { COLUMN => 'd:status', VERSIONS => 5 }
+COLUMN  CELL
+ d:status timestamp=2025-10-05T02:00, value=REFUNDED
+ d:status timestamp=2025-09-30T20:02:19.001, value=RETURNED
+ d:status timestamp=2025-09-30T20:02:19, value=DELIVERED
+ d:status timestamp=2025-09-28T20:02:19, value=PLACED
+1 row(s)
+Took 0.0162 seconds
+hbase:039:0> 
+hbase:040:0> title '6. get mac dinh chi tra phien ban moi nhat; TIMERANGE lay trang thai tai mot thoi diem'
+
+==== 6. get mac dinh chi tra phien ban moi nhat; TIMERANGE lay trang thai tai mot thoi diem
+hbase:041:0> get T, KR, { COLUMN => 'd:status' }
+COLUMN  CELL
+ d:status timestamp=2025-10-05T02:00, value=REFUNDED
+1 row(s)
+Took 0.0066 seconds
+hbase:042:0> get T, KR, { COLUMN => 'd:status', TIMERANGE => [ms('2025-09-29T00:00:00'), ms('2025-10-01T00:00:00')], VERSIONS => 5 }
+COLUMN  CELL
+ d:status timestamp=2025-09-28T20:02:19, value=PLACED
+1 row(s)
+Took 0.0075 seconds
+hbase:043:0> 
+hbase:044:0> title '7. delete dung phien ban REFUNDED (theo timestamp) -> con 3 phien ban'
+
+==== 7. delete dung phien ban REFUNDED (theo timestamp) -> con 3 phien ban
+hbase:045:0> delete T, KR, 'd:status', TS_REFUND
+Took 0.0111 seconds
+hbase:046:0> get T, KR, { COLUMN => 'd:status', VERSIONS => 5 }
+COLUMN  CELL
+ d:status timestamp=2025-09-30T20:02:19.001, value=RETURNED
+ d:status timestamp=2025-09-30T20:02:19, value=DELIVERED
+ d:status timestamp=2025-09-28T20:02:19, value=PLACED
+1 row(s)
+Took 0.0094 seconds
+hbase:047:0> 
+hbase:048:0> title '8. put / get / deleteall mot dong demo (khach C01200)'
+
+==== 8. put / get / deleteall mot dong demo (khach C01200)
+hbase:049:0> KD = rk('C01200', '2026-07-31T23:59:59')
+=> "C01200#9223370251337576807"
+hbase:050:0> put T, KD, 'o:order_id', 'ORDDEMO0001'
+Took 0.0180 seconds
+hbase:051:0> put T, KD, 'm:net_revenue', '1234.50'
+Took 0.0063 seconds
+hbase:052:0> get T, KD
+COLUMN  CELL
+ m:net_revenue timestamp=2026-10-11T16:07:02.730, value=1234.50
+ o:order_id timestamp=2026-10-11T16:07:02.717, value=ORDDEMO0001
+1 row(s)
+Took 0.0102 seconds
+hbase:053:0> deleteall T, KD
+Took 0.0053 seconds
+hbase:054:0> get T, KD
+COLUMN  CELL
+0 row(s)
+Took 0.0037 seconds
+hbase:055:0> 
+hbase:056:0> title '9. count toan bang'
+
+==== 9. count toan bang
+hbase:057:0> count T, INTERVAL => 5000, CACHE => 1000
+Current count: 5000, row: C00415#9223370297322776807
+Current count: 10000, row: C00831#9223370252635661807
+14408 row(s)
+Took 0.3078 seconds
+=> 14408
+hbase:058:0> 
+hbase:059:0> title '10. TTL tinh theo timestamp cua cell: bang tam TTL 1 nam'
+
+==== 10. TTL tinh theo timestamp cua cell: bang tam TTL 1 nam
+hbase:060:0> TT = 'btl:customer_orders_ttl_demo'.freeze
+=> "btl:customer_orders_ttl_demo"
+hbase:061:0> if list.include?(TT)
+  disable TT
+  drop TT
+end
+TABLE
+btl:customer_orders
+btl:order_events
+2 row(s)
+Took 0.0139 seconds
+hbase:065:0> create TT, { NAME => 'd', TTL => 31_536_000 }
+Created table btl:customer_orders_ttl_demo
+Took 0.6459 seconds
+=> Hbase::Table - btl:customer_orders_ttl_demo
+hbase:066:0> put TT, 'C00941#ts-2025-01', 'd:status', 'PLACED', ms('2025-01-10T10:00:00')
+Took 0.0104 seconds
+hbase:067:0> put TT, 'C00941#ts-hien-tai', 'd:status', 'PLACED'
+Took 0.0051 seconds
+hbase:068:0> scan TT
+ROW  COLUMN+CELL
+ C00941#ts-hien-tai column=d:status, timestamp=2026-10-11T16:07:03.801, value=PLACED
+1 row(s)
+Took 0.0062 seconds
+hbase:069:0> disable TT
+Took 0.3348 seconds
+hbase:070:0> drop TT
+Took 0.1456 seconds
+hbase:071:0> 
+hbase:072:0> title '11. sao luu: snapshot + clone_snapshot (khoi phuc sang bang moi)'
+
+==== 11. sao luu: snapshot + clone_snapshot (khoi phuc sang bang moi)
+hbase:073:0> SNAP = 'customer_orders_snap'.freeze
+=> "customer_orders_snap"
+hbase:074:0> delete_snapshot SNAP if list_snapshots(SNAP).size > 0
+SNAPSHOT  TABLE + CREATION TIME + TTL(Sec)
+ customer_orders_snap btl:customer_orders (2026-10-11 16:03:53 +0000) FOREVER
+1 row(s)
+Took 0.0391 seconds
+Took 0.0127 seconds
+hbase:075:0> snapshot T, SNAP
+Took 1.1637 seconds
+hbase:076:0> list_snapshots SNAP
+SNAPSHOT  TABLE + CREATION TIME + TTL(Sec)
+ customer_orders_snap btl:customer_orders (2026-10-11 16:07:04 +0000) FOREVER
+1 row(s)
+Took 0.0120 seconds
+=> ["customer_orders_snap"]
+hbase:077:0> RESTORE = 'btl:customer_orders_restore'.freeze
+=> "btl:customer_orders_restore"
+hbase:078:0> if list.include?(RESTORE)
+  disable RESTORE
+  drop RESTORE
+end
+TABLE
+btl:customer_orders
+btl:order_events
+2 row(s)
+Took 0.0062 seconds
+hbase:082:0> clone_snapshot SNAP, RESTORE
+Took 1.1452 seconds
+hbase:083:0> count RESTORE, INTERVAL => 5000, CACHE => 1000
+Current count: 5000, row: C00415#9223370297322776807
+Current count: 10000, row: C00831#9223370252635661807
+14408 row(s)
+Took 0.5395 seconds
+=> 14408
+hbase:084:0> disable RESTORE
+Took 0.3279 seconds
+hbase:085:0> drop RESTORE
+Took 0.1451 seconds
+hbase:086:0> 
+hbase:087:0> title '12. quyen: cap quyen chi doc (R) cho user analyst'
+
+==== 12. quyen: cap quyen chi doc (R) cho user analyst
+hbase:088:0> grant 'analyst', 'R', T
+Took 0.0820 seconds
+hbase:089:0> user_permission T
+User  Namespace,Table,Family,Qualifier:Permission
+ analyst btl,btl:customer_orders,,: [Permission: actions=READ]
+ hadoop btl,btl:customer_orders,,: [Permission: actions=READ,WRITE,EXEC,CREATE,ADMIN]
+2 row(s)
+Took 0.0699 seconds
+hbase:090:0> 
+hbase:001:0> 

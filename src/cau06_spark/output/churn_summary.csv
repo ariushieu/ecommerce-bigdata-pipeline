@@ -1,0 +1,6 @@
+customer_segment,customers,high,medium,low,high_pct,avg_recency_days
+Loyal,296,28,51,217,9.46,44.66
+New,303,41,48,214,13.53,51.10
+Regular,302,37,61,204,12.25,50.00
+VIP,299,41,62,196,13.71,49.35
+ALL,1200,147,222,831,12.25,48.80

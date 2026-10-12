@@ -1,0 +1,4 @@
+spark-submit category_month_only.py: doc orders.csv, lam sach, groupBy category x month, ghi CSV
+lan 1: wall_s=20.2 CM_ONLY rows=114 session_start_s=7.7 job_s=7.9
+lan 2: wall_s=17.3 CM_ONLY rows=114 session_start_s=8.3 job_s=7.7
+lan 3: wall_s=17.5 CM_ONLY rows=114 session_start_s=8.3 job_s=6.4
