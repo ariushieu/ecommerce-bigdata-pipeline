@@ -10,7 +10,13 @@ echo "PASS: Pig = MapReduce = Spark tung o, tong khop Cau 1"
 PYTHONPYCACHEPREFIX="${TMPDIR:-/tmp}/cau10_pycache" python3 -m py_compile spark_category_month.py compare.py
 echo "PASS: cu phap Python"
 
-pig -x local -l "${TMPDIR:-/tmp}" -c -param IN=x -param OUT=y -f category_month.pig 2>&1 | grep -q 'syntax OK'
+# Pig ghi <script>.substituted canh script va log vao thu muc hien tai, ma src co the
+# khong ghi duoc (vd. tren CI): chep script ra thu muc tam; lay het output roi moi grep.
+tmp=$(mktemp -d)
+cp category_month.pig "$tmp/"
+out=$(cd "$tmp" && pig -x local -l "$tmp" -c -param IN=x -param OUT=y -f category_month.pig 2>&1) || true
+rm -rf "$tmp"
+grep -q "syntax OK" <<< "$out"
 echo "PASS: cu phap Pig"
 
 if [ -f output/bench.tsv ]; then
