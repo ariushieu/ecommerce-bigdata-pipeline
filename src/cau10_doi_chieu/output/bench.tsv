@@ -1,0 +1,24 @@
+tool	scale	run	wall_s	yarn_apps_khac
+MapReduce	x1	1	18.1	0
+Pig	x1	1	64.9	0
+Spark	x1	1	22.3	0
+MapReduce	x1	2	26.4	0
+Pig	x1	2	64.1	0
+Spark	x1	2	19.0	0
+MapReduce	x1	3	16.0	0
+Pig	x1	3	59.5	0
+Spark	x1	3	19.5	0
+# x1: 3 cong cu cho ket qua giong het nhau (114 o)
+# x1: orders=14408 net_revenue=78218341.22 returned=1114
+MapReduce	x10	1	15.5	0
+Pig	x10	1	53.9	0
+Spark	x10	1	24.2	0
+MapReduce	x10	2	16.4	0
+Pig	x10	2	54.1	0
+Spark	x10	2	15.8	0
+MapReduce	x10	3	16.3	0
+Pig	x10	3	55.3	0
+Spark	x10	3	17.6	0
+# x10: 3 cong cu cho ket qua giong het nhau (114 o)
+# x10: orders=144080 net_revenue=782183412.20 returned=11140
+# Pig x1: so job MapReduce sinh ra = 3
