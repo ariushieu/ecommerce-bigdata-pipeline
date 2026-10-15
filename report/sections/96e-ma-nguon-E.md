@@ -1,4 +1,4 @@
-### Mã nguồn – thành viên E
+### Mã nguồn Câu 8, 9 – Phạm Văn Quyết
 
 Mã đầy đủ nằm ở `src/cau08_bigsheets/dashboard.R` và `src/cau09_r/phan_tich.R`. Dưới đây là các đoạn quan trọng nhất, đã rút gọn.
 

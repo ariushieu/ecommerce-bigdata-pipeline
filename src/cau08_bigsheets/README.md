@@ -2,7 +2,7 @@
 
 **Yêu cầu:** Collection, làm sạch, calculated columns, lọc/nhóm/join, dashboard doanh thu – hoàn trả – giao hàng theo danh mục và tỉnh; hướng dẫn từng bước cho người không lập trình.
 
-**Phụ trách:** thành viên E (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
+**Phụ trách:** Phạm Văn Quyết – thành viên E (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
 
 **Bài viết:** mục 1.4.4, 4.3 và Phụ lục C của báo cáo (`report/sections/14e-*.md`, `43-*.md`, `97-*.md`).
 

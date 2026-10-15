@@ -1,4 +1,4 @@
-### Mã nguồn – thành viên C
+### Mã nguồn Câu 4, 5 – Nguyễn Tiến Hiệp
 
 Mục này trích mã chính của Câu 4 (`src/cau04_pig/cau04.pig`, 254 dòng) và Câu 5 (`src/cau05_mapreduce/java/btl/cau05/`, 7 tệp), kèm các bảng chi tiết bổ sung cho mục 3.5 và 4.1.
 

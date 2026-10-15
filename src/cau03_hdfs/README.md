@@ -4,7 +4,7 @@
 
 **Bài viết:** mục 3.2.1 và 3.3 của báo cáo – [`report/sections/32a-hdfs.md`, `33-pipeline.md`](../../report/sections/).
 
-**Phụ trách:** thành viên B (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
+**Phụ trách:** Nguyễn Trần Khánh Duy – thành viên B (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
 
 ## Vùng dữ liệu (đường dẫn chốt cho cả nhóm)
 

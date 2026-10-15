@@ -2,7 +2,7 @@
 
 **Yêu cầu:** LOAD + schema, FILTER, JOIN sự kiện với 2 bảng danh mục, GROUP theo category × customer_segment, FOREACH/DISTINCT/ORDER/LIMIT/SPLIT/STORE, ít nhất 4 hàm (SUM, COUNT, AVG, MAX…).
 
-**Phụ trách:** thành viên C (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
+**Phụ trách:** Nguyễn Tiến Hiệp – thành viên C (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
 
 **Bài viết:** mục 1.4.2, 2.4.1, 3.5.1, 4.1.1, 4.1.3 và Phụ lục B (`report/sections/14c-*`, `24a-*`, `35-*`, `41-*`, `96c-*`).
 

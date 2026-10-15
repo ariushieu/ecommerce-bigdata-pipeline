@@ -2,7 +2,7 @@
 
 **Yêu cầu:** DBI/RSQLite, SQL có JOIN + GROUP BY, dplyr/tidyr, ggplot2, hồi quy doanh thu, phân loại khả năng trả hàng, ghi kết quả lại CSDL (bản copy), đóng kết nối.
 
-**Phụ trách:** thành viên E (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
+**Phụ trách:** Phạm Văn Quyết – thành viên E (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
 
 **Bài viết:** mục 1.4.4, 4.2 (phần Câu 9), 4.3 và Phụ lục B/C của báo cáo.
 

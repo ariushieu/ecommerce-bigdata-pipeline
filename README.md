@@ -77,11 +77,11 @@ Chi tiết (giao diện web, tắt máy an toàn, xử lý lỗi): **[docs/moi-t
 
 | Thành viên | Câu | Mục báo cáo phụ trách | Ngoài ra |
 |---|---|---|---|
-| A – nhóm trưởng | 1, 10 | Lời mở đầu, 1.1–1.3, 2.1–2.3, 3.1, 4.5, Chương 5, Phụ lục A | Môi trường Docker/CI, ghép báo cáo |
-| B | 2, 3 | 1.4 (Flume, HDFS/YARN), 1.5, 3.2 (HDFS), 3.3 | Slide thuyết trình |
-| C | 4, 5 | 1.4 (Pig, MapReduce), 2.4 (Pig), 3.5, 4.1 | |
-| D | 6, 7 | 1.4 (Spark, HBase), 2.4–2.5 (Spark), 3.2 (HBase), 3.4, 3.6, 4.4 | |
-| E | 8, 9 | 1.4 (BigSheets, R), 4.2, 4.3, Phụ lục C | Dashboard demo |
+| A – Nguyễn Quốc Hiếu (nhóm trưởng) | 1, 10 | Lời mở đầu, 1.1–1.3, 2.1–2.3, 3.1, 4.5, Chương 5, Phụ lục A | Môi trường Docker/CI, ghép báo cáo |
+| B – Nguyễn Trần Khánh Duy | 2, 3 | 1.4 (Flume, HDFS/YARN), 1.5, 3.2 (HDFS), 3.3 | Slide thuyết trình |
+| C – Nguyễn Tiến Hiệp | 4, 5 | 1.4 (Pig, MapReduce), 2.4 (Pig), 3.5, 4.1 | |
+| D – Vũ Văn Quốc | 6, 7 | 1.4 (Spark, HBase), 2.4–2.5 (Spark), 3.2 (HBase), 3.4, 3.6, 4.4 | |
+| E – Phạm Văn Quyết | 8, 9 | 1.4 (BigSheets, R), 4.2, 4.3, Phụ lục C | Dashboard demo |
 
 Mỗi câu làm **code và mục báo cáo cùng lúc**, trong cùng một Pull Request. Quy ước chung (đường dẫn HDFS, làm sạch, file đối chiếu, cách đánh số bảng/hình): [`docs/quy-uoc.md`](docs/quy-uoc.md).
 

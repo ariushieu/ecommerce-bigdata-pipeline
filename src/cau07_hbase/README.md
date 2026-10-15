@@ -2,7 +2,7 @@
 
 **Yêu cầu:** Bảng truy cập ngẫu nhiên, RowKey `customer_id#reverse_timestamp`, ≥3 column families, version/timestamp, create/put/get/scan/delete, pre-split, TTL, nén, backup (snapshot), phân quyền.
 
-**Phụ trách:** thành viên D (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
+**Phụ trách:** Vũ Văn Quốc – thành viên D (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
 
 **Bài viết:** mục 1.4.3, 3.2.2 và Phụ lục B – `report/sections/14d-*.md`, `32b-*.md`, `96d-*.md`.
 

@@ -1,4 +1,4 @@
-### Mã nguồn – thành viên D
+### Mã nguồn Câu 6, 7 – Vũ Văn Quốc
 
 Mã đầy đủ nằm trong `src/cau06_spark/` (Câu 6) và `src/cau07_hbase/` (Câu 7). Dưới đây là các đoạn quan trọng nhất; chú thích trong mã viết không dấu theo quy ước của nhóm.
 

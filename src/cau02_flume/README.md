@@ -4,7 +4,7 @@
 
 **Bài viết:** mục 1.4.1, 1.5, 3.3 và Phụ lục B của báo cáo – [`report/sections/14b-*.md`, `15-*.md`, `33-*.md`, `96b-*.md`](../../report/sections/).
 
-**Phụ trách:** thành viên B (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
+**Phụ trách:** Nguyễn Trần Khánh Duy – thành viên B (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
 
 ## Hai kịch bản
 

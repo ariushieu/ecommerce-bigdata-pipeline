@@ -2,7 +2,7 @@
 
 **Yêu cầu:** tích hợp thành báo cáo kỹ thuật hoàn chỉnh, trong đó có **đối chiếu Pig – MapReduce – Spark**. Thư mục này chứa phần đối chiếu có thể chạy lại. Các mục báo cáo của Câu 10 là Lời mở đầu, 1.1, 1.2, 4.5, Chương 5 và Phụ lục A (`report/sections/`).
 
-**Phụ trách:** thành viên A – nhóm trưởng (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
+**Phụ trách:** Nguyễn Quốc Hiếu – thành viên A, nhóm trưởng (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
 
 **Chạy (trong `ssh may1`, thư mục `~/src`):**
 

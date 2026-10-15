@@ -1,4 +1,4 @@
-### Mã nguồn – thành viên B
+### Mã nguồn Câu 2, 3 – Nguyễn Trần Khánh Duy
 
 Toàn bộ mã nằm ở `src/cau02_flume/` và `src/cau03_hdfs/`. Lệnh chạy và kết quả được ghi trong `README.md` của từng thư mục.
 
