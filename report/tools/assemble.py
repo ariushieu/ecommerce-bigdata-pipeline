@@ -89,14 +89,86 @@ def resolve(s):
     return CITE.sub(cite, TOKEN.sub(tok, s))
 
 
+SEP_ROW = re.compile(r"^\|(\s*:?-+:?\s*\|)+\s*$")
+CELL_SPLIT = re.compile(r"(?<!\\)\|")
+
+
+def column_weights(longest, total=9071, char=130, pad=230):
+    """Do rong cot (twip, tren kho chu A4 9.071 twip): cot ngan duoc du cho noi dung dai nhat
+    (khong xuong dong), phan con lai chia cho cot dai theo do dai noi dung. Tra ve so dau '-'."""
+    natural = [n * char + pad for n in longest]
+    if sum(natural) <= total:
+        widths = natural
+    else:
+        share = total / len(natural)
+        short = [w <= share for w in natural]
+        rest = total - sum(w for w, s in zip(natural, short) if s)
+        long_len = [min(n, 80) for n, s in zip(longest, short) if not s]
+        it = iter(long_len)
+        widths = [w if s else rest * next(it) / sum(long_len) for w, s in zip(natural, short)]
+    return [max(3, round(100 * w / sum(widths))) for w in widths]
+
+
+def rebalance_tables(lines):
+    """Chia lai do rong cot cua bang Markdown theo do dai noi dung.
+    pandoc lay ti le cot tu so dau '-' o dong phan cach (khi bang rong hon 72 ky tu);
+    tac gia thuong viet '|---|---|' nen cac cot bang nhau -> cot noi dung bi bop hep."""
+    out, i = [], 0
+    while i < len(lines):
+        if lines[i].startswith("|") and i + 1 < len(lines) and SEP_ROW.match(lines[i + 1]):
+            j = i
+            while j < len(lines) and lines[j].startswith("|"):
+                j += 1
+            rows = [CELL_SPLIT.split(l.strip().strip("|")) for l in lines[i:j]]
+            seps = rows[1]
+            n = len(seps)
+            longest = [3] * n
+            for k, r in enumerate(rows):
+                if k == 1:
+                    continue
+                for c, cell in enumerate(r[:n]):
+                    text = re.sub(r"\*\*|`|\[(Bảng|Hình|TL):[a-z0-9-]+\]", "xx", cell.strip())
+                    longest[c] = max(longest[c], len(text))
+            weights = column_weights(longest)
+            new_sep = "|" + "|".join(
+                (":" if s.strip().startswith(":") else "") + "-" * w + (":" if s.strip().endswith(":") else "")
+                for s, w in zip(seps, weights)) + "|"
+            out += [lines[i], new_sep] + lines[i + 2:j]
+            i = j
+        else:
+            out.append(lines[i])
+            i += 1
+    return out
+
+
+def toc_field(style, items):
+    """Truong TOC cua Word lay theo kieu chu thich (Word tu dien so trang khi cap nhat truong).
+    Ket qua tam thoi (truoc khi cap nhat) la danh sach chu thich, de ban xem truoc van doc duoc."""
+    esc = lambda s: s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    items = items or ["(chưa có)"]
+    ps = []
+    for i, it in enumerate(items):
+        r = ""
+        if i == 0:
+            r += ('<w:r><w:fldChar w:fldCharType="begin" w:dirty="true"/></w:r>'
+                  f'<w:r><w:instrText xml:space="preserve"> TOC \\h \\z \\t "{style},1" </w:instrText></w:r>'
+                  '<w:r><w:fldChar w:fldCharType="separate"/></w:r>')
+        r += f'<w:r><w:t xml:space="preserve">{esc(it)}</w:t></w:r>'
+        if i == len(items) - 1:
+            r += '<w:r><w:fldChar w:fldCharType="end"/></w:r>'
+        ps.append(f'<w:p><w:pPr><w:ind w:firstLine="0"/><w:jc w:val="left"/></w:pPr>{r}</w:p>')
+    return "```{=openxml}\n" + "\n".join(ps) + "\n```"
+
+
 # 3) Chuyen chu thich, mermaid, anh
 os.makedirs(os.path.join(BUILD, "mermaid"), exist_ok=True)
 out, n_mmd = [], 0
 for f, t in texts:
     if f.startswith("02-"):
-        for kind, title in (("Hình", "DANH MỤC HÌNH"), ("Bảng", "DANH MỤC BẢNG")):
-            out += [f"# {title}", ""] + [x for c in captions[kind] for x in (c, "")] + [""]
-    lines = t.splitlines()
+        for kind, title, style in (("Hình", "DANH MỤC HÌNH", "Image Caption"),
+                                   ("Bảng", "DANH MỤC BẢNG", "Table Caption")):
+            out += [f"# {title}", "", toc_field(style, captions[kind]), ""]
+    lines = rebalance_tables(t.splitlines())
     i, block = 0, []
     while i < len(lines):
         line = lines[i]
