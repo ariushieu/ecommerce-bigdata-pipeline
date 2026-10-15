@@ -26,7 +26,7 @@ DOC_DEFAULTS = ("<w:docDefaults><w:rPrDefault>" + rpr(26).replace('<w:color w:va
 
 # styleId -> (rPr, pPr bo sung)
 STYLES = {
-    "Heading1": (rpr(32, bold=True), '<w:spacing w:before="240" w:after="240"/><w:jc w:val="center"/>'),
+    "Heading1": (rpr(32, bold=True), '<w:pageBreakBefore/><w:spacing w:before="0" w:after="240"/><w:jc w:val="center"/>'),
     "Heading2": (rpr(28, bold=True), '<w:spacing w:before="200" w:after="120"/><w:jc w:val="left"/>'),
     "Heading3": (rpr(26, bold=True), '<w:spacing w:before="160" w:after="80"/><w:jc w:val="left"/>'),
     "Heading4": (rpr(26, bold=True, italic=True), '<w:jc w:val="left"/>'),
@@ -91,7 +91,14 @@ def patch_styles(xml):
 
 def patch_document(xml):
     sect = ('<w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" '
-            'w:left="1701" w:header="567" w:footer="567" w:gutter="0"/>')
+            'w:left="1701" w:header="567" w:footer="567" w:gutter="0"/>'
+            # khung vien doi chi o trang bia, giong mau CTKU122
+            '<w:pgBorders w:display="firstPage">'
+            '<w:top w:val="thinThickSmallGap" w:sz="24" w:space="1" w:color="auto"/>'
+            '<w:left w:val="thinThickSmallGap" w:sz="24" w:space="4" w:color="auto"/>'
+            '<w:bottom w:val="thickThinSmallGap" w:sz="24" w:space="1" w:color="auto"/>'
+            '<w:right w:val="thickThinSmallGap" w:sz="24" w:space="4" w:color="auto"/>'
+            '</w:pgBorders>')
     xml = re.sub(r"<w:pgSz\b[^>]*/>", "", xml)
     xml = re.sub(r"<w:pgMar\b[^>]*/>", "", xml)
     xml = re.sub(r"<w:sectPr\s*/>", "<w:sectPr></w:sectPr>", xml)
