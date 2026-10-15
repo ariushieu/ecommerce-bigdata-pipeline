@@ -134,3 +134,60 @@ get ... {COLUMN => 'd:status', TIMERANGE => [ms('2025-09-29T00:00:00'), ms('2025
 ```
 
 Thêm phiên bản `REFUNDED` với timestamp 05/10/2025 thì `get` mặc định trả `REFUNDED`; `delete` đúng timestamp đó thì lịch sử quay về 3 phiên bản. Phiên bản thứ 6 trở đi bị loại khi compaction.
+
+**9. Truy vấn Spark SQL danh mục × tháng** (`pipeline.py`; dẫn từ mục 3.4.3):
+
+```sql
+SELECT category, ym AS month, COUNT(*) AS orders,
+       CAST(SUM(CAST(net_revenue AS DECIMAL(14,2))) AS DECIMAL(16,2)) AS net_revenue,
+       SUM(returned_flag) AS returned,
+       ROUND(100.0 * SUM(returned_flag) / COUNT(*), 2) AS return_rate_pct
+FROM orders_clean GROUP BY category, ym ORDER BY category, month
+```
+
+**10. Ví dụ đơn trước và sau xử lý** (dẫn từ mục 2.4.2):
+
+*[Bảng:c06-truoc-sau]. Ví dụ hai đơn trước và sau xử lý (trích `pipeline_log.txt`)*
+
+| Trường | ORD0000002 – trước | ORD0000002 – sau | ORD0000014 – sau |
+|---|---|---|---|
+| Thời điểm | `2025-10-12T22:41:50` (chuỗi) | `2025-10-12 22:41:50` (TIMESTAMP) | `2025-01-20 07:52:06` |
+| `ym` / `month_idx` | – | `2025-10` / 9 | `2025-01` / 0 |
+| `delivery_days` | `3.0` (DOUBLE) | `3` (INT) | `3` |
+| `review_score` / `has_review` | rỗng | NULL / false | 2 / true |
+| `brand` / `home_province` | – | Brand-40 / Hai Phong | Brand-25 / Da Nang |
+| `seen_in_stream` | – | true | true |
+
+**Nhận xét [Bảng:c06-truoc-sau]:** `review_score` rỗng được giữ là NULL nên không kéo thấp điểm trung bình; `home_province` của ORD0000002 (Hai Phong) khác tỉnh giao hàng (Lam Dong).
+
+**11. Phân bố dòng HBase sau pre-split** (`src/cau07_hbase/output/load.txt`; dẫn từ mục 3.2.2):
+
+*[Bảng:c07-pre-split]. Phân bố dòng trên 6 region sau khi nạp 14.408 đơn*
+
+| Region (khoảng rowkey) | RegionServer | Số dòng | Số khách |
+|---|---|---:|---:|
+| (đầu) .. C00201 | datanode2 | 2.384 | 200 |
+| C00201 .. C00401 | datanode3 | 2.419 | 200 |
+| C00401 .. C00601 | datanode1 | 2.444 | 200 |
+| C00601 .. C00801 | datanode2 | 2.377 | 200 |
+| C00801 .. C01001 | datanode1 | 2.332 | 200 |
+| C01001 .. (cuối) | datanode3 | 2.452 | 200 |
+| **Tổng** | | **14.408** | **1.200** |
+
+**Nhận xét [Bảng:c07-pre-split]:** region lớn nhất chỉ hơn region nhỏ nhất 5,1%, mỗi RegionServer giữ đúng 2 region; khách mới (C01201 trở đi) rơi vào region cuối, HBase tự tách tiếp khi region lớn lên.
+
+**12. Kiểm tra phân quyền HBase** (`src/cau07_hbase/output/acl_backup.txt`, user `hadoop` là superuser; dẫn từ mục 3.2.2):
+
+*[Bảng:c07-quyen]. Kiểm tra phân quyền trên `btl:customer_orders`*
+
+| Lệnh | Kết quả |
+|---|---|
+| `grant 'analyst', 'R', 'btl:customer_orders'` rồi `scan … LIMIT => 2` | Đọc được 2 dòng |
+| analyst `put … 'o:order_id', 'HACK'` | `AccessDeniedException … action=WRITE` |
+| `revoke 'analyst', 'btl:customer_orders'` rồi `scan` | `AccessDeniedException … action=READ` |
+
+**Nhận xét [Bảng:c07-quyen]:** `AccessController` chặn đúng thao tác ngoài quyền được cấp, và thu hồi quyền có hiệu lực ngay.
+
+**13. Tiêu chí phân tích của Câu 6** (`product_growth`, `customer_churn`; dẫn từ mục 3.4.3):
+- *Tăng trưởng sản phẩm:* gộp theo `product_id × month_idx`; `growth_rev_pct = (rev_R − rev_P) / rev_P × 100` (tương tự cho số lượng); độ dốc 19 tháng `slope = covar_pop(month_idx, rev) / var_pop(month_idx)`; `z_orders = (n_R − n_P) / √(n_R + n_P)` (hiệu hai biến Poisson; |z| ≥ 1,96 là khó do ngẫu nhiên).
+- *Rời bỏ:* `recency_days`, `frequency`, `monetary`, `avg_gap_days`; số đơn 6 tháng cuối so với 6 tháng trước; điểm R, F, M bằng `ntile(5)`. **MEDIUM** khi quá 90 ngày, hoặc quá max(60, 2 × `avg_gap_days`) ngày, hoặc số đơn giảm ít nhất một nửa (từ ≥ 4 đơn). Đường cơ sở Poisson: số khách *ngẫu nhiên* không mua trong 90 ngày là Σ exp(−90 × `frequency` / 577).
