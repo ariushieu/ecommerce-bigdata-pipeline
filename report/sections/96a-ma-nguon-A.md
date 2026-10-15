@@ -1,6 +1,6 @@
 ### Mã nguồn Câu 1, 10 – Nguyễn Quốc Hiếu
 
-**A.1. Kiểm tra độ tin cậy của dữ liệu (Câu 1, `src/cau01_5v/profile_data.py`).** Đoạn mã thử lại công thức doanh thu cho từng đơn và đếm số đơn sai theo nhãn `quality_flag`. Kết quả này cho thấy chỉ nhãn OUTLIER có dấu hiệu nhận biết được trên giá trị (mục 2.3).
+**A.1. Kiểm tra độ tin cậy của dữ liệu (Câu 1).** Tệp `profile_data.py` (thư mục `src/cau01_5v`). Đoạn mã thử lại công thức doanh thu cho từng đơn và đếm số đơn sai theo nhãn `quality_flag`. Kết quả này cho thấy chỉ nhãn OUTLIER có dấu hiệu nhận biết được trên giá trị (mục 2.3).
 
 ```python
 # net_revenue = quantity * unit_price * (1 - discount_rate) + shipping_fee
@@ -12,7 +12,7 @@ for r in orders:
         formula_fail[r["quality_flag"]] += 1
 ```
 
-**A.2. Đối chiếu kết quả ba công cụ (Câu 10, `src/cau10_doi_chieu/compare.py`).** So từng ô (danh mục, tháng) của Pig, MapReduce và Spark với nhau, rồi so tổng với số liệu profiling của Câu 1. Script thoát với mã lỗi nếu có bất kỳ sai khác nào, nên CI phát hiện được ngay.
+**A.2. Đối chiếu kết quả ba công cụ (Câu 10).** Tệp `compare.py` (thư mục `src/cau10_doi_chieu`). So từng ô (danh mục, tháng) của Pig, MapReduce và Spark với nhau, rồi so tổng với số liệu profiling của Câu 1. Script thoát với mã lỗi nếu có bất kỳ sai khác nào, nên CI phát hiện được ngay.
 
 ```python
 for name, (rows, _) in data.items():
@@ -27,7 +27,7 @@ for name, (rows, _) in data.items():
 sys.exit(1 if problems else 0)
 ```
 
-**A.3. Phép tính danh mục × tháng bản Pig tối giản (Câu 10, `src/cau10_doi_chieu/category_month.pig`).** Đây là bản Pig dùng để đo hiệu năng ở mục 4.5.2.
+**A.3. Phép tính danh mục × tháng bản Pig tối giản (Câu 10).** Tệp `category_month.pig` (thư mục `src/cau10_doi_chieu`). Đây là bản Pig dùng để đo hiệu năng ở mục 4.5.2.
 
 ```pig
 o_clean = FILTER o_raw BY quality_flag != 'quality_flag'

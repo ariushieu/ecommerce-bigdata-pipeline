@@ -2,7 +2,7 @@
 
 *[Bảng:quality-flag]. Dấu hiệu nhận biết của từng nhãn chất lượng*
 
-| `quality_flag` | Số bản ghi | Tỷ lệ (%) | Sai công thức `net_revenue` | `delivery_days` lẻ | `delivery_days` lớn nhất | `review_score` rỗng | `campaign_id` rỗng |
+| Nhãn | Số bản ghi | Tỷ lệ (%) | Sai công thức doanh thu | Ngày giao lẻ | Ngày giao lớn nhất | Thiếu điểm đánh giá | Thiếu mã chiến dịch |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | OK | 14.095 | 93,97 | 0 | 0 | 9 | 4.983 | 0 |
 | MISSING | 313 | 2,09 | 0 | 0 | 7 | 210 | 165 |
@@ -16,7 +16,7 @@
 
 **b) Trùng lặp:** `order_id` duy nhất; 149 bản ghi DUPLICATE **không trùng nội dung** với bản ghi nào nên `DISTINCT` không loại được. 5.000 sự kiện JSON là bản sao của 5.000 đơn đầu tiên; cộng dồn hai nguồn sẽ tính trùng doanh thu.
 
-**c) Sai kiểu:** từ điển không chốt kiểu; `delivery_days` có giá trị lẻ ở OUTLIER (ví dụ 13,456); tiêu đề CSV mang BOM khiến cột đầu thành `\ufeffrecord_id`.
+**c) Sai kiểu:** từ điển không chốt kiểu; `delivery_days` có giá trị lẻ ở OUTLIER (ví dụ 13,456); dòng tiêu đề CSV mang ký tự BOM (U+FEFF) khiến tên cột đầu bị đọc sai nếu không xử lý.
 
 **d) Ngoại lệ:** ở OUTLIER, `unit_price` lên tới 23.600,02 và `net_revenue` tới 121.652,55 (đơn sạch tối đa 3.499,94 và 21.034,66).
 
