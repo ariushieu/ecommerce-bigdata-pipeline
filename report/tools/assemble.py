@@ -22,7 +22,8 @@ CITE = re.compile(r"\[TL:([a-z0-9-]+)\]")
 CHAPTER = re.compile(r"^# CHƯƠNG (\d+)")
 APPENDIX = re.compile(r"^## Phụ lục ([A-Z])\.")
 CAPTION = re.compile(r"^\*\[(Bảng|Hình):([a-z0-9-]+)\]\.\s*(.+?)\*\s*$")
-IMAGE = re.compile(r"^!\[[^\]]*\]\(([^)]+)\)\s*$")
+IMAGE = re.compile(r"^!\[[^\]]*\]\(([^)]+)\)(\{[^}]*\})?\s*$")
+IMG_WIDTH = "{width=78%}"   # mac dinh hinh rong 78% kho chu; ghi {width=...} ngay sau anh de doi
 COMMENT = re.compile(r"<!--.*?-->", re.S)
 
 files = sorted(f for f in os.listdir(SEC) if f.endswith(".md"))
@@ -117,7 +118,7 @@ for f, t in texts:
             for k in range(len(block) - 1, -1, -1):
                 im = IMAGE.match(block[k])
                 if im:
-                    block[k] = f"![{title}]({im.group(1)})"
+                    block[k] = f"![{title}]({im.group(1)}){im.group(2) or IMG_WIDTH}"
                     break
                 if block[k].strip():
                     block.append(f"*{title}*")

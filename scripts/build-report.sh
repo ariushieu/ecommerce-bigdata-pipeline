@@ -41,5 +41,7 @@ run -w /work/report/build "$PANDOC_IMG" BaoCao.md -o BaoCao.docx \
   --from markdown-auto_identifiers+lists_without_preceding_blankline --reference-doc reference.docx \
   --resource-path .:/work/report/sections --toc --toc-depth 3 -M toc-title="MỤC LỤC" -M lang=vi-VN
 
+run --entrypoint python3 "$NODE_IMG" -I report/tools/fix_tables.py report/build/BaoCao.docx
+
 ls -l report/build/BaoCao.docx
 echo "Xong. Mo report/build/BaoCao.docx bang Word, bam 'Yes' khi duoc hoi cap nhat muc luc."
