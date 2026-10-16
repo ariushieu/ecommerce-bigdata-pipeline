@@ -19,4 +19,4 @@
 
 **Nhận xét [Bảng:muc-tieu-cu-the]:** mỗi mục tiêu ứng với một câu của đề, có tiêu chí kiểm chứng được (đánh giá ở mục 4.5.3). Mốc ban đầu ([Bảng:kpi-danh-muc]): doanh thu ròng 78.218.341,22, tỷ lệ trả 7,73%, giao trung bình 3,04 ngày.
 
-**Phạm vi:** dữ liệu giả lập của giảng viên (15.000 đơn 01/2025 – 07/2026, 1.200 khách, 400 sản phẩm, 5.000 sự kiện); cụm Hadoop 4 node trên Docker; BigSheets mô phỏng; không dùng Kafka.
+**Phạm vi:** dữ liệu giả lập của giảng viên (15.000 đơn 01/2025 – 07/2026, 1.200 khách, 400 sản phẩm, 5.000 sự kiện); cụm Hadoop 4 node (1 master, 3 worker); BigSheets mô phỏng; không dùng Kafka.

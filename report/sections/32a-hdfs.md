@@ -66,7 +66,7 @@ Khi DataNode hỏng, client đọc ngay bản sao khác; sau 150 s NameNode ché
 
 Demo `recovery_demo.sh` (Phụ lục B.6) tắt rồi bật lại datanode3, dùng thêm một tệp hệ số 2 (9 block).
 
-*[Bảng:c03-demo-khoi-phuc]. Diễn biến khi tắt datanode3 (mốc tính từ lúc `docker stop`)*
+*[Bảng:c03-demo-khoi-phuc]. Diễn biến khi tắt datanode3 (mốc tính từ lúc tắt node)*
 
 | Mốc | Thời điểm | Trạng thái quan sát được |
 |---|---:|---|

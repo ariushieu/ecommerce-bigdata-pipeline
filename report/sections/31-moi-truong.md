@@ -1,6 +1,6 @@
 ## 3.1. Môi trường triển khai
 
-Hệ thống chạy trên một **cụm Hadoop 4 node** cộng **1 máy R**, mô phỏng bằng Docker Compose trên một máy tính cá nhân. Mỗi container có IP riêng, truy cập qua SSH như máy thật (`ssh may1` … `ssh may4`).
+Hệ thống chạy trên một **cụm Hadoop 4 node** (1 master, 3 worker) cộng **1 máy R**, đặt trên một máy tính cá nhân (các node được dựng bằng container Docker). Mỗi node có IP riêng trong mạng nội bộ của cụm và được truy cập qua SSH như máy chủ độc lập (`ssh may1` … `ssh may4`).
 
 ```mermaid
 flowchart TB
@@ -10,7 +10,7 @@ flowchart TB
     R["rstudio 172.28.1.10<br/>R 4.4, RStudio Server"]
   end
   M --- D
-  U["Máy thật (Windows)<br/>Docker Desktop"] -- "SSH 127.0.0.1:2201–2204<br/>Web UI 9870, 8088, 16010, 8787" --> NET
+  U["Máy tính cá nhân (Windows)"] -- "SSH 127.0.0.1:2201–2204<br/>Web UI 9870, 8088, 16010, 8787" --> NET
 ```
 
 *[Hình:moi-truong-cum]. Sơ đồ cụm triển khai*
@@ -28,7 +28,7 @@ flowchart TB
 | HBase (kèm ZooKeeper) | 2.5.16 | 7 |
 | R, tidyverse, DBI, RSQLite, broom | 4.4 | 8, 9 |
 
-**Nhận xét [Bảng:phien-ban]:** mỗi câu có một công cụ đảm nhận; mọi thành viên dùng chung một image Docker nên chạy cùng phiên bản.
+**Nhận xét [Bảng:phien-ban]:** mỗi câu có một công cụ đảm nhận; mọi thành viên dùng chung một bộ cấu hình nên chạy cùng phiên bản.
 
 *[Bảng:cau-hinh-cum]. Cấu hình tài nguyên chính của cụm*
 
@@ -43,4 +43,4 @@ flowchart TB
 
 **Nhận xét [Bảng:cau-hinh-cum]:** cấu hình thu nhỏ để chạy trên máy 16 GB RAM (khi rảnh cụm dùng khoảng 4,6 GB) nhưng giữ bản chất đề bài: nhân bản 3 lần, phân tán trên 3 node, phát hiện node hỏng đủ nhanh để demo khôi phục.
 
-**Khả năng tái lập:** môi trường được mô tả bằng mã (`docker-compose.yml`, Dockerfile, `infra/`); GitHub Actions build image, dựng lại cụm và chạy `test.sh` của từng câu sau mỗi thay đổi. Người chấm chỉ cần Docker (Phụ lục A).
+**Khả năng tái lập:** toàn bộ cấu hình cụm nằm trong thư mục `infra/` của kho mã; GitHub Actions dựng lại cụm và chạy `test.sh` của từng câu sau mỗi thay đổi. Cách dựng lại môi trường trình bày ở Phụ lục A.

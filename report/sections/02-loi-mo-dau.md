@@ -27,7 +27,7 @@ Trong phạm vi bài tập lớn, nhóm đã:
 6. Mô phỏng quy trình BigSheets và dựng dashboard.
 7. Dùng R với SQLite để xây dựng mô hình hồi quy và phân loại.
 
-Toàn bộ hệ thống chạy trên một cụm Hadoop 4 node dựng bằng Docker. Mã nguồn được kiểm thử tự động, nên kết quả có thể tái lập.
+Toàn bộ hệ thống chạy trên một cụm Hadoop 4 node (1 master, 3 worker). Mã nguồn được kiểm thử tự động, nên kết quả có thể tái lập.
 
 Báo cáo gồm năm chương:
 - **Chương 1** trình bày tổng quan bài toán, đặc trưng Big Data và kiến trúc hệ thống.

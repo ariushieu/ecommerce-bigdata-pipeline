@@ -127,7 +127,7 @@ stopifnot(all(da_ghi$so_dong == sapply(ket_qua, nrow)))
 
 **8. Số liệu chi tiết của mục 1.4.4, 4.2.2 và 4.2.3**
 
-*[Bảng:c09-phien-ban-r]. Phiên bản các gói R sử dụng (container `rstudio`, ảnh `rocker/tidyverse:4.4`)*
+*[Bảng:c09-phien-ban-r]. Phiên bản các gói R sử dụng (R 4.4, tidyverse)*
 
 | Thành phần | Phiên bản |
 |---|---|
@@ -137,7 +137,7 @@ stopifnot(all(da_ghi$so_dong == sapply(ket_qua, nrow)))
 | ggplot2 / ragg / scales | 3.5.2 / 1.3.3 / 1.3.0 |
 | broom | 1.0.8 |
 
-**Nhận xét [Bảng:c09-phien-ban-r]:** Mọi gói có sẵn trong ảnh Docker của nhóm (`infra/docker/r/Dockerfile`) nên kết quả tái lập được. Ảnh không có `patchwork` hay `pROC`, nên dashboard được ghép bằng `grid` và AUC được tính tay theo hạng.
+**Nhận xét [Bảng:c09-phien-ban-r]:** Mọi gói được cài sẵn trong môi trường R của nhóm (cấu hình trong thư mục `infra/`) nên kết quả tái lập được. Môi trường không có `patchwork` hay `pROC`, nên dashboard được ghép bằng `grid` và AUC được tính tay theo hạng.
 
 *[Bảng:c06-roi-bo-phan-khuc]. Mức nguy cơ rời bỏ theo phân khúc khách hàng (`churn_summary.csv`)*
 

@@ -1,6 +1,6 @@
 ## 5.1. Kết quả đạt được
 
-Nhóm đã xây dựng một nền tảng phân tích dữ liệu lớn hoàn chỉnh cho bài toán thương mại điện tử, chạy trên cụm Hadoop 4 node và tái lập được bằng Docker. Các kết quả chính:
+Nhóm đã xây dựng một nền tảng phân tích dữ liệu lớn hoàn chỉnh cho bài toán thương mại điện tử, chạy trên cụm Hadoop 4 node và tái lập được hoàn toàn từ mã nguồn. Các kết quả chính:
 
 1. **Hiểu dữ liệu bằng số liệu:** phân tích 5V và Variability; phân loại 6 tệp, 47 trường; phát hiện các lỗi nằm ngoài nhãn `quality_flag` (ô trống `''` trong SQLite, giá sản phẩm không nhất quán, sự kiện sai thứ tự).
 2. **Thu thập và lưu trữ:** hai kịch bản Flume (CSV theo lô; sự kiện HTTP vào đồng thời HDFS và HBase), FileChannel không mất sự kiện khi agent bị tắt đột ngột; bốn vùng dữ liệu trên HDFS nhân bản 3 lần, chịu được hỏng một node.

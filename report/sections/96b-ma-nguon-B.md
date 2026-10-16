@@ -137,17 +137,16 @@ nap() {  # nap <bang> <tep>
 }
 ```
 
-**B.6. Demo khôi phục khi hỏng node** (`src/cau03_hdfs/recovery_demo.sh`, trích các bước chính, chạy trên máy thật)
+**B.6. Demo khôi phục khi hỏng node** (`src/cau03_hdfs/recovery_demo.sh`, trích các bước chính, đã lược bớt)
 
 ```bash
 # tep he so 2, block 1 MiB -> ~9 block, NameNode co cho de nhan ban lai
 m "cat /data/orders.csv /data/orders.csv /data/orders.csv /data/orders.csv \
    | hdfs dfs -D dfs.blocksize=1048576 -D dfs.replication=2 -put - $DEMO/orders_x4_rep2.csv"
-docker stop datanode3                                         # gia lap hong node
+# ... tat datanode3 de gia lap hong node ...
 cho 420 10 "NameNode danh dau 1 DataNode dead" la_dead          # ~150 s
 cho 300 10 "tep rep2 du 2 ban sao tren datanode1 + datanode2" rep2_du
-docker start datanode3
-docker exec datanode3 su - hadoop -c 'hdfs --daemon start datanode; yarn --daemon start nodemanager; hbase-daemon.sh start regionserver'
+# ... bat lai datanode3 va cac tien trinh DataNode, NodeManager, RegionServer ...
 cho 300 10 "khong con block thieu ban sao trong /btl va tep demo" het_thieu
 ```
 
