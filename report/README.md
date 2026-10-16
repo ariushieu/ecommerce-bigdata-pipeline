@@ -3,7 +3,8 @@
 Báo cáo viết theo **Mẫu báo cáo BTL CTKU122** (chia theo chương, không chia theo câu). Mỗi mục của mẫu là một file trong `sections/`, đánh số để ghép đúng thứ tự, nên 5 người viết song song không bị xung đột.
 
 ```bash
-bash scripts/build-report.sh     # chạy trên máy thật (Git Bash), cần Docker → report/build/BaoCao.docx
+bash scripts/build-report.sh         # → report/build/BaoCao.docx (sửa tiếp bằng Word được)
+bash scripts/build-report.sh --pdf   # thêm report/build/BaoCao.pdf: mục lục có số trang, font Times New Roman, khung bìa
 ```
 
 Script này ghép các mục, đánh số bảng/hình theo chương và vẽ sơ đồ mermaid thành ảnh. Riêng trang bìa, phiếu đánh giá và tổng hợp điểm thì chép tay từ file mẫu của bộ môn ở bước cuối.

@@ -44,4 +44,24 @@ run -w /work/report/build "$PANDOC_IMG" BaoCao.md -o BaoCao.docx \
 run --entrypoint python3 "$NODE_IMG" -I report/tools/postprocess.py report/build/BaoCao.docx
 
 ls -l report/build/BaoCao.docx
-echo "Xong. Mo report/build/BaoCao.docx bang Word, bam 'Yes' khi duoc hoi cap nhat muc luc."
+
+# --pdf: xuat BaoCao.pdf bang LibreOffice (font Times New Roman that, muc luc + danh muc
+# co so trang, khung vien trang bia). Lan dau mat vai phut de tai LibreOffice va font.
+if [ "${1:-}" = "--pdf" ]; then
+  echo "== 5/5 LibreOffice -> BaoCao.pdf"
+  docker run --rm -v "$HOSTDIR:/work" -w /work ubuntu:22.04 bash -c '
+    export DEBIAN_FRONTEND=noninteractive
+    sed -i "s/ main restricted$/ main restricted multiverse/" /etc/apt/sources.list
+    apt-get update -qq >/dev/null 2>&1
+    echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
+    apt-get install -y -qq --no-install-recommends libreoffice-writer python3-uno fonts-liberation \
+      ttf-mscorefonts-installer >/dev/null 2>&1
+    soffice --headless --invisible --norestore --accept="socket,host=localhost,port=2002;urp;" >/dev/null 2>&1 &
+    python3 report/tools/export_pdf.py report/build/BaoCao.docx report/build/BaoCao.pdf
+    chown "'"$UIDGID"'" report/build/BaoCao.pdf'
+  ls -l report/build/BaoCao.pdf
+  echo "Xong: report/build/BaoCao.pdf (ban nop) va report/build/BaoCao.docx (ban sua bang Word)."
+else
+  echo "Xong. Mo report/build/BaoCao.docx bang Word, bam 'Yes' khi duoc hoi cap nhat muc luc."
+  echo "Hoac chay: bash scripts/build-report.sh --pdf  de xuat luon BaoCao.pdf."
+fi
