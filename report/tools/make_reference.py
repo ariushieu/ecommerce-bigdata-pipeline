@@ -25,20 +25,48 @@ DOC_DEFAULTS = ("<w:docDefaults><w:rPrDefault>" + rpr(26).replace('<w:color w:va
                 'w:line="312" w:lineRule="auto"/><w:jc w:val="both"/></w:pPr></w:pPrDefault></w:docDefaults>')
 
 # styleId -> (rPr, pPr bo sung)
+LINE = 'w:line="312" w:lineRule="auto"'          # gian dong 1,3 (mau: 1,3-1,5)
+NO_IND = '<w:ind w:firstLine="0"/>'
+MONO = '<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"/>'
+
 STYLES = {
-    "Heading1": (rpr(32, bold=True), '<w:spacing w:before="240" w:after="240"/><w:jc w:val="center"/>'),
-    "Heading2": (rpr(28, bold=True), '<w:spacing w:before="200" w:after="120"/><w:jc w:val="left"/>'),
-    "Heading3": (rpr(26, bold=True), '<w:spacing w:before="160" w:after="80"/><w:jc w:val="left"/>'),
-    "Heading4": (rpr(26, bold=True, italic=True), '<w:jc w:val="left"/>'),
-    "Title": (rpr(32, bold=True), '<w:jc w:val="center"/>'),
-    "TOCHeading": (rpr(32, bold=True), '<w:jc w:val="center"/>'),
-    "ImageCaption": (rpr(26, italic=True), '<w:spacing w:after="200"/><w:jc w:val="center"/>'),
-    "TableCaption": (rpr(26, italic=True), '<w:keepNext/><w:jc w:val="center"/>'),
-    "Caption": (rpr(26, italic=True), '<w:jc w:val="center"/>'),
-    "CaptionedFigure": ("", '<w:jc w:val="center"/>'),
-    "Figure": ("", '<w:jc w:val="center"/>'),
-    "SourceCode": ("", '<w:spacing w:line="240" w:lineRule="auto"/><w:jc w:val="left"/>'),
+    # Doan van: can deu 2 ben, thut dau dong 1 cm, cach doan 6 pt
+    "BodyText": ("", f'<w:spacing w:before="0" w:after="120" {LINE}/><w:ind w:firstLine="567"/><w:jc w:val="both"/>'),
+    "FirstParagraph": ("", f'<w:spacing w:before="0" w:after="120" {LINE}/><w:ind w:firstLine="567"/><w:jc w:val="both"/>'),
+    # Muc trong danh sach (thut le do numbering quy dinh) va o bang (hau xu ly dat gian dong don)
+    "Compact": ("", f'<w:spacing w:before="0" w:after="60" {LINE}/>{NO_IND}<w:jc w:val="both"/>'),
+    "BlockText": ("", f'<w:spacing w:before="60" w:after="120" {LINE}/><w:ind w:left="567" w:firstLine="0"/><w:jc w:val="both"/>'),
+    "Heading1": (rpr(32, bold=True), f'<w:pageBreakBefore/><w:spacing w:before="0" w:after="360"/>{NO_IND}<w:jc w:val="center"/>'),
+    "Heading2": (rpr(28, bold=True), f'<w:spacing w:before="240" w:after="120"/>{NO_IND}<w:jc w:val="left"/>'),
+    "Heading3": (rpr(26, bold=True), f'<w:spacing w:before="180" w:after="120"/>{NO_IND}<w:jc w:val="left"/>'),
+    "Heading4": (rpr(26, bold=True, italic=True), f'<w:spacing w:before="120" w:after="60"/>{NO_IND}<w:jc w:val="left"/>'),
+    "Title": (rpr(32, bold=True), f'{NO_IND}<w:jc w:val="center"/>'),
+    "TOCHeading": (rpr(32, bold=True), f'{NO_IND}<w:jc w:val="center"/>'),
+    # Ten bang dat tren bang, ten hinh dat duoi hinh: nghieng, can giua
+    "ImageCaption": (rpr(26, italic=True), f'<w:spacing w:before="60" w:after="240" w:line="276" w:lineRule="auto"/>{NO_IND}<w:jc w:val="center"/>'),
+    "TableCaption": (rpr(26, italic=True), f'<w:keepNext/><w:spacing w:before="180" w:after="120" w:line="276" w:lineRule="auto"/>{NO_IND}<w:jc w:val="center"/>'),
+    "Caption": (rpr(26, italic=True), f'{NO_IND}<w:jc w:val="center"/>'),
+    "CaptionedFigure": ("", f'<w:keepNext/><w:spacing w:before="120" w:after="60"/>{NO_IND}<w:jc w:val="center"/>'),
+    "Figure": ("", f'<w:keepNext/><w:spacing w:before="120" w:after="60"/>{NO_IND}<w:jc w:val="center"/>'),
+    "SourceCode": ("", '<w:spacing w:before="60" w:after="160" w:line="240" w:lineRule="auto"/><w:ind w:left="0" w:firstLine="0"/><w:jc w:val="left"/>'),
+    # Ky tu: ma nguon Courier New 11 pt; lien ket mau den (ban in)
+    "VerbatimChar": (f'<w:rPr>{MONO}<w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr>', ""),
+    "Hyperlink": ('<w:rPr><w:color w:val="000000"/></w:rPr>', ""),
 }
+
+# Style pandoc dung nhung reference.docx mac dinh khong co -> them moi
+EXTRA_STYLES = (
+    '<w:style w:type="paragraph" w:customStyle="1" w:styleId="SourceCode"><w:name w:val="Source Code"/>'
+    '<w:basedOn w:val="Normal"/><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F2F2F2"/>'
+    '<w:spacing w:before="60" w:after="160" w:line="240" w:lineRule="auto"/><w:ind w:left="0" w:firstLine="0"/>'
+    f'<w:jc w:val="left"/></w:pPr><w:rPr>{MONO}<w:sz w:val="18"/><w:szCs w:val="18"/></w:rPr></w:style>'
+    # Tai lieu tham khao (IEEE): can trai, "[n]" treo o le, dong sau thang voi chu
+    '<w:style w:type="paragraph" w:customStyle="1" w:styleId="Tailieuthamkhao">'
+    '<w:name w:val="Tai lieu tham khao"/><w:basedOn w:val="Normal"/><w:pPr>'
+    '<w:tabs><w:tab w:val="left" w:pos="567"/></w:tabs>'
+    f'<w:spacing w:before="0" w:after="120" {LINE}/><w:ind w:left="567" w:hanging="567"/><w:jc w:val="left"/>'
+    '</w:pPr></w:style>'
+)
 
 TABLE_STYLE = (
     '<w:style w:type="table" w:default="1" w:styleId="Table"><w:name w:val="Table"/>'
@@ -49,7 +77,7 @@ TABLE_STYLE = (
               for b in ("top", "left", "bottom", "right", "insideH", "insideV"))
     + '</w:tblBorders><w:tblCellMar><w:left w:w="80" w:type="dxa"/><w:right w:w="80" w:type="dxa"/>'
     '</w:tblCellMar></w:tblPr>'
-    '<w:tblStylePr w:type="firstRow"><w:rPr><w:b/><w:bCs/></w:rPr></w:tblStylePr></w:style>'
+    '<w:tblStylePr w:type="firstRow"><w:pPr><w:jc w:val="center"/></w:pPr><w:rPr><w:b/><w:bCs/></w:rPr></w:tblStylePr></w:style>'
 )
 
 
@@ -84,6 +112,8 @@ def patch_styles(xml):
         if r:
             s = s.replace("</w:style>", r + "</w:style>")
         xml = xml.replace(m.group(0), s)
+    if 'w:styleId="SourceCode"' not in xml:
+        xml = xml.replace("</w:styles>", EXTRA_STYLES + "</w:styles>")
     m = re.search(r'<w:style [^>]*w:styleId="Table"[^>]*>.*?</w:style>', xml, re.S)
     xml = xml.replace(m.group(0), TABLE_STYLE) if m else xml.replace("</w:styles>", TABLE_STYLE + "</w:styles>")
     return xml
@@ -91,7 +121,14 @@ def patch_styles(xml):
 
 def patch_document(xml):
     sect = ('<w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" '
-            'w:left="1701" w:header="567" w:footer="567" w:gutter="0"/>')
+            'w:left="1701" w:header="567" w:footer="567" w:gutter="0"/>'
+            # khung vien doi chi o trang bia, giong mau CTKU122
+            '<w:pgBorders w:display="firstPage">'
+            '<w:top w:val="thinThickSmallGap" w:sz="24" w:space="1" w:color="auto"/>'
+            '<w:left w:val="thinThickSmallGap" w:sz="24" w:space="4" w:color="auto"/>'
+            '<w:bottom w:val="thickThinSmallGap" w:sz="24" w:space="1" w:color="auto"/>'
+            '<w:right w:val="thickThinSmallGap" w:sz="24" w:space="4" w:color="auto"/>'
+            '</w:pgBorders>')
     xml = re.sub(r"<w:pgSz\b[^>]*/>", "", xml)
     xml = re.sub(r"<w:pgMar\b[^>]*/>", "", xml)
     xml = re.sub(r"<w:sectPr\s*/>", "<w:sectPr></w:sectPr>", xml)

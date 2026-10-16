@@ -38,8 +38,10 @@ run --entrypoint python3 "$NODE_IMG" -I report/tools/make_reference.py \
 
 echo "== 4/4 pandoc -> BaoCao.docx"
 run -w /work/report/build "$PANDOC_IMG" BaoCao.md -o BaoCao.docx \
-  --from markdown-auto_identifiers+lists_without_preceding_blankline --reference-doc reference.docx \
-  --resource-path .:/work/report/sections --toc --toc-depth 3 -M toc-title="MỤC LỤC" -M lang=vi-VN
+  --from markdown-auto_identifiers+lists_without_preceding_blankline --reference-doc reference.docx --no-highlight \
+  --resource-path .:/work/report/sections -M lang=vi-VN
+
+run --entrypoint python3 "$NODE_IMG" -I report/tools/postprocess.py report/build/BaoCao.docx
 
 ls -l report/build/BaoCao.docx
 echo "Xong. Mo report/build/BaoCao.docx bang Word, bam 'Yes' khi duoc hoi cap nhat muc luc."

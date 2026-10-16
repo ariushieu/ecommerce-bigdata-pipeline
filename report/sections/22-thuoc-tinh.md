@@ -6,22 +6,19 @@ Cột *Kiểu* là kiểu nhóm chốt sau khảo sát (`data_dictionary.csv` ch
 
 | Thuộc tính | Kiểu | Ý nghĩa | Ghi chú |
 |---|---|---|---|
-| `record_id` | STRING | Khóa kỹ thuật | Luôn bằng `order_id` |
-| `timestamp` | TIMESTAMP (ISO 8601) | Thời điểm phát sinh đơn | Phân vùng năm/tháng, cửa sổ thời gian |
-| `province` | STRING (18) | Tỉnh/thành phố | Là **tỉnh giao hàng** (khác tỉnh cư trú ở 94,4% đơn) |
-| `source_system`, `ingest_mode`, `data_format` | STRING (5), (2), (3) | Hệ thống sinh, chế độ nạp, định dạng gốc | web, mobile, api, partner, batch; stream 62%, batch 38%; CSV, JSON, LOG |
-| `order_id` | STRING | Mã đơn hàng | Khóa chính; không tăng theo thời gian |
-| `customer_id`, `product_id` | STRING | Mã khách hàng, mã sản phẩm | Khóa ngoại → `customers` (1.200 giá trị), `products` (400 giá trị) |
-| `category` | STRING (6) | Nhóm sản phẩm | Khớp 100% với `products` |
-| `customer_segment` | STRING (4) | Phân khúc khách hàng | New, Regular, Loyal, VIP |
-| `sales_channel` | STRING (3) | Kênh bán | mobile, web, marketplace |
+| `record_id`, `order_id` | STRING | Khóa kỹ thuật, mã đơn | Bằng nhau; không tăng theo thời gian |
+| `timestamp` | TIMESTAMP | Thời điểm đặt đơn | Phân vùng năm/tháng |
+| `province` | STRING (18) | Tỉnh/thành | **Tỉnh giao hàng** (khác tỉnh cư trú ở 94,4% đơn) |
+| `source_system`, `ingest_mode`, `data_format` | STRING (5), (2), (3) | Siêu dữ liệu nguồn | stream 62%, batch 38% |
+| `customer_id`, `product_id` | STRING | Khóa ngoại | → `customers`, `products` |
+| `category`, `customer_segment`, `sales_channel` | STRING (6), (4), (3) | Danh mục, phân khúc, kênh bán | Chiều phân tích |
 | `quantity` | INT | Số lượng | 1–6 |
 | `unit_price` | DOUBLE | Đơn giá | Đơn sạch 162,65 – 3.499,94 |
-| `discount_rate`, `shipping_fee` | DOUBLE | Tỷ lệ giảm giá, phí giao hàng | 6 mức từ 0 đến 0,3; 5 mức từ 0 đến 50 |
+| `discount_rate`, `shipping_fee` | DOUBLE | Giảm giá, phí giao | 6 mức 0–0,3; 5 mức 0–50 |
 | `net_revenue` | DOUBLE | Doanh thu ròng | **Mục tiêu doanh thu**; = `quantity × unit_price × (1 − discount_rate) + shipping_fee` |
-| `payment_method` | STRING (4) | Phương thức thanh toán | COD, card, e_wallet, bank_transfer |
+| `payment_method` | STRING (4) | Thanh toán | COD, card, e_wallet, bank_transfer |
 | `delivery_days` | INT (đọc dạng DOUBLE) | Số ngày giao | **Mục tiêu giao hàng**; đơn sạch 0–9 |
-| `returned_flag` | INT (0/1) | Cờ trả hàng | **Mục tiêu hoàn trả**; nhãn phân loại |
+| `returned_flag` | INT (0/1) | Cờ trả hàng | **Mục tiêu hoàn trả** |
 | `review_score` | INT (1–5), cho phép rỗng | Điểm đánh giá | Rỗng 35,93% |
 | `campaign_id` | STRING, cho phép rỗng | Mã chiến dịch | 30 chiến dịch; rỗng 1,1% |
 | `quality_flag` | STRING (5) | Nhãn chất lượng | OK, MISSING, OUTLIER, LATE, DUPLICATE |
@@ -30,41 +27,22 @@ Cột *Kiểu* là kiểu nhóm chốt sau khảo sát (`data_dictionary.csv` ch
 
 *[Bảng:thuoc-tinh-events]. Thuộc tính của `events_stream.jsonl` (dữ liệu bán cấu trúc, luồng)*
 
-| Thuộc tính | Kiểu | Ý nghĩa | Ghi chú |
-|---|---|---|---|
-| `event_id` | STRING | Mã sự kiện | = `EVT-` + `order_id`, dùng khử trùng lặp |
-| `event_time` | TIMESTAMP (ISO 8601) | Thời điểm phát sinh | Mốc gom cửa sổ; 50,27% cặp liên tiếp sai thứ tự |
-| `event_type` | STRING | Loại sự kiện | Chỉ có `order_event` |
-| `source` | STRING (5) | Nguồn phát | Trùng `source_system` của đơn |
-| `payload.category`, `payload.customer_segment` | STRING (6), (4) | Nhóm sản phẩm, phân khúc khách | Chiều phân tích luồng |
-| `payload.net_revenue` | DOUBLE | Doanh thu ròng | Độ đo luồng |
-| `payload.returned_flag` | INT (0/1) | Cờ trả hàng | Cảnh báo tỷ lệ trả |
+| Thuộc tính | Kiểu | Ghi chú |
+|---|---|---|
+| `event_id` | STRING | = `EVT-` + `order_id`, dùng khử trùng lặp |
+| `event_time` | TIMESTAMP | Mốc gom cửa sổ; 50,27% cặp liên tiếp sai thứ tự |
+| `event_type`, `source` | STRING | Chỉ có `order_event`; `source` trùng `source_system` |
+| `payload.category`, `payload.customer_segment` | STRING (6), (4) | Chiều phân tích luồng |
+| `payload.net_revenue` | DOUBLE | Độ đo luồng |
+| `payload.returned_flag` | INT (0/1) | Cảnh báo tỷ lệ trả |
 
-**Nhận xét [Bảng:thuoc-tinh-events]:**
-- Sự kiện gồm phần vỏ ổn định và `payload` lồng chỉ mang 4/23 thuộc tính của đơn; phân tích cần tỉnh, sản phẩm hay số ngày giao phải ghép với `orders`, nên thuộc nhánh tĩnh.
+**Nhận xét [Bảng:thuoc-tinh-events]:** `payload` lồng chỉ mang 4/23 thuộc tính của đơn; phân tích cần tỉnh, sản phẩm hay số ngày giao phải ghép với `orders` nên thuộc nhánh tĩnh.
 
-*[Bảng:thuoc-tinh-customers]. Thuộc tính của `customers.csv` / `entity_master` (dữ liệu có cấu trúc, danh mục)*
+*[Bảng:thuoc-tinh-customers]. Thuộc tính của hai bảng danh mục `customers.csv` / `entity_master` và `products.csv` / `item_master`*
 
-| Thuộc tính | Kiểu | Ý nghĩa | Ghi chú |
-|---|---|---|---|
-| `customer_id` | STRING | Mã khách hàng | Khóa chính |
-| `customer_segment` | STRING (4) | Phân khúc | |
-| `age_group`, `gender` | STRING (5), (3) | Nhóm tuổi, giới tính | 18-24 … 55+; M, F, Other |
-| `province` | STRING (18) | Tỉnh cư trú | Khác tỉnh giao hàng của đơn |
-| `join_date` | DATE | Ngày tham gia | 25/11/2020 – 31/12/2024 |
-| `loyalty_score` | INT (0–100) | Điểm trung thành | Đặc trưng mô hình rời bỏ |
-| `preferred_channel` | STRING (2) | Kênh ưa thích | web, mobile |
+| Bảng | Thuộc tính (kiểu) | Ghi chú |
+|---|---|---|
+| customers (1.200 dòng) | `customer_id` (khóa), `customer_segment`, `age_group`, `gender`, `province` (STRING); `join_date` (DATE); `loyalty_score` (INT 0–100); `preferred_channel` (STRING) | `province` là tỉnh cư trú; `join_date` 25/11/2020 – 31/12/2024 |
+| products (400 dòng) | `product_id` (khóa), `category`, `brand`, `supplier_id` (STRING); `unit_cost`, `list_price`, `rating` (DOUBLE); `active_flag` (INT 0/1) | `list_price` thấp hơn giá vốn ở 117 sản phẩm; 14 sản phẩm ngừng bán |
 
-*[Bảng:thuoc-tinh-products]. Thuộc tính của `products.csv` / `item_master` (dữ liệu có cấu trúc, danh mục)*
-
-| Thuộc tính | Kiểu | Ý nghĩa | Ghi chú |
-|---|---|---|---|
-| `product_id` | STRING | Mã sản phẩm | Khóa chính |
-| `category` | STRING (6) | Nhóm sản phẩm | |
-| `brand`, `supplier_id` | STRING (44), (79) | Thương hiệu, nhà cung cấp | |
-| `unit_cost` | DOUBLE | Giá vốn | 22,71 – 1.798,04 |
-| `list_price` | DOUBLE | Giá niêm yết | 49,53 – 3.191,09; thấp hơn giá vốn ở 117 sản phẩm |
-| `rating` | DOUBLE (2,5–5,0) | Điểm sản phẩm | |
-| `active_flag` | INT (0/1) | Còn kinh doanh | 14 sản phẩm ngừng bán |
-
-**Nhận xét [Bảng:thuoc-tinh-customers] và [Bảng:thuoc-tinh-products]:** hai bảng danh mục nhỏ (1.200 và 400 dòng), ít thay đổi, nên khi ghép với đơn hàng có thể gửi bản sao tới mọi node (*replicated join* trong Pig, *broadcast join* trong Spark) thay vì xáo trộn qua mạng.
+**Nhận xét [Bảng:thuoc-tinh-customers]:** hai bảng danh mục nhỏ, ít thay đổi, nên khi ghép với đơn hàng có thể gửi bản sao tới mọi node (*replicated join* trong Pig, *broadcast join* trong Spark) thay vì xáo trộn qua mạng.

@@ -2,7 +2,7 @@
 
 **Yêu cầu:** DataFrame pipeline: sản phẩm tăng trưởng nhanh và khách hàng có nguy cơ rời bỏ. Đọc CSV/JSON, làm sạch, join, ≥5 transformations, ≥3 actions, cache/persist, xuất CSV/Parquet, so sánh với MapReduce.
 
-**Phụ trách:** thành viên D (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
+**Phụ trách:** Vũ Văn Quốc – thành viên D (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
 
 **Bài viết:** mục 1.4.3, 2.4.2, 2.5, 3.4, 3.6, 4.2.2, 4.4 và Phụ lục B (mã nguồn D) – `report/sections/14d-*.md`, `24b-*.md`, `25-*.md`, `34-*.md`, `36-*.md`, `42-*.md` (4.2.2), `44-*.md`, `96d-*.md`.
 

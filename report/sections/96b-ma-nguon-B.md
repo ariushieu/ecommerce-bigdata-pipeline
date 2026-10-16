@@ -1,6 +1,6 @@
-### Mã nguồn – thành viên B
+### Mã nguồn Câu 2, 3 – Nguyễn Trần Khánh Duy
 
-Toàn bộ mã nằm ở `src/cau02_flume/` và `src/cau03_hdfs/`. Lệnh chạy và kết quả được ghi trong `README.md` của từng thư mục. Dưới đây là các đoạn quan trọng nhất.
+Toàn bộ mã nằm ở `src/cau02_flume/` và `src/cau03_hdfs/`. Lệnh chạy và kết quả được ghi trong `README.md` của từng thư mục.
 
 **B.1. Kịch bản Flume (ii): HTTP → FileChannel/HDFS + MemoryChannel/HBase** (`src/cau02_flume/conf/stream-events.conf`, rút gọn)
 
@@ -137,17 +137,16 @@ nap() {  # nap <bang> <tep>
 }
 ```
 
-**B.6. Demo khôi phục khi hỏng node** (`src/cau03_hdfs/recovery_demo.sh`, trích các bước chính, chạy trên máy thật)
+**B.6. Demo khôi phục khi hỏng node** (`src/cau03_hdfs/recovery_demo.sh`, trích các bước chính, đã lược bớt)
 
 ```bash
 # tep he so 2, block 1 MiB -> ~9 block, NameNode co cho de nhan ban lai
 m "cat /data/orders.csv /data/orders.csv /data/orders.csv /data/orders.csv \
    | hdfs dfs -D dfs.blocksize=1048576 -D dfs.replication=2 -put - $DEMO/orders_x4_rep2.csv"
-docker stop datanode3                                         # gia lap hong node
+# ... tat datanode3 de gia lap hong node ...
 cho 420 10 "NameNode danh dau 1 DataNode dead" la_dead          # ~150 s
 cho 300 10 "tep rep2 du 2 ban sao tren datanode1 + datanode2" rep2_du
-docker start datanode3
-docker exec datanode3 su - hadoop -c 'hdfs --daemon start datanode; yarn --daemon start nodemanager; hbase-daemon.sh start regionserver'
+# ... bat lai datanode3 va cac tien trinh DataNode, NodeManager, RegionServer ...
 cho 300 10 "khong con block thieu ban sao trong /btl va tep demo" het_thieu
 ```
 
@@ -176,15 +175,60 @@ cho 300 10 "khong con block thieu ban sao trong /btl va tep demo" het_thieu
 
 | Thành phần | Tham số | Giá trị | Lý do |
 |---|---|---|---|
-| spooldir | `ignorePattern`, cách đặt tệp | `^.*[.]tmp$`; chép thành `<tên>.tmp` rồi `mv` | Spooldir yêu cầu tệp đã ghi xong và không đổi. Phép `mv` trong cùng hệ tệp là nguyên tử |
+| spooldir | `ignorePattern`, cách đặt tệp | `^.*[.]tmp$`; chép thành `<tên>.tmp` rồi `mv` | Spooldir cần tệp đã ghi xong; `mv` trong cùng hệ tệp là nguyên tử |
 | spooldir | tên tệp lô | `<bảng>_YYYYmmdd-HHMMSS` | Spooldir dừng nếu gặp lại tên tệp đã nạp |
-| spooldir | `deletePolicy`, `basenameHeader` | `never`, `true` | Tệp đã nạp được đổi tên `.COMPLETED` để làm bằng chứng; tên lô đi theo event để đặt tên tệp HDFS |
+| spooldir | `deletePolicy`, `basenameHeader` | `never`, `true` | Tệp đã nạp đổi tên `.COMPLETED`; tên lô dùng để đặt tên tệp HDFS |
 | spooldir | `deserializer`, `inputCharset` | `LINE`, UTF-8 | Mỗi dòng CSV là một event; BOM và CRLF được giữ nguyên |
 | FileChannel | `capacity`, `transactionCapacity` | 1.000.000; 10.000 | Chứa được khoảng 65 lần tệp `orders` (15.001 dòng), đủ đệm khi HDFS tạm ngừng |
-| HDFS sink | `hdfs.path`, `filePrefix` | `/btl/raw/%{table}/ingest_date=%Y-%m-%d`, `%{basename}` | Phân vùng theo ngày nạp; mỗi tệp lô thành một tệp HDFS riêng, truy được nguồn gốc |
-| HDFS sink | `fileType`, `inUsePrefix` | `DataStream`, `_` | Ghi nguyên văn. Tệp đang ghi có tên `_….tmp` nên Pig, MapReduce, Spark bỏ qua |
-| HDFS sink | `rollSize`, `rollCount`, `rollInterval`, `idleTimeout` | 127 MiB, 0, 0, 30 s | Tệp không vượt một block 128 MiB; lô đã nạp xong được đóng sau 30 s không có dữ liệu mới |
+| HDFS sink | `hdfs.path`, `filePrefix` | `/btl/raw/%{table}/ingest_date=%Y-%m-%d`, `%{basename}` | Phân vùng theo ngày nạp; truy được tệp lô nguồn |
+| HDFS sink | `fileType`, `inUsePrefix` | `DataStream`, `_` | Ghi nguyên văn; tệp đang ghi `_….tmp` bị Pig, MapReduce, Spark bỏ qua |
+| HDFS sink | `rollSize`, `rollCount`, `rollInterval`, `idleTimeout` | 127 MiB, 0, 0, 30 s | Tệp không vượt một block 128 MiB; đóng tệp sau 30 s không có dữ liệu |
 
-**Nhận xét [Bảng:c02-tham-so-lo]:**
-- Vùng raw giữ **nguyên văn** dữ liệu nguồn, nên kịch bản (i) không bỏ BOM hay dòng tiêu đề; việc đó dành cho Pig khi ghi staging.
-- Dùng `%{basename}` làm tiền tố giúp mỗi tệp HDFS là bản sao đúng một tệp lô, kiểm tra được bằng md5. Cái giá là mỗi lô sinh một tệp; nếu lô nhỏ và dày, cần gộp lô ở nguồn hoặc gộp tệp định kỳ (mục 3.2.1).
+**Nhận xét [Bảng:c02-tham-so-lo]:** tiền tố `%{basename}` làm mỗi tệp HDFS là bản sao đúng một tệp lô, kiểm tra được bằng md5; cái giá là mỗi lô sinh một tệp, nên lô nhỏ và dày cần gộp ở nguồn hoặc gộp tệp định kỳ.
+
+**B.9. Lệnh và đầu ra của các bước pipeline** (mục 3.3.1)
+
+*[Bảng:c03-cac-buoc]. Lệnh và đầu ra của từng bước (chạy trong `ssh may1`, thư mục `~/src`)*
+
+| Bước | Lệnh | Đầu ra |
+|---|---|---|
+| B0 | `start-cluster.sh` | HDFS, YARN, JobHistory, Spark History, HBase |
+| B1 | `cau03_hdfs/init_zones.sh` | Bốn vùng, `/btl/raw/<bảng>/ingest_date=2026-08-01/` |
+| B2a, B2b | `cau02_flume/run_batch.sh`, `run_stream.sh` | `/btl/raw/<bảng>/ingest_date=<ngày chạy>/`, `btl:order_events` |
+| B3 | `cau04_pig/run.sh` | `/btl/staging/orders`, `/btl/output/cau04_pig/` |
+| B4 | `cau05_mapreduce/run.sh` | `/btl/output/cau05_mr/` |
+| B5 | `cau06_spark/run.sh` | `/btl/curated/orders/…`, `/btl/output/cau06_spark/` |
+| B6 | `cau07_hbase/run.sh` | `btl:customer_orders`, `/btl/backup/hbase/` |
+| B7 | `cau08_bigsheets/chay.sh`, `cau09_r/chay.sh` (máy `rstudio`) | Dashboard, bảng `kq_*` trong bản sao SQLite |
+| B8 | So sánh `compare_category_month.csv` của Câu 4, 5, 6 | Bảng đối chiếu (mục 4.4, 4.5) |
+
+**Nhận xét [Bảng:c03-cac-buoc]:** mỗi bước là một lệnh theo đường dẫn đã chốt, nên tái lập được và không ghi đè bản chụp raw.
+
+**B.10. Dung lượng theo định dạng lưu** (mục 3.2.1)
+
+*[Bảng:c03-dinh-dang]. Dung lượng và số tệp theo định dạng lưu (`output/parquet_probe.txt`)*
+
+| Tập dữ liệu | Byte | Số tệp | Tỷ lệ so với raw |
+|---|---:|---:|---:|
+| `orders` raw CSV (15.000 dòng) | 2.298.806 | 1 | 1,000 |
+| `orders` sạch (14.408 dòng), Parquet Snappy 1 tệp | 594.099 | 1 | **0,258** |
+| `orders` sạch, Parquet phân vùng, 1 tệp mỗi partition | 1.388.160 | 114 | 0,604 |
+| `orders` sạch, Parquet phân vùng, 12 task cùng ghi | 8.931.807 | 1.368 | **3,885** |
+| `events` raw JSON Lines | 1.118.573 | 1 | 1,000 |
+| `events` phẳng, Parquet Snappy 1 tệp | 111.343 | 1 | **0,100** |
+
+**Nhận xét [Bảng:c03-dinh-dang]:** Parquet nén tốt khi tệp đủ lớn (lợi nhất với JSON vì lặp tên khóa); dự báo dùng tỷ lệ bản một tệp vì ở quy mô thật mỗi partition khoảng 20 MB. Với dữ liệu nhỏ, phân vùng làm mất lợi ích nén.
+
+**B.11. Phương án khôi phục theo loại sự cố** (mục 3.2.1)
+
+*[Bảng:c03-khoi-phuc]. Phương án khôi phục theo từng loại sự cố*
+
+| Sự cố | Tự động khôi phục | Việc của người quản trị |
+|---|---|---|
+| DataNode hỏng | Đọc bản sao khác; nhân bản lại nếu còn node trống | Sửa node, khởi động DataNode; theo dõi `hdfs fsck /` |
+| NodeManager hỏng | Chạy lại task trên node khác (MapReduce tối đa 4 lần/task); Spark tính lại từ lineage | Khởi động lại NodeManager |
+| RegionServer hỏng | HMaster chia WAL, gán region sang RegionServer khác [TL:white2015] | Bật lại RegionServer |
+| NameNode hỏng | **Không** (chỉ có 1 NameNode) | Khởi động lại từ fsimage + edit log, hoặc fsimage sao lưu bằng `hdfs dfsadmin -fetchImage` |
+| Flume agent sập | FileChannel phát lại log (mục 3.3.3) | Dùng systemd/supervisor tự khởi động lại |
+
+**Nhận xét [Bảng:c03-khoi-phuc]:** chỉ NameNode không tự khôi phục; ba DataNode của cụm nằm trên cùng một ổ đĩa máy thật, nên thiết kế chỉ chống hỏng tiến trình/container.

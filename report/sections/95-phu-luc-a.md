@@ -2,7 +2,7 @@
 
 ## Phụ lục A. Hướng dẫn cài đặt và chạy chương trình
 
-**Yêu cầu:** máy tính từ 16 GB RAM, Docker Desktop (cấp cho Docker ít nhất 10 GB RAM) và Git. Không cần cài Hadoop, Spark, Python hay R lên máy, vì mọi công cụ đều chạy trong container.
+**Yêu cầu:** máy tính từ 16 GB RAM (dành cho cụm ít nhất 10 GB), Git và Docker. Hadoop, Spark, Pig, Flume, HBase và R đã được cấu hình sẵn trong kho mã.
 
 **Bước 1 – Lấy mã nguồn và dựng cụm** (PowerShell hoặc Git Bash, trên máy thật):
 
@@ -10,8 +10,8 @@
 git clone https://github.com/ariushieu/ecommerce-bigdata-pipeline.git
 cd ecommerce-bigdata-pipeline
 powershell -ExecutionPolicy Bypass -File .\scripts\setup.ps1   # Git Bash/Linux: bash scripts/setup.sh
-docker compose pull          # tải image dựng sẵn từ GitHub Container Registry
-docker compose up -d         # bật 5 container: masternode, datanode1-3, rstudio
+docker compose pull          # tải môi trường đã cấu hình sẵn
+docker compose up -d         # bật 5 node: masternode, datanode1-3, rstudio
 ```
 
 **Bước 2 – Bật dịch vụ và kiểm tra** (trong `ssh may1`):
@@ -47,4 +47,4 @@ cd ~/src && bash cau03_hdfs/init_zones.sh    # tạo 4 vùng, nạp bản chụp
 
 **Giao diện web:** HDFS `localhost:9870`, YARN `localhost:8088`, JobHistory `localhost:19888`, Spark History `localhost:18080`, HBase `localhost:16010`, RStudio `localhost:8787`.
 
-**Tắt cụm an toàn:** `docker compose stop`. Container tự tắt HBase → YARN → HDFS đúng thứ tự. Không dùng `docker kill`.
+**Tắt cụm an toàn:** `docker compose stop` (các node tự tắt HBase → YARN → HDFS đúng thứ tự).

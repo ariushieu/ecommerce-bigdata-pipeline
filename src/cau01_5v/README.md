@@ -4,7 +4,7 @@
 
 **Bài viết:** mục 1.3, 2.1, 2.2, 2.3 của báo cáo – [`report/sections/13-*.md`, `21-*.md`, `22-*.md`, `23-*.md`](../../report/sections/). Thư mục này chứa script sinh số liệu làm căn cứ cho bài viết.
 
-**Phụ trách:** thành viên A – nhóm trưởng (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
+**Phụ trách:** Nguyễn Quốc Hiếu – thành viên A, nhóm trưởng (xem [phân công](../../README.md#phân-công-mỗi-người-20)). Quy ước chung: [`docs/quy-uoc.md`](../../docs/quy-uoc.md).
 
 **Chạy (trong `ssh may1`, thư mục `~/src`):**
 

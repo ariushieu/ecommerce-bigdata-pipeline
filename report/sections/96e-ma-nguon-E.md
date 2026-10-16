@@ -1,4 +1,4 @@
-### Mã nguồn – thành viên E
+### Mã nguồn Câu 8, 9 – Phạm Văn Quyết
 
 Mã đầy đủ nằm ở `src/cau08_bigsheets/dashboard.R` và `src/cau09_r/phan_tich.R`. Dưới đây là các đoạn quan trọng nhất, đã rút gọn.
 
@@ -97,9 +97,7 @@ stopifnot(all(da_ghi$so_dong == sapply(ket_qua, nrow)))
 | `kq_phan_loai_chi_so`, `kq_phan_loai_he_so`, `kq_phan_loai_lrt`, `kq_phan_loai_thap_phan_vi` | 3 + 26 + 1 + 10 | Phân loại trả hàng |
 | `kq_phan_loai_du_doan` | 4.288 | Xác suất trả và nhãn dự báo cho từng đơn của tập test |
 
-**Nhận xét [Bảng:c09-bang-ghi-lai]:**
-- Tổng cộng 16 bảng `kq_*` nằm cạnh 3 bảng gốc. Bảng gốc không bị sửa: `fact_main` vẫn có 15.000 dòng, được `test.sh` kiểm tra khi có tệp CSDL.
-- Các bảng nhỏ còn được ghi ra CSV trong `src/cau09_r/output/` để commit. Riêng tệp `.sqlite` không commit (gitignore); chạy lại script sẽ tạo lại tệp này.
+**Nhận xét [Bảng:c09-bang-ghi-lai]:** 16 bảng `kq_*` nằm cạnh 3 bảng gốc không bị sửa (`fact_main` vẫn 15.000 dòng, `test.sh` kiểm tra). Các bảng nhỏ còn được ghi ra CSV trong `src/cau09_r/output/`; tệp `.sqlite` không commit, chạy lại script sẽ tạo lại.
 
 **7. Chi tiết mô hình của mục 4.2.4–4.2.5**
 
@@ -107,22 +105,67 @@ stopifnot(all(da_ghi$so_dong == sapply(ket_qua, nrow)))
 
 | Biến | Hệ số | p-value | Diễn giải |
 |---|---:|---:|---|
-| `log(quantity)` | 0,992 | < 0,001 | Số lượng tăng 1% thì doanh thu tăng khoảng 0,99% |
-| `log(list_price)` | 0,427 | < 0,001 | Giá niêm yết cao hơn 1% thì doanh thu đơn cao hơn khoảng 0,43% |
-| Giảm giá tăng 10 điểm % | −0,119 | < 0,001 | Doanh thu đơn giảm 11,25% |
-| Danh mục Sports | 0,093 | < 0,001 | +9,73% so với Beauty, cùng giá và số lượng |
+| `log(quantity)` | 0,992 | < 0,001 | Số lượng +1% → doanh thu +0,99% |
+| `log(list_price)` | 0,427 | < 0,001 | Giá niêm yết +1% → doanh thu +0,43% |
+| Giảm giá tăng 10 điểm % | −0,119 | < 0,001 | −11,25% |
+| Danh mục Sports | 0,093 | < 0,001 | +9,73% so với Beauty |
 | Danh mục Electronics | 0,056 | < 0,001 | +5,75% |
 | Danh mục Fashion | −0,070 | < 0,001 | −6,79% |
 | Danh mục Home | −0,026 | 0,026 | −2,56% |
 | Phân khúc VIP | 0,023 | 0,016 | +2,33% so với Loyal |
-| Kênh bán, thanh toán, có chiến dịch | | > 0,16 | Không có ý nghĩa thống kê |
+| Kênh bán, thanh toán, có chiến dịch | | > 0,16 | Không có ý nghĩa |
 
-**Nhận xét [Bảng:c09-hoi-quy-he-so]:**
-- Mức −11,25% cho mỗi 10 điểm giảm giá gần đúng với cơ chế của công thức doanh thu, tức là chi phí trực tiếp của giảm giá. Dữ liệu không có nhóm đối chứng nên chưa kết luận được giảm giá có làm tăng số đơn hay không.
-- Theo `hoi_quy_anova.csv`, phần dư chiếm 17,7% tổng bình phương của M3.
+**Nhận xét [Bảng:c09-hoi-quy-he-so]:** Mức −11,25% cho mỗi 10 điểm giảm giá gần đúng cơ chế của công thức doanh thu, tức chi phí trực tiếp của giảm giá; dữ liệu không có nhóm đối chứng nên chưa kết luận được giảm giá có làm tăng số đơn. Phần dư chiếm 17,7% tổng bình phương của M3 (`hoi_quy_anova.csv`).
 
-**Thống kê bổ sung:**
-- Phần dư M3 (`hoi_quy_phan_du.csv`): trung bình 0, độ lệch chuẩn 0,338, độ xiên 0,07; 7,07% phần dư chuẩn hóa vượt ±2, cao hơn mức khoảng 5% của phân phối chuẩn.
-- Mô hình logistic dùng 13 biến: ngày giao, giảm giá, số lượng, `log(unit_price)`, danh mục, phân khúc, kênh bán, thanh toán, có chiến dịch, có đánh giá, điểm thân thiết, rating sản phẩm, nhóm tuổi (25 hệ số). Ngưỡng Youden tối đa hóa recall + specificity − 1 trên tập train.
-- Ở ngưỡng 0,0758, mô hình gắn cờ 2.415/4.288 đơn (56%). Kiểm định tỷ số hợp lý có 25 bậc tự do (`phan_loai_lrt.csv`).
-- Tỷ lệ trả thực tế theo 10 nhóm xác suất dự báo dao động 5,84–9,81% mà không tăng dần (`phan_loai_thap_phan_vi.csv`). Chỉ hệ số kênh mobile và web (odds ratio 1,26 và 1,24; p ≈ 0,01–0,02) có ý nghĩa ở mức 5%, nhưng với 25 hệ số, trung bình đã có khoảng 1 hệ số "có ý nghĩa" do ngẫu nhiên.
+![](../../docs/images/cau09-hoi-quy-phan-du.png){width=70%}
+
+*[Hình:c09-hoi-quy-phan-du]. Kiểm tra phần dư của M3: phần dư theo giá trị dự báo và biểu đồ Q-Q*
+
+**Nhận xét [Hình:c09-hoi-quy-phan-du]:** Phần dư gần đối xứng (độ xiên 0,07) nhưng đuôi dày hơn chuẩn: 7,07% phần dư chuẩn hóa vượt ±2, so với khoảng 5% của phân phối chuẩn. Đường loess cong lên ở vùng dự báo thấp vì phí vận chuyển (0–50) là khoản cộng thêm cố định.
+
+**Mô hình logistic:** 13 biến (ngày giao, giảm giá, số lượng, `log(unit_price)`, danh mục, phân khúc, kênh bán, thanh toán, có chiến dịch, có đánh giá, điểm thân thiết, rating sản phẩm, nhóm tuổi; 25 hệ số); ngưỡng Youden tối đa hóa recall + specificity − 1 trên tập train. Ở ngưỡng 0,0758, mô hình gắn cờ 2.415/4.288 đơn (56%). Tỷ lệ trả thực tế theo 10 nhóm xác suất dự báo dao động 5,84–9,81% mà không tăng dần (`phan_loai_thap_phan_vi.csv`); chỉ hệ số kênh mobile và web (odds ratio 1,26 và 1,24) có ý nghĩa ở mức 5%, đúng cỡ số hệ số "có ý nghĩa" do ngẫu nhiên khi có 25 hệ số.
+
+**8. Số liệu chi tiết của mục 1.4.4, 4.2.2 và 4.2.3**
+
+*[Bảng:c09-phien-ban-r]. Phiên bản các gói R sử dụng (R 4.4, tidyverse)*
+
+| Thành phần | Phiên bản |
+|---|---|
+| R | 4.4.3 |
+| DBI / RSQLite (SQLite nhúng) | 1.2.3 / 2.3.9 (3.47.1) |
+| dplyr / tidyr / readr | 1.1.4 / 1.3.1 / 2.1.5 |
+| ggplot2 / ragg / scales | 3.5.2 / 1.3.3 / 1.3.0 |
+| broom | 1.0.8 |
+
+**Nhận xét [Bảng:c09-phien-ban-r]:** Mọi gói được cài sẵn trong môi trường R của nhóm (cấu hình trong thư mục `infra/`) nên kết quả tái lập được. Môi trường không có `patchwork` hay `pROC`, nên dashboard được ghép bằng `grid` và AUC được tính tay theo hạng.
+
+*[Bảng:c06-roi-bo-phan-khuc]. Mức nguy cơ rời bỏ theo phân khúc khách hàng (`churn_summary.csv`)*
+
+| Phân khúc | Khách | HIGH | MEDIUM | LOW | HIGH (%) | Recency TB (ngày) |
+|---|---:|---:|---:|---:|---:|---:|
+| Loyal | 296 | 28 | 51 | 217 | 9,46 | 44,66 |
+| New | 303 | 41 | 48 | 214 | 13,53 | 51,10 |
+| Regular | 302 | 37 | 61 | 204 | 12,25 | 50,00 |
+| VIP | 299 | 41 | 62 | 196 | 13,71 | 49,35 |
+| **Tất cả** | **1.200** | **147** | **222** | **831** | **12,25** | **48,80** |
+
+**Nhận xét [Bảng:c06-roi-bo-phan-khuc]:** Danh sách 369 khách HIGH và MEDIUM nằm trong `churn_risk_customers.csv`. So với nhóm LOW, khách HIGH mua 9,82 so với 12,31 đơn/khách, trả 7,48% so với 7,86%, giao 3,05 so với 3,03 ngày (`churn_by_risk.csv`).
+
+*[Bảng:c09-kiem-dinh]. Kiểm định sự khác biệt về tỷ lệ trả (χ²) và thời gian giao (ANOVA một chiều)*
+
+| Chỉ số | Yếu tố | Số mức | Thống kê | p-value |
+|---|---|---:|---:|---:|
+| Tỷ lệ trả | Kênh bán | 3 | χ² = 4,110 | 0,1281 |
+| Tỷ lệ trả | Có/không đánh giá | 2 | χ² = 0,951 | 0,3294 |
+| Tỷ lệ trả | Ô danh mục × tỉnh | 108 | χ² = 105,269 | 0,5292 |
+| Tỷ lệ trả | Thanh toán | 4 | χ² = 2,102 | 0,5516 |
+| Tỷ lệ trả | Tỉnh giao hàng | 18 | χ² = 15,589 | 0,5532 |
+| Tỷ lệ trả | Phân khúc | 4 | χ² = 1,196 | 0,7540 |
+| Tỷ lệ trả | Danh mục | 6 | χ² = 2,071 | 0,8392 |
+| Tỷ lệ trả | Thời gian giao (0–2 / 3–5 / > 5 ngày) | 3 | χ² = 0,089 | 0,9567 |
+| Tỷ lệ trả | Mức giảm giá | 6 | χ² = 0,942 | 0,9671 |
+| Ngày giao | Tỉnh giao hàng | 18 | F = 0,869 | 0,6114 |
+| Ngày giao | Danh mục | 6 | F = 2,597 | 0,0236 |
+| Ngày giao | Kênh bán | 3 | F = 2,776 | 0,0623 |
+
+**Nhận xét [Bảng:c09-kiem-dinh]:** Không p-value nào của tỷ lệ trả nhỏ hơn 0,05; chỉ thời gian giao theo danh mục có ý nghĩa (diễn giải ở mục 4.2.3).
