@@ -40,3 +40,6 @@ src/**/*.sqlite
 
 # Bao cao sinh tu dong
 report/build/
+
+# anh R ve khi chay trong RStudio (ban chinh thuc o docs/images/)
+src/*/output/hinh/

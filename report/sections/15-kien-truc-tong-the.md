@@ -60,8 +60,9 @@ flowchart LR
 
 | Tầng | Thành phần | Cơ chế chịu lỗi |
 |---|---|---|
+| 1. Nguồn | 3 tệp CSV, luồng `order_event`, SQLite | Tệp gốc không bị xóa (đổi tên `.COMPLETED`); luồng phát lại được |
 | 2. Thu thập | Flume `b1` (spooldir), `s1` (HTTP) | Giao dịch, FileChannel ghi đĩa, client gửi lại khi nhận HTTP 503 |
-| 3. Lưu trữ | HDFS 4 vùng; HBase 2 bảng | Nhân bản 3; WAL, gán lại region |
+| 3. Lưu trữ (3a thô, 3b kết quả) | HDFS 4 vùng; HBase 2 bảng | Nhân bản 3; WAL, gán lại region |
 | 4. Xử lý | Pig, MapReduce, Spark, trình nạp HBase | YARN chạy lại container lỗi; Spark tính lại từ lineage |
 | 5. Phục vụ | Dashboard, R, tra cứu HBase | Tạo lại được từ các vùng dưới |
 
