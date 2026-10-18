@@ -49,12 +49,3 @@ chay_lau() {
 }
 
 web() { printf '%s   Giao dien web: %s%s\n' "$C_BUOC" "$*" "$C_HET"; }
-
-# mo_anh <tep>: mo anh bang trinh xem anh cua Windows (Git Bash); NOOPEN=1 thi chi in duong dan
-mo_anh() {
-  if [ "${NOOPEN:-0}" != 1 ] && command -v cygpath > /dev/null 2>&1; then
-    explorer.exe "$(cygpath -w "$1")" || true
-  else
-    echo "   anh: $1"
-  fi
-}
