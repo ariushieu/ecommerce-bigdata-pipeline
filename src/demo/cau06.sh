@@ -23,4 +23,11 @@ lenh "echo \"\$(( \$(wc -l < output/churn_risk_customers.csv) - 1 )) khach nguy 
 
 buoc "Thoi gian chay"
 lenh 'tail -3 output/run_time.txt'
-web "Spark History http://localhost:18080 (DAG, stage, cache)"
+
+while IFS= read -r d; do kq "$d"; done < <(grep -E '^(orders raw|curated /btl)' output/pipeline_log.txt)
+kq "San pham tang truong nhanh: $(( $(wc -l < output/fast_growing_products.csv) - 1 )) (3 thang cuoi so voi 3 thang lien truoc)"
+kq "Khach co nguy co roi bo: $(( $(wc -l < output/churn_risk_customers.csv) - 1 )) ($(awk -F, '$1 == "ALL" { print $3 " HIGH + " $4 " MEDIUM" }' output/churn_summary.csv) / 1.200 khach)"
+kq "Thoi gian lan chay moi nhat: $(tail -1 output/run_time.txt | cut -d, -f2) s"
+web http://localhost:18080 "Spark History: bam app moi nhat > Jobs (action), Stages (shuffle), Storage (cache), SQL"
+web http://localhost:9870  "HDFS: Utilities > Browse the file system > /btl/curated/orders (Parquet year/month/category)"
+tong_ket

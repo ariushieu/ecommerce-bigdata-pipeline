@@ -20,4 +20,10 @@ lenh "grep -E '^== (3|4|6|7)|REPLAY|so dong HDFS|count|PASS|FAIL' output/stream_
 buoc "Chong mat du lieu: kill -9 agent, so sanh FileChannel va MemoryChannel"
 chay_lau 2 'bash crash_demo.sh > /dev/null 2>&1'
 lenh "sed -n '/^== 4/,\$p' output/crash_demo.txt"
-web "HBase http://localhost:16010 (bang btl:order_events)"
+
+for f in output/batch_run.txt output/stream_run.txt output/crash_demo.txt; do
+  while IFS= read -r d; do kq "$d"; done < <(grep -E '^(PASS|FAIL)' "$f")
+done
+web http://localhost:16010 "HBase: muc Tables > btl:order_events (bang su kien vua ghi)"
+web http://localhost:9870  "HDFS: Utilities > Browse the file system > /btl/raw/events"
+tong_ket

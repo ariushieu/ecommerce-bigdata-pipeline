@@ -20,8 +20,13 @@ else
   C_TD=; C_BUOC=; C_LENH=; C_HET=
 fi
 
+TEN_DEMO=
+KQ=()
+WEB=()
+
 tieude() {
   local dong="=============================================================================="
+  TEN_DEMO=$*
   printf '\n%s%s\n  %s\n%s%s\n' "$C_TD" "$dong" "$*" "$dong" "$C_HET"
 }
 
@@ -48,4 +53,20 @@ chay_lau() {
   fi
 }
 
-web() { printf '%s   Giao dien web: %s%s\n' "$C_BUOC" "$*" "$C_HET"; }
+# kq "dong ket qua"            -> ghi lai, in o khung tong ket cuoi script
+# web <url> "can bam vao dau"  -> ghi lai link giao dien web, in o khung tong ket
+kq()  { KQ+=("$*"); }
+web() { WEB+=("$1|$2"); }
+
+# tong_ket: khung "XONG" cuoi moi script: ket qua chinh + link web can mo (Ctrl + click de mo)
+tong_ket() {
+  local dong="==============================================================================" k w
+  printf '\n%s%s\n  XONG: %s\n%s%s\n' "$C_TD" "$dong" "$TEN_DEMO" "$dong" "$C_HET"
+  printf '%sKet qua:%s\n' "$C_BUOC" "$C_HET"
+  for k in "${KQ[@]}"; do printf '  - %s\n' "$k"; done
+  if [ "${#WEB[@]}" -gt 0 ]; then
+    printf '\n%sMo trinh duyet de xem:%s\n' "$C_BUOC" "$C_HET"
+    for w in "${WEB[@]}"; do printf '  %s%-24s%s %s\n' "$C_LENH" "${w%%|*}" "$C_HET" "${w#*|}"; done
+  fi
+  printf '%s%s%s\n' "$C_TD" "$dong" "$C_HET"
+}

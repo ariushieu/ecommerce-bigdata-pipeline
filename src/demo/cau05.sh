@@ -26,4 +26,17 @@ lenh 'cat output/runtime.txt'
 
 buoc "5 test case (TC1-TC5): lam sach, Combiner, Partitioner, tinh toan, doi chieu du lieu that"
 chay_lau 1 "bash test.sh | grep -E '^(PASS|FAIL)'"
-web "JobHistory http://localhost:19888 (xem Counters cua tung job)"
+
+C=output/counters_category_province_month.txt
+cnt() { awk -F'\t' -v k="$2" '$1 == "COUNTER" && $3 == k { print $4 }' "$1"; }
+CI=$(cnt $C COMBINE_INPUT_RECORDS); CO=$(cnt $C COMBINE_OUTPUT_RECORDS)
+SB=$(cnt $C REDUCE_SHUFFLE_BYTES); SB0=$(cnt output/counters_category_province_month_nocombiner.txt REDUCE_SHUFFLE_BYTES)
+kq "Combiner: $CI -> $CO ban ghi qua shuffle (giam $(awk -v a="$CI" -v b="$CO" 'BEGIN { printf "%.1f", 100 * (a - b) / a }')%); shuffle $SB0 -> $SB byte"
+kq "$(grep -m1 'Combiner bat/tat' output/runtime.txt)"
+kq "Partitioner: $(awk -F'\t' 'NR > 1 { printf "%s%s=%s", s, $1, $4; s = ", " }' output/partitions.txt)"
+kq "$(grep -m1 '^orders=' output/runtime.txt) (khop Cau 1)"
+kq "Thoi gian: $(awk -F'\t' '/wall_s=/ { printf "%s%s %s s", s, $1, substr($2, 8); s = "; " }' output/runtime.txt)"
+JOB=$(grep -m1 'JOB_ID' $C | awk -F'\t' '{ print $2 }')
+web http://localhost:19888 "JobHistory: bam job cau05 category_province_month${JOB:+ ($JOB)} > menu trai Counters"
+web http://localhost:9870  "HDFS: Utilities > Browse the file system > /btl/output/cau05_mr"
+tong_ket

@@ -108,3 +108,10 @@ echo "   tep rep2 nhan ban lai xong   : $(( T_REP - T_HONG ))"
 echo "   bat lai DataNode             : $(( T_BAT - T_HONG ))"
 echo "   DataNode duoc tinh live lai  : $(( T_LIVE - T_HONG ))"
 echo "   HDFS het thieu ban sao       : $(( T_OK - T_HONG ))"
+
+kq "Doc lai ngay sau khi tat DataNode: dung md5 ca 2 tep"
+kq "NameNode danh dau $NODE chet sau $(( T_DEAD - T_HONG )) s"
+kq "Tep nhan ban 2 duoc nhan ban lai sang node con song sau $(( T_REP - T_HONG )) s"
+kq "Bat lai DataNode: HDFS het thieu ban sao sau $(( T_OK - T_HONG )) s, $(hdfs fsck /btl 2>/dev/null | grep -oE 'is (HEALTHY|CORRUPT)')"
+web http://localhost:9870 "HDFS: Datanodes (bam F5 trong luc chay de thay $NODE chuyen Dead roi In Service)"
+tong_ket

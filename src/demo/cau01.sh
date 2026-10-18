@@ -22,3 +22,13 @@ lenh "sed -n '/^## Veracity/,/^## Value/p' output/profile.md"
 
 buoc "Value: chi so kinh doanh sau lam sach"
 lenh "sed -n '/^## Value/,\$p' output/profile.md | head -25"
+
+P=output/profile.md
+kq "Volume: $(grep -m1 '^- Tổng:' $P | sed 's/^- Tổng: //; s/\*\*//g')"
+kq "Velocity: su kien $(grep -m1 'cặp liên tiếp bị ngược' $P | grep -oE '[0-9]+,[0-9]+%') cap lien tiep den sai thu tu thoi gian"
+kq "Veracity: $(grep -m1 'Quy tắc làm sạch' $P | sed 's/^- //; s/\*\*//g')"
+kq "Value: $(grep -m1 'Doanh thu ròng' $P | sed 's/^- //; s/\*\*//g')"
+kq "$(grep -m1 '^- Trả hàng' $P | sed 's/^- //; s/\*\*//g')"
+kq "$(grep -m1 '^- Giao hàng' $P | sed 's/^- //; s/\*\*//g')"
+kq "Chi tiet: ~/src/cau01_5v/output/profile.md (bao cao muc 1.3, 2.1-2.3)"
+tong_ket

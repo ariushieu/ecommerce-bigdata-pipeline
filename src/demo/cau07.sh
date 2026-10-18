@@ -24,4 +24,11 @@ lenh "sed -n '/history/,/status /p' output/client_api_demo.txt | head -8"
 
 buoc "Nen SNAPPY + FAST_DIFF: nho hon 5,79 lan so voi khong nen"
 lenh 'cat output/compression.txt'
-web "HBase http://localhost:16010 (Tables > btl:customer_orders > 6 region)"
+
+kq "$(grep -m1 '^nap ' output/load.txt)"
+kq "$(grep -m1 '^tong so dong' output/load.txt); $(grep -cE '^(\(-\)|C[0-9]+) +\.\.' output/load.txt) region tren $(awk '$2 == ".." { print $4 }' output/load.txt | sort -u | wc -l) RegionServer"
+kq "Scan tien to C00941#: lay 5 don moi nhat trong 1 lan quet (rowkey customer_id#reverse_timestamp)"
+kq "Nen SNAPPY + FAST_DIFF: $(awk 'NR == 2 { s = $1 } NR == 3 { p = $1 } END { printf "%.2f", p / s }' output/compression.txt) lan nho hon khong nen"
+kq "$(grep -m1 'ExportSnapshot:' output/acl_backup.txt) (sao luu snapshot sang /btl/backup/hbase)"
+web http://localhost:16010 "HBase: muc Tables > btl:customer_orders > xem 6 region chia cho 3 RegionServer"
+tong_ket
