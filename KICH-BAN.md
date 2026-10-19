@@ -34,6 +34,14 @@ Tổng thời gian khoảng 25 phút, chưa kể phần hỏi đáp. Nếu cô c
 >
 > **Variety:** 3 định dạng: CSV, JSON Lines và SQLite. **Velocity:** dữ liệu đến liên tục, hơn một nửa sự kiện, 50,27%, đến sai thứ tự thời gian.
 
+**▶ Làm:** lật báo cáo tới mục 2.1, bảng "Mô tả và phân loại các tệp dữ liệu".
+
+> Về phân loại: các tệp CSV và SQLite là **dữ liệu có cấu trúc**, lược đồ cố định. Tệp `events_stream.jsonl` là **dữ liệu bán cấu trúc**, vì mỗi bản ghi tự mô tả bằng tên khóa, có đối tượng lồng `payload`; đồng thời nó là **dữ liệu luồng**, vì sự kiện phát sinh liên tục và đến không theo thứ tự. Phân loại từng trường nằm ở ba bảng thuộc tính mục 2.2.
+
+**▶ Làm:** lật tới mục 1.3.7, hình "Phân luồng dữ liệu" và bảng "Phân chia nhu cầu phân tích theo chế độ xử lý".
+
+> Từ đó nhóm em chia hai nhánh. **Phân tích tĩnh**, chấp nhận trễ vài giờ đến vài ngày: doanh thu, tỷ lệ trả theo danh mục, tỉnh, tháng; sản phẩm tăng trưởng; khách rời bỏ; hồi quy. **Gần thời gian thực**, trễ vài giây đến vài phút: doanh thu theo phút, cảnh báo tỷ lệ trả tăng đột biến, và tra cứu đơn mới nhất của khách trên HBase.
+
 **▶ Khi hiện bảng Veracity:**
 
 > **Veracity:** khoảng 6% bản ghi bị gắn cờ lỗi: OUTLIER, DUPLICATE, LATE và MISSING. Nhóm thống nhất một quy tắc làm sạch dùng chung cho mọi công cụ: bỏ OUTLIER, DUPLICATE, LATE, giữ MISSING. Sau làm sạch còn **14.408 đơn**.
