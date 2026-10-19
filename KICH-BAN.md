@@ -86,7 +86,7 @@ Tổng thời gian khoảng 25 phút, chưa kể phần hỏi đáp. Nếu cô c
 
 > Để kiểm tra khả năng chịu lỗi, nhóm em tắt DataNode trên `datanode3`. Đọc lại tệp ngay lập tức vẫn đúng, mã md5 khớp. Sau khoảng 143 giây, NameNode đánh dấu node đó đã chết, rồi tự nhân bản lại các block bị thiếu sang hai node còn lại; đến giây 181 thì đủ bản sao. Bật lại node, HDFS trở về trạng thái HEALTHY.
 
-*(Nếu cô muốn xem trực tiếp: chạy `bash ~/src/demo/cau03_hong_node.sh` (4 phút). Trong lúc chờ, bấm F5 trang Datanodes để thấy `datanode3` chuyển sang Dead.)*
+*(Nếu cô muốn xem trực tiếp: chạy `bash ~/src/demo/cau03_hong_node.sh` (3 phút). Trong lúc chờ, bấm F5 trang Datanodes để thấy `datanode3` chuyển sang Dead.)*
 
 > Em mời bạn Hiệp trình bày phần xử lý bằng Pig và MapReduce.
 

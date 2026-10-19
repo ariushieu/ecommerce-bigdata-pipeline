@@ -163,7 +163,7 @@ hdfs dfsadmin -report | grep -E '^Live datanodes|^Name:'; yarn node -list
 
 ### 3e. Phương án khôi phục khi một node hỏng
 
-💻 Chạy (khoảng 4 phút, trong lúc chạy không làm việc khác):
+💻 Chạy (khoảng 3 phút, trong lúc chạy không làm việc khác):
 ```bash
 bash ~/src/demo/cau03_hong_node.sh
 ```
@@ -386,7 +386,7 @@ echo "scan 'btl:customer_orders', {ROWPREFIXFILTER => 'C00941#', COLUMNS => ['o:
 
 💻 Chạy:
 ```bash
-echo "describe 'btl:customer_orders'" | hbase shell -n 2>/dev/null | grep '^{NAME'
+echo "describe 'btl:customer_orders'" | hbase shell -n 2>/dev/null | grep '^{NAME' | sed -E "s/ (INDEX_BLOCK_ENCODING|KEEP_DELETED_CELLS|MIN_VERSIONS|REPLICATION_SCOPE|IN_MEMORY|BLOCKCACHE|BLOCKSIZE) => '[^']*',?//g"
 ```
 👀 Thấy: 3 family `o`, `m`, `d`; `VERSIONS => '5'` ở `d`; `TTL => 1095 DAYS`; `COMPRESSION => 'SNAPPY'`.
 

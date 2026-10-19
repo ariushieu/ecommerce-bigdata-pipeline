@@ -76,7 +76,7 @@ Thêm chữ `nhanh` sau lệnh (ví dụ `bash ~/src/demo/cau04.sh nhanh`) để
 |---|---|
 | **Báo cáo** | Mục 3.2.1 |
 | **Lệnh (tab `may1`)** | `bash ~/src/demo/cau03.sh` (10 giây, in kết quả lần tắt node trước) |
-| **Hỏng node trực tiếp (nếu cô yêu cầu)** | `bash ~/src/demo/cau03_hong_node.sh` (khoảng 4 phút, không chạy job khác cùng lúc) |
+| **Hỏng node trực tiếp (nếu cô yêu cầu)** | `bash ~/src/demo/cau03_hong_node.sh` (khoảng 3 phút, không chạy job khác cùng lúc) |
 | **Web** | `localhost:9870` → **Datanodes**: 3 node In Service. Trong lúc chạy hỏng node, bấm F5 để thấy `datanode3` chuyển sang **Dead**. Utilities → Browse the file system → `/btl`: 4 vùng |
 
 **Nói:**

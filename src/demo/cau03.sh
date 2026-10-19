@@ -19,13 +19,13 @@ lenh "hdfs dfsadmin -report 2>/dev/null | grep -E '^Live datanodes|^Name:'"
 lenh "hdfs fsck $ORD -files -blocks -locations 2>/dev/null | grep -E 'len=|Average block replication' | sed -E 's/BP-[^:]*://; s/DatanodeInfoWithStorage\\[([0-9.]+):9866[^]]*\\]/\\1/g'"
 
 buoc "Ket qua lan tat DataNode tren datanode3 (bash ~/src/demo/cau03_hong_node.sh): van doc duoc, tu nhan ban lai"
-lenh "sed 's/\x1b\[[0-9;]*m//g' output/hong_node.log | grep -E '^== |DOC_DUOC|Live datanodes|Under replicated|HEALTHY|->'"
-lenh "sed -n '/Moc thoi gian/,\$p' output/hong_node.log | tail -5"
+lenh "sed 's/\x1b\[[0-9;]*m//g; /Moc thoi gian/q' output/hong_node.log | grep -E '^== |DOC_DUOC|Live datanodes|thieu ban sao|HEALTHY|->'"
+lenh "sed 's/\x1b\[[0-9;]*m//g' output/hong_node.log | grep -E ' : [0-9]+\$'"
 
 kq "$(hdfs dfsadmin -report 2>/dev/null | grep -m1 '^Live datanodes' | tr -d ':'), nhan ban 3 lan"
 while read -r a ua b ub z; do kq "$z: $a $ua du lieu, chiem $b $ub (x3)"; done \
   < <(hdfs dfs -du -s -h /btl/raw /btl/staging /btl/curated /btl/output)
 while read -r d; do kq "Tat DataNode: $d"; done \
-  < <(sed -n '/Moc thoi gian/,$p' output/hong_node.log | tail -5 | sed 's/\x1b\[[0-9;]*m//g')
+  < <(sed 's/\x1b\[[0-9;]*m//g' output/hong_node.log | grep -E ' : [0-9]+$')
 web http://localhost:9870 "HDFS: Datanodes (3 node In Service); Utilities > Browse the file system > /btl"
 tong_ket
