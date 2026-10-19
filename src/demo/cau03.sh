@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Demo Cau 3 - Vung du lieu HDFS, nhan ban, khoi phuc (ssh may1):  bash ~/src/demo/cau03.sh
-# Demo tat DataNode truc tiep (4 phut): bash ~/src/demo/cau03_hong_node.sh
+# Demo tat DataNode truc tiep (3 phut): bash ~/src/demo/cau03_hong_node.sh
 # shellcheck source=lib.sh disable=SC1091
 . "$(dirname "$0")/lib.sh"
 cd "$SRC/cau03_hdfs" || exit 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Demo Cau 3 - hong mot DataNode va HDFS tu khoi phuc, chay hoan toan trong ssh may1:
-#   bash ~/src/demo/cau03_hong_node.sh          (khoang 4 phut, trong luc do khong chay job khac)
+#   bash ~/src/demo/cau03_hong_node.sh          (khoang 3 phut, trong luc do khong chay job khac)
 # 1. Tao 2 tep demo: orders_rep3.csv (nhan ban 3) va orders_x4_rep2.csv (9 block, nhan ban 2)
 # 2. ssh datanode3: tat tien trinh DataNode (gia lap node hong)
 # 3. Doc lai tep ngay; cho NameNode danh dau node chet (~150 s); cho tep rep2 duoc nhan ban lai
