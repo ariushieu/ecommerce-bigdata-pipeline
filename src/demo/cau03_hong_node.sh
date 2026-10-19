@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Demo Cau 3 - hong mot DataNode va HDFS tu khoi phuc, chay hoan toan trong ssh may1:
-#   bash ~/src/demo/cau03_hong_node.sh          (khoang 4 phut, trong luc do khong chay job khac)
+#   bash ~/src/demo/cau03_hong_node.sh          (khoang 3 phut, trong luc do khong chay job khac)
 # 1. Tao 2 tep demo: orders_rep3.csv (nhan ban 3) va orders_x4_rep2.csv (9 block, nhan ban 2)
 # 2. ssh datanode3: tat tien trinh DataNode (gia lap node hong)
 # 3. Doc lai tep ngay; cho NameNode danh dau node chet (~150 s); cho tep rep2 duoc nhan ban lai
@@ -21,8 +21,19 @@ T0=$(date +%s)
 moc() { printf '\n%s== [%s | +%s s] %s%s\n' "$C_BUOC" "$(date +%T)" "$(( $(date +%s) - T0 ))" "$*" "$C_HET"; }
 ip_ten() { sed -E 's/DatanodeInfoWithStorage\[([0-9.]+):9866,DS-[^]]*\]/\1/g;
   s/172\.28\.1\.2/datanode1/g; s/172\.28\.1\.3/datanode2/g; s/172\.28\.1\.4/datanode3/g'; }
+# thieu: so block thieu ban sao trong /btl va tep demo. Khong dem toan HDFS: WAL cua HBase
+# dang ghi do cung mat 1 ban sao khi tat node, nhung chi duoc nhan ban bu khi WAL dong (~1 gio).
+thieu() {
+  local n=0 p x
+  for p in /btl $DEMO; do
+    x=$(hdfs fsck "$p" 2>/dev/null | sed -n 's/^[[:space:]]*Under-replicated blocks:[[:space:]]*\([0-9]*\).*/\1/p' | head -1)
+    n=$(( n + ${x:-0} ))
+  done
+  echo "$n"
+}
 khoi() {
-  hdfs dfsadmin -report 2>/dev/null | grep -E '^Live datanodes|^Dead datanodes|Under replicated blocks|Missing blocks:' | sed 's/^/   /'
+  hdfs dfsadmin -report 2>/dev/null | grep -E '^Live datanodes|^Dead datanodes' | sed 's/^/   /'
+  echo "   Block thieu ban sao trong /btl va tep demo: $(thieu)"
 }
 vi_tri() {
   hdfs fsck "$1" -files -blocks -locations 2>/dev/null | grep -E 'len=' | ip_ten \
@@ -38,7 +49,6 @@ doc_lai() {
 live_la() { [ "$(live)" = "$1" ]; }
 live() { hdfs dfsadmin -report 2>/dev/null | sed -n 's/^Live datanodes (\([0-9]*\)).*/\1/p'; }
 het_thieu() { [ "$(thieu)" = 0 ]; }
-thieu() { hdfs dfsadmin -report 2>/dev/null | sed -n 's/^[[:space:]]*Under replicated blocks: //p' | head -1; }
 rep2_du() {  # 9 block deu du 2 ban sao va khong con ban sao nao tren node hong
   local v; v=$(vi_tri $DEMO/orders_x4_rep2.csv)
   [ "$(grep -c "Live_repl=2" <<< "$v")" -eq 9 ] && [ "$(grep -c "$NODE" <<< "$v")" -eq 0 ]
@@ -88,6 +98,7 @@ cho 240 "tep rep2 du 2 ban sao tren node con song" rep2_du
 T_REP=$(date +%s)
 vi_tri $DEMO/orders_x4_rep2.csv
 doc_lai
+khoi   # tep nhan ban 3 thieu 1 ban: cum chi con 2 DataNode, cho node quay lai
 
 moc "4. ssh $NODE: bat lai DataNode"
 T_BAT=$(date +%s)

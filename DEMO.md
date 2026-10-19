@@ -2,6 +2,10 @@
 
 Mỗi câu ghi rõ bốn thứ: **ai demo**, **chạy lệnh ở đâu**, **mở trang web nào để xem**, và **nói gì**.
 
+Lời nói chi tiết cho từng người (mở đầu, chuyển tiếp, kết luận, hỏi đáp): [KICH-BAN.md](KICH-BAN.md).
+
+Trình bày theo **từng ý của đề** (ý nào chạy lệnh gì, ý nào xem mục nào trong báo cáo): [THEO-DE.md](THEO-DE.md).
+
 Script demo in lệnh màu xanh trước khi chạy và **dừng chờ Enter ở mỗi bước**. Người demo bấm Enter, chờ kết quả hiện ra, giải thích xong mới bấm tiếp.
 
 Thêm chữ `nhanh` sau lệnh (ví dụ `bash ~/src/demo/cau04.sh nhanh`) để bỏ qua bước chạy lâu và chỉ in kết quả của lần chạy trước. Dùng khi máy chậm hoặc hết giờ.
@@ -72,7 +76,7 @@ Thêm chữ `nhanh` sau lệnh (ví dụ `bash ~/src/demo/cau04.sh nhanh`) để
 |---|---|
 | **Báo cáo** | Mục 3.2.1 |
 | **Lệnh (tab `may1`)** | `bash ~/src/demo/cau03.sh` (10 giây, in kết quả lần tắt node trước) |
-| **Hỏng node trực tiếp (nếu cô yêu cầu)** | `bash ~/src/demo/cau03_hong_node.sh` (khoảng 4 phút, không chạy job khác cùng lúc) |
+| **Hỏng node trực tiếp (nếu cô yêu cầu)** | `bash ~/src/demo/cau03_hong_node.sh` (khoảng 3 phút, không chạy job khác cùng lúc) |
 | **Web** | `localhost:9870` → **Datanodes**: 3 node In Service. Trong lúc chạy hỏng node, bấm F5 để thấy `datanode3` chuyển sang **Dead**. Utilities → Browse the file system → `/btl`: 4 vùng |
 
 **Nói:**

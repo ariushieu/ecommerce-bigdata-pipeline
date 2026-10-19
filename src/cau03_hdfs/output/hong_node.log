@@ -3,49 +3,46 @@
   Cau 3 - Hong DataNode datanode3: HDFS van doc duoc va tu nhan ban lai
 ==============================================================================
 
-== [22:52:57 | +0 s] 0. Trang thai ban dau
-   	Under replicated blocks: 0
-   	Missing blocks: 0
+== [13:34:09 | +0 s] 0. Trang thai ban dau
    Live datanodes (3):
+   Block thieu ban sao trong /btl va tep demo: 0
 
-== [22:52:58 | +1 s] 1. Tao tep demo trong /tmp/cau03_hong_node
+== [13:34:13 | +4 s] 1. Tao tep demo trong /tmp/cau03_hong_node
    Found 2 items
-   -rw-r--r--   3 hadoop supergroup    2298806 2026-10-18 15:52 /tmp/cau03_hong_node/orders_rep3.csv
-   -rw-r--r--   2 hadoop supergroup    9195224 2026-10-18 15:53 /tmp/cau03_hong_node/orders_x4_rep2.csv
+   -rw-r--r--   3 hadoop supergroup    2298806 2026-10-19 06:34 /tmp/cau03_hong_node/orders_rep3.csv
+   -rw-r--r--   2 hadoop supergroup    9195224 2026-10-19 06:34 /tmp/cau03_hong_node/orders_x4_rep2.csv
    -- vi tri block orders_rep3.csv
-   block 0  len=2298806  Live_repl=3  [datanode3, datanode1, datanode2]
+   block 0  len=2298806  Live_repl=3  [datanode1, datanode2, datanode3]
    -- vi tri block orders_x4_rep2.csv
-   block 0  len=1048576  Live_repl=2  [datanode2, datanode1]
-   block 1  len=1048576  Live_repl=2  [datanode2, datanode3]
-   block 2  len=1048576  Live_repl=2  [datanode2, datanode1]
-   block 3  len=1048576  Live_repl=2  [datanode3, datanode1]
+   block 0  len=1048576  Live_repl=2  [datanode3, datanode1]
+   block 1  len=1048576  Live_repl=2  [datanode1, datanode3]
+   block 2  len=1048576  Live_repl=2  [datanode2, datanode3]
+   block 3  len=1048576  Live_repl=2  [datanode1, datanode3]
    block 4  len=1048576  Live_repl=2  [datanode1, datanode2]
-   block 5  len=1048576  Live_repl=2  [datanode3, datanode1]
-   block 6  len=1048576  Live_repl=2  [datanode2, datanode1]
+   block 5  len=1048576  Live_repl=2  [datanode1, datanode3]
+   block 6  len=1048576  Live_repl=2  [datanode2, datanode3]
    block 7  len=1048576  Live_repl=2  [datanode1, datanode3]
-   block 8  len=806616  Live_repl=2  [datanode1, datanode2]
+   block 8  len=806616  Live_repl=2  [datanode1, datanode3]
 
-== [22:53:04 | +7 s] 2. ssh datanode3: tat DataNode (gia lap node hong)
+== [13:34:21 | +12 s] 2. ssh datanode3: tat DataNode (gia lap node hong)
 $ ssh datanode3 '/home/hadoop/hadoop/bin/hdfs --daemon stop datanode'
 
-== [22:53:05 | +8 s] 3a. Doc lai ngay (NameNode chua biet node da chet)
+== [13:34:22 | +13 s] 3a. Doc lai ngay (NameNode chua biet node da chet)
    rep2: 5225b93a8b509064b37df6f63a016aa5 DOC_DUOC_DUNG
    rep3: 079da45aaa09e3aac0db566e6ad94653 DOC_DUOC_DUNG
-   	Under replicated blocks: 0
-   	Missing blocks: 0
    Live datanodes (3):
+   Block thieu ban sao trong /btl va tep demo: 0
 
-== [22:53:09 | +12 s] 3b. Cho NameNode danh dau datanode3 la dead (2 x 60 s recheck + 10 x 3 s heartbeat = 150 s)
-   -> NameNode chi con 2 DataNode song (sau ~120 s cho)
-   	Under replicated blocks: 0
-   	Missing blocks: 0
+== [13:34:28 | +19 s] 3b. Cho NameNode danh dau datanode3 la dead (2 x 60 s recheck + 10 x 3 s heartbeat = 150 s)
+   -> NameNode chi con 2 DataNode song (sau ~115 s cho)
    Live datanodes (2):
    Dead datanodes (1):
+   Block thieu ban sao trong /btl va tep demo: 0
 
-== [22:55:27 | +150 s] 3c. Cho NameNode nhan ban lai cac block cua tep rep2 sang 2 node con song
-   -> tep rep2 du 2 ban sao tren node con song (sau ~5 s cho)
-   block 0  len=1048576  Live_repl=2  [datanode2, datanode1]
-   block 1  len=1048576  Live_repl=2  [datanode2, datanode1]
+== [13:36:43 | +154 s] 3c. Cho NameNode nhan ban lai cac block cua tep rep2 sang 2 node con song
+   -> tep rep2 du 2 ban sao tren node con song (sau ~15 s cho)
+   block 0  len=1048576  Live_repl=2  [datanode1, datanode2]
+   block 1  len=1048576  Live_repl=2  [datanode1, datanode2]
    block 2  len=1048576  Live_repl=2  [datanode2, datanode1]
    block 3  len=1048576  Live_repl=2  [datanode1, datanode2]
    block 4  len=1048576  Live_repl=2  [datanode1, datanode2]
@@ -55,22 +52,37 @@ $ ssh datanode3 '/home/hadoop/hadoop/bin/hdfs --daemon stop datanode'
    block 8  len=806616  Live_repl=2  [datanode1, datanode2]
    rep2: 5225b93a8b509064b37df6f63a016aa5 DOC_DUOC_DUNG
    rep3: 079da45aaa09e3aac0db566e6ad94653 DOC_DUOC_DUNG
+   Live datanodes (2):
+   Dead datanodes (1):
+   Block thieu ban sao trong /btl va tep demo: 193
 
-== [22:55:38 | +161 s] 4. ssh datanode3: bat lai DataNode
+== [13:37:07 | +178 s] 4. ssh datanode3: bat lai DataNode
 $ ssh datanode3 '/home/hadoop/hadoop/bin/hdfs --daemon start datanode'
    -> DataNode quay lai (Live datanodes 3) (sau ~0 s cho)
    -> HDFS het block thieu ban sao (sau ~0 s cho)
-   	Under replicated blocks: 0
-   	Missing blocks: 0
    Live datanodes (3):
+   Block thieu ban sao trong /btl va tep demo: 0
    The filesystem under path '/btl' is HEALTHY
 
-== [22:55:45 | +168 s] 5. Don tep demo
+== [13:37:18 | +189 s] 5. Don tep demo
    da xoa /tmp/cau03_hong_node
 
-== [22:55:44 | +167 s] Moc thoi gian (giay, tinh tu luc tat DataNode)
-   NameNode danh dau node chet  : 142
-   tep rep2 nhan ban lai xong   : 151
-   bat lai DataNode             : 154
-   DataNode duoc tinh live lai  : 157
-   HDFS het thieu ban sao       : 159
+== [13:37:19 | +190 s] Moc thoi gian (giay, tinh tu luc tat DataNode)
+   NameNode danh dau node chet  : 138
+   tep rep2 nhan ban lai xong   : 160
+   bat lai DataNode             : 166
+   DataNode duoc tinh live lai  : 170
+   HDFS het thieu ban sao       : 172
+
+==============================================================================
+  XONG: Cau 3 - Hong DataNode datanode3: HDFS van doc duoc va tu nhan ban lai
+==============================================================================
+Ket qua:
+  - Doc lai ngay sau khi tat DataNode: dung md5 ca 2 tep
+  - NameNode danh dau datanode3 chet sau 138 s
+  - Tep nhan ban 2 duoc nhan ban lai sang node con song sau 160 s
+  - Bat lai DataNode: HDFS het thieu ban sao sau 172 s, is HEALTHY
+
+Mo trinh duyet de xem:
+  http://localhost:9870    HDFS: Datanodes (bam F5 trong luc chay de thay datanode3 chuyen Dead roi In Service)
+==============================================================================

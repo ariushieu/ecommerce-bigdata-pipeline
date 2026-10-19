@@ -3,6 +3,12 @@
 # shellcheck source=lib.sh disable=SC1091
 . "$(dirname "$0")/lib.sh"
 cd "$SRC/cau01_5v" || exit 1
+P=output/profile.md
+
+# muc <ten muc>: in cac dong gach dau dong (khong in bang) cua mot muc trong profile.md
+muc() { sed -n "/^## $1/,/^## /p" $P | grep '^- ' | sed 's/\*\*//g'; }
+# dong <mau>: mot dong cua profile.md, bo "- " va dau **
+dong() { grep -m1 "$1" $P | sed 's/^- //; s/\*\*//g; s/`//g; s/\.$//'; }
 
 tieude "Cau 1 - Dac trung 5V va chat luong du lieu (bao cao muc 1.3, 2.1-2.3)"
 
@@ -14,21 +20,25 @@ lenh 'head -2 /data/events_stream.jsonl'
 buoc "Chay profiling: do Volume, Velocity, Variety, Veracity, Value tu du lieu that"
 lenh 'python3 profile_data.py'
 
-buoc "Volume: dung luong, so ban ghi"
-lenh "sed -n '/^## Volume/,/^## Velocity/p' output/profile.md | head -16"
+buoc "1. Volume: dung luong, so ban ghi"
+lenh "sed -n '/^## Volume/,/^## Velocity/p' $P | grep -v '^## Velocity'"
 
-buoc "Veracity: loi du lieu (OUTLIER, DUPLICATE, LATE, MISSING, su kien sai thu tu)"
-lenh "sed -n '/^## Veracity/,/^## Value/p' output/profile.md"
+buoc "2. Velocity: toc do phat sinh, che do nap, su kien den sai thu tu"
+lenh "muc Velocity"
 
-buoc "Value: chi so kinh doanh sau lam sach"
-lenh "sed -n '/^## Value/,\$p' output/profile.md | head -25"
+buoc "3. Variety: dinh dang, ma hoa, nguon, cau truc JSON"
+lenh "muc Variety"
 
-P=output/profile.md
-kq "Volume: $(grep -m1 '^- Tổng:' $P | sed 's/^- Tổng: //; s/\*\*//g')"
-kq "Velocity: su kien $(grep -m1 'cặp liên tiếp bị ngược' $P | grep -oE '[0-9]+,[0-9]+%') cap lien tiep den sai thu tu thoi gian"
-kq "Veracity: $(grep -m1 'Quy tắc làm sạch' $P | sed 's/^- //; s/\*\*//g')"
-kq "Value: $(grep -m1 'Doanh thu ròng' $P | sed 's/^- //; s/\*\*//g')"
-kq "$(grep -m1 '^- Trả hàng' $P | sed 's/^- //; s/\*\*//g')"
-kq "$(grep -m1 '^- Giao hàng' $P | sed 's/^- //; s/\*\*//g')"
+buoc "4. Veracity: loi du lieu (OUTLIER, DUPLICATE, LATE, MISSING) va quy tac lam sach"
+lenh "sed -n '/^## Veracity/,/^## Value/p' $P | grep -v '^## Value'"
+
+buoc "5. Value: chi so kinh doanh sau lam sach"
+lenh "sed -n '/^## Value/,\$p' $P | head -25"
+
+kq "Volume: $(dong '^- Tổng:' | sed 's/^Tổng: //')"
+kq "Velocity: $(dong '^- Đơn/ngày' | sed 's/;.*//'); $(grep -m1 'cặp liên tiếp bị ngược' $P | grep -oE '[0-9]+,[0-9]+%') cap su kien lien tiep den sai thu tu"
+kq "Variety: 3 dinh dang tep (CSV, JSON Lines, SQLite); 5 nguon ($(dong '^- .source_system' | sed -E 's/^source_system: //; s/ [0-9.]+//g')); $(dong '^- Nhãn .data_format' | sed 's/^Nhãn //')"
+kq "Veracity: $(dong 'Quy tắc làm sạch')"
+kq "Value: $(dong 'Doanh thu ròng' | cut -d, -f1-2); $(dong '^- Trả hàng' | cut -d, -f1-2); $(dong '^- Giao hàng' | sed 's/, P90.*//')"
 kq "Chi tiet: ~/src/cau01_5v/output/profile.md (bao cao muc 1.3, 2.1-2.3)"
 tong_ket
