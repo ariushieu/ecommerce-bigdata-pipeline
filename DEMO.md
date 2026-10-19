@@ -4,6 +4,8 @@ Mỗi câu ghi rõ bốn thứ: **ai demo**, **chạy lệnh ở đâu**, **mở
 
 Lời nói chi tiết cho từng người (mở đầu, chuyển tiếp, kết luận, hỏi đáp): [KICH-BAN.md](KICH-BAN.md).
 
+Trình bày theo **từng ý của đề** (ý nào chạy lệnh gì, ý nào xem mục nào trong báo cáo): [THEO-DE.md](THEO-DE.md).
+
 Script demo in lệnh màu xanh trước khi chạy và **dừng chờ Enter ở mỗi bước**. Người demo bấm Enter, chờ kết quả hiện ra, giải thích xong mới bấm tiếp.
 
 Thêm chữ `nhanh` sau lệnh (ví dụ `bash ~/src/demo/cau04.sh nhanh`) để bỏ qua bước chạy lâu và chỉ in kết quả của lần chạy trước. Dùng khi máy chậm hoặc hết giờ.
